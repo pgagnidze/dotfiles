@@ -1,0 +1,86 @@
+!
+! ~/.Xresources
+!
+
+! Fontconfig settings
+Xft.lcdfilter                :  lcddefault
+Xft.hintstyle                :  hintslight
+Xft.hinting                  :  1
+Xft.autohint                 :  1
+Xft.antialias                :  1
+Xft.dpi                      :  96
+Xft.rgba                     :  rgb
+
+! Font declaration
+URxvt.font                   :  xft:Misc Tamsyn:pixelsize=14:autohint=true
+URxvt.boldFont               :  xft:Misc Tamsyn:pixelsize=14:autohint=true
+URxvt.italicFont             :  xft:Misc Tamsyn:pixelsize=14:autohint=true
+
+! Disable scrollbar
+URxvt.scrollBar              :  false
+
+! Enable buffer
+URxvt.buffered               :  true
+
+! Enable url and mouseless text selection
+URxvt.perl-ext-common        :  default,url-select,keyboard-select
+URxvt.url-select.launcher    :  /usr/bin/xdg-open
+URxvt.url-select.underline   :  true
+URxvt.keysym.M-u             :  perl:url-select:select_next
+URxvt.keysym.M-Escape        :  perl:keyboard-select:activate
+URxvt.keysym.M-s             :  perl:keyboard-select:search
+
+! Color all underlined text
+URxvt.colorUL                :  #78A4FF
+
+! Allow large maximum line length
+URxvt*saveLines              :  65535
+
+! Enable cursor blinking
+URxvt*cursorBlink            :  true
+
+! Do not scroll with output
+URxvt*scrollTtyOutput        :  false
+
+! Scroll in relation to buffer
+URxvt*scrollWithBuffer       :  true
+
+! Scroll back to the bottom on keypress
+URxvt*scrollTtyKeypress      :  true
+
+! Holo
+
+*background: #262626
+*foreground: #CCCCCC
+
+! Black
+*color0: #444444 
+*color8: #888888
+
+! Red
+*color1: #BF3E3E
+*color9: #FF5353
+
+! Green
+*color2: #98AB60
+*color10: #CBE580
+
+! Yellow
+*color3: #AB7260
+*color11: #E59980 
+
+! Blue
+*color4: #6099AC
+*color12: #80CCE6
+
+! Magenta
+*color5: #AB6099
+*color13: #E580CC
+
+! Cyan
+*color6: #80bab0
+*color14: #add9d1
+
+! White
+*color7: #F1F2F0
+*color15: #FFFFFF
