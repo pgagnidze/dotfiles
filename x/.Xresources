@@ -12,9 +12,9 @@ Xft.dpi                      :  96
 Xft.rgba                     :  rgb
 
 ! Font declaration
-URxvt.font                   :  xft:Misc Tamsyn:pixelsize=14:autohint=true
-URxvt.boldFont               :  xft:Misc Tamsyn:pixelsize=14:autohint=true
-URxvt.italicFont             :  xft:Misc Tamsyn:pixelsize=14:autohint=true
+URxvt.font                   :  xft:Terminus:pixelsize=14:autohint=true
+URxvt.boldFont               :  xft:Terminus:pixelsize=14:autohint=true
+URxvt.italicFont             :  xft:Terminus:pixelsize=14:autohint=true
 
 ! Disable scrollbar
 URxvt.scrollBar              :  false
