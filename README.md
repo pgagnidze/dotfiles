@@ -1,5 +1,5 @@
 ### Introduction
-Bits of this dots are collected from either arch linux community or specific individuals. I might forgot to mention someone I stoled from in credits. If you recognize your or someone's handwriting, remind me to add on the list. For now, Backup your configs or create new user to test before use.
+Bits of these dots are collected from the arch linux community. I might have forgotten to mention someone I stole from in credits. If you recognize your or someone's handwriting, remind me to add on the list. For now, Backup your configs or create a new user to test before use.
 
 ### Installation
 1. Clone this repository
@@ -8,9 +8,10 @@ Bits of this dots are collected from either arch linux community or specific ind
    * ``` cd dotfiles ```
 3. Install with stow
 ```bash
-    $ stow awesome        # Install awesome with ergo theme
-    $ stow -D awesome     # Uninstall awesome with ergo theme
+    $ stow bash        # Install bash configurations
+    $ stow -D bash     # Uninstall bash configurations
 ```
+Awesome WM theme is not maintained anymore, please refer to https://github.com/lcpz/awesome-copycats for up-to-date themes.
 
 ### Screenshot
 
@@ -25,9 +26,9 @@ Bits of this dots are collected from either arch linux community or specific ind
 
 [zanshin] for [.tmux.linux.5b3c864]
 
-[copycat-killer]: https://github.com/copycat-killer
-[rc.lua.template.afde62a]: https://raw.githubusercontent.com/copycat-killer/awesome-copycats/afde62ab4b548d1e5ed1c4ce2457333b2d8d3375/rc.lua.template
-[lain.133fe63]: https://github.com/copycat-killer/lain/tree/133fe63b85978ac1f21658c5decd66e269261e60
+[copycat-killer]: https://github.com/lcpz
+[rc.lua.template.afde62a]: https://raw.githubusercontent.com/lcpz/awesome-copycats/afde62ab4b548d1e5ed1c4ce2457333b2d8d3375/rc.lua.template
+[lain.133fe63]: https://github.com/lcpz/lain/tree/133fe63b85978ac1f21658c5decd66e269261e60
 
 [helmuthdu]: https://github.com/helmuthdu
 [.bashrc.0140a69]: https://raw.githubusercontent.com/helmuthdu/dotfiles/0140a69c037092711d10a9d035eb435f273fcf80/.bashrc
