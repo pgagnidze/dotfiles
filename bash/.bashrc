@@ -4,7 +4,7 @@
 
 ## Prompt
 
-export PS1='\[\033[01;34m\]\w$(__git_ps1) \$\[\033[00m\] '
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34m\]\w$(__git_ps1) \$\[\033[00m\] '
 
 ## General
 
@@ -132,14 +132,27 @@ bind '"\ex":"\C-asudo \C-e"'
 
 ## Sources
 
-# Automatically search the official repositories, when entering an unrecognized command
+# Automatically search the official repositories, when entering an unrecognized command (arch)
 [[ -f /usr/share/doc/pkgfile/command-not-found.bash ]] && . /usr/share/doc/pkgfile/command-not-found.bash
 
-# Navigating the file system by searching for strings in a database with the user's most-visited paths
+# Navigating the file system by searching for strings in a database with the user's most-visited paths (arch)
 [[ -f /etc/profile.d/autojump.bash ]] && . /etc/profile.d/autojump.bash
 
-# Allows to see repository status in your prompt
+# Navigating the file system by searching for strings in a database with the user's most-visited paths (ubuntu)
+[[ -f /etc/profile.d/autojump.sh ]] && . /etc/profile.d/autojump.sh
+
+# Allows to see repository status in your prompt (arch)
 [[ -f /usr/share/git/git-prompt.sh ]] && . /usr/share/git/git-prompt.sh
+
+# Allows to see repository status in your prompt (ubuntu)
+[[ -f /etc/bash_completion.d/git-prompt ]] && . /etc/bash_completion.d/git-prompt
+
+## Ubuntu related
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
 
 ## Functions
 
@@ -255,7 +268,7 @@ function lsgrep ()
 }
 
 # Detailed information on an IP address or hostname
-ipif() { 
+ipif() {
     if grep -P "(([1-9]\d{0,2})\.){3}(?2)" <<< "$1"; then
 	curl ipinfo.io/"$1"
     else
@@ -321,9 +334,6 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 # Start urxvt with a started tmux session
 alias tmuxp='tmux -q has-session && exec tmux attach-session -d || exec tmux new-session -n$USER -s$USER@$HOSTNAME'
-
-# Set firefox timezone to UTC+1
-alias firefox='TZ=UTC-01:00 firefox'
 
 ## Misc
 
