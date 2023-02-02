@@ -8,13 +8,13 @@ Xft.hintstyle                :  hintslight
 Xft.hinting                  :  1
 Xft.autohint                 :  1
 Xft.antialias                :  1
-Xft.dpi                      :  96
+Xft.dpi                      :  192
 Xft.rgba                     :  rgb
 
 ! Font declaration
-URxvt.font                   :  xft:Terminus:pixelsize=14:autohint=true
-URxvt.boldFont               :  xft:Terminus:pixelsize=14:autohint=true
-URxvt.italicFont             :  xft:Terminus:pixelsize=14:autohint=true
+URxvt.font                   :  xft:Terminus:pixelsize=36:autohint=true
+URxvt.boldFont               :  xft:Terminus:pixelsize=36:autohint=true
+URxvt.italicFont             :  xft:Terminus:pixelsize=36:autohint=true
 
 ! Disable scrollbar
 URxvt.scrollBar              :  false

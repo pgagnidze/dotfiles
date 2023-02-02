@@ -347,3 +347,10 @@ if [[ $UID -ge 1000 && -d $HOME/.local/bin && -z $(echo $PATH | grep -o $HOME/.l
 then
     export PATH=$HOME/.local/bin:${PATH}
 fi
+
+# Set PATH so it includes user's npm global directories
+if [[ $UID -ge 1000 && -d $HOME/.npm-global/bin && -z $(echo $PATH | grep -o $HOME/.npm-global/bin) ]]
+then
+    export PATH=$HOME/.npm-global/bin:${PATH}    
+fi
+
