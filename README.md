@@ -1,5 +1,5 @@
 ### Introduction
-Bits of these dots are collected from the arch linux community. I might have forgotten to mention someone I stole from in credits. If you recognize your or someone's handwriting, remind me to add on the list. For now, Backup your configs or create a new user to test before use.
+Credit to Arch Linux community for components used in this dotfiles project. Omissions in credits will be corrected if brought to attention. Please backup configurations or use a testing user before use.
 
 ### Installation
 1. Clone this repository
@@ -8,14 +8,13 @@ Bits of these dots are collected from the arch linux community. I might have for
    * ``` cd dotfiles ```
 3. Install with stow
 ```bash
-    $ stow bash        # Install bash configurations
-    $ stow -D bash     # Uninstall bash configurations
+    $ stow -S bash        # Install bash configurations
+    $ stow -D bash        # Uninstall bash configurations
 ```
-Awesome WM theme is not maintained anymore, please refer to https://github.com/lcpz/awesome-copycats for up-to-date themes.
 
 ### Screenshot
 
-![clean](https://u.teknik.io/E9W7x.png)
+![clean](https://i.imgur.com/WJRt5wF.png)
 
 ### Credits
 [copycat-killer] for [rc.lua.template.afde62a] and [lain.133fe63]
