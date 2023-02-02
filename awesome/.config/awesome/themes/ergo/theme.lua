@@ -142,14 +142,14 @@ theme.mail = lain.widget.imap({
 -- CPU
 local cpu = lain.widget.sysload({
     settings = function()
-        widget:set_markup(markup.font(theme.font, markup(gray, " Cpu ") .. load_1 .. " "))
+        widget:set_markup(markup.font(theme.font, markup(gray, " cpu ") .. load_1 .. " "))
     end
 })
 
 -- MEM
 local mem = lain.widget.mem({
     settings = function()
-        widget:set_markup(markup.font(theme.font, markup(gray, " Mem ") .. mem_now.used .. " "))
+        widget:set_markup(markup.font(theme.font, markup(gray, " mem ") .. mem_now.used .. " "))
     end
 })
 
@@ -181,8 +181,8 @@ theme.fs = lain.widget.fs({
 local bat = lain.widget.bat({
     settings = function()
         local perc = bat_now.perc
-        if bat_now.ac_status == 1 then perc = perc .. " Plug" end
-        widget:set_markup(markup.font(theme.font, markup(gray, " Bat ") .. perc .. " "))
+        if bat_now.ac_status == 1 then perc = perc .. " plug" end
+        widget:set_markup(markup.font(theme.font, markup(gray, " bat ") .. perc .. " "))
     end
 })
 
@@ -198,7 +198,7 @@ local bat = lain.widget.bat({
 -- ALSA volume
 theme.volume = lain.widget.alsa({
     settings = function()
-        header = " Vol "
+        header = " vol "
         vlevel  = volume_now.level
 
         if volume_now.status == "off" then
