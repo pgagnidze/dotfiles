@@ -83,7 +83,6 @@ theme.layout_txt_termfair                       = "[termfair]"
 theme.layout_txt_centerfair                     = "[centerfair]"
 
 local markup = lain.util.markup
-local white  = theme.fg_normal
 local gray   = theme.taglist_fg_focus
 
 -- Textclock
@@ -154,19 +153,19 @@ local mem = lain.widget.mem({
     end
 })
 
--- Coretemp
-local temp = lain.widgets.temp({
-    settings = function()
-        widget:set_markup(markup.font(theme.font, markup(gray, " temp ") .. coretemp_now .. " "))
-    end
-})
-
 -- Net
-local net = lain.widgets.net({
+local net = lain.widget.net({
     settings = function()
         widget:set_markup(markup.font(theme.font, markup(gray, " net ") .. net_now.received)
                           .. " " ..
                           markup.font(theme.font, markup(gray, " " ) .. net_now.sent .. " "))
+    end
+})
+
+-- Coretemp
+local temp = lain.widget.temp({
+    settings = function()
+        widget:set_markup(markup.font(theme.font, markup(gray, " temp ") .. coretemp_now .. " "))
     end
 })
 
@@ -292,9 +291,9 @@ function theme.at_screen_connect(s)
             bar_spr,
             cpu.widget,
             bar_spr,
-            temp.widget,
-            bar_spr,
             net.widget,
+            bar_spr,
+            temp.widget,
             bar_spr,
             --theme.mpd.widget,
             --theme.mail.widget,
