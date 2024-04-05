@@ -132,19 +132,41 @@ bind '"\ex":"\C-asudo \C-e"'
 
 ## Sources
 
-# Automatically search the official repositories, when entering an unrecognized command (arch)
+## Sources
+
+# Automatically search the official repositories when entering an unrecognized command (Fedora)
+if [ -f /usr/libexec/pk-command-not-found ]; then
+    command_not_found_handle() {
+        local pkgs=$(PATH="$PATH:/sbin" /usr/libexec/pk-command-not-found "$1" 2>/dev/null)
+        if [ -n "$pkgs" ]; then
+            echo -n "The program '$1' is not currently installed. You can install it by typing: "
+            echo "sudo dnf install $pkgs"
+        else
+            echo "bash: $1: command not found"
+        fi
+        return 127
+    }
+fi
+
+# Navigating the file system by searching for strings in a database with the user's most-visited paths (Fedora)
+[[ -f /usr/share/autojump/autojump.bash ]] && . /usr/share/autojump/autojump.bash
+
+# Allows seeing repository status in your prompt (Fedora)
+[[ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]] && . /usr/share/git-core/contrib/completion/git-prompt.sh
+
+# Automatically search the official repositories when entering an unrecognized command (Arch)
 [[ -f /usr/share/doc/pkgfile/command-not-found.bash ]] && . /usr/share/doc/pkgfile/command-not-found.bash
 
-# Navigating the file system by searching for strings in a database with the user's most-visited paths (arch)
+# Navigating the file system by searching for strings in a database with the user's most-visited paths (Arch)
 [[ -f /etc/profile.d/autojump.bash ]] && . /etc/profile.d/autojump.bash
 
-# Navigating the file system by searching for strings in a database with the user's most-visited paths (ubuntu)
+# Navigating the file system by searching for strings in a database with the user's most-visited paths (Ubuntu)
 [[ -f /etc/profile.d/autojump.sh ]] && . /etc/profile.d/autojump.sh
 
-# Allows to see repository status in your prompt (arch)
+# Allows seeing repository status in your prompt (Arch)
 [[ -f /usr/share/git/git-prompt.sh ]] && . /usr/share/git/git-prompt.sh
 
-# Allows to see repository status in your prompt (ubuntu)
+# Allows seeing repository status in your prompt (Ubuntu)
 [[ -f /etc/bash_completion.d/git-prompt ]] && . /etc/bash_completion.d/git-prompt
 
 ## Ubuntu related
@@ -328,6 +350,12 @@ alias ls='ls --color=auto'
 alias la='ls -a --color=auto'
 alias lr='ls -R --color=auto'
 alias ll='ls -hal --color=auto'
+
+# DNF aliases for Fedora
+alias dnfup='sudo dnf update'            # Update all packages
+alias dnfins='sudo dnf install'          # Install specified package(s)
+alias dnfrm='sudo dnf remove'            # Remove specified package(s)
+alias dnfsearch='dnf search'             # Search package(s)
 
 # Add an "alert" alias for long running commands
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
