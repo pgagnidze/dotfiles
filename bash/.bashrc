@@ -132,8 +132,6 @@ bind '"\ex":"\C-asudo \C-e"'
 
 ## Sources
 
-## Sources
-
 # Automatically search the official repositories when entering an unrecognized command (Fedora)
 if [ -f /usr/libexec/pk-command-not-found ]; then
     command_not_found_handle() {
@@ -147,21 +145,11 @@ if [ -f /usr/libexec/pk-command-not-found ]; then
         return 127
     }
 fi
-
-# Navigating the file system by searching for strings in a database with the user's most-visited paths (Fedora)
-[[ -f /usr/share/autojump/autojump.bash ]] && . /usr/share/autojump/autojump.bash
-
 # Allows seeing repository status in your prompt (Fedora)
 [[ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]] && . /usr/share/git-core/contrib/completion/git-prompt.sh
 
 # Automatically search the official repositories when entering an unrecognized command (Arch)
 [[ -f /usr/share/doc/pkgfile/command-not-found.bash ]] && . /usr/share/doc/pkgfile/command-not-found.bash
-
-# Navigating the file system by searching for strings in a database with the user's most-visited paths (Arch)
-[[ -f /etc/profile.d/autojump.bash ]] && . /etc/profile.d/autojump.bash
-
-# Navigating the file system by searching for strings in a database with the user's most-visited paths (Ubuntu)
-[[ -f /etc/profile.d/autojump.sh ]] && . /etc/profile.d/autojump.sh
 
 # Allows seeing repository status in your prompt (Arch)
 [[ -f /usr/share/git/git-prompt.sh ]] && . /usr/share/git/git-prompt.sh
