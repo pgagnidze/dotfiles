@@ -157,6 +157,17 @@ fi
 # Allows seeing repository status in your prompt (Ubuntu)
 [[ -f /etc/bash_completion.d/git-prompt ]] && . /etc/bash_completion.d/git-prompt
 
+# Allows seeing repository status in your prompt (macOS with Homebrew)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ -f /usr/local/etc/bash_completion.d/git-prompt.sh ]]; then
+        . /usr/local/etc/bash_completion.d/git-prompt.sh
+    elif [[ -f /opt/homebrew/etc/bash_completion.d/git-prompt.sh ]]; then
+        . /opt/homebrew/etc/bash_completion.d/git-prompt.sh
+    elif [[ -f /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh ]]; then
+        . /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-prompt.sh
+    fi
+fi
+
 ## Ubuntu related
 
 # set variable identifying the chroot you work in (used in the prompt below)
