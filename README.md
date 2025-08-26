@@ -55,7 +55,9 @@ chmod +x pomarchy
 **After installation, use from anywhere:**
 
 ```bash
-# Pomarchy installs a convenient alias in your bashrc
+# Configure the pomarchy alias in your ~/.bashrc:
+# alias pomarchy="/path/to/your/pomarchy/pomarchy"
+
 pomarchy doctor              # Check system status
 pomarchy setup packages -y   # Install packages without prompts
 pomarchy update              # Update to latest version

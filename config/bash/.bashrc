@@ -12,7 +12,8 @@ eval "$(atuin init bash)"
 
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 
-alias pomarchy="$HOME/Development/personal/dotfiles/pomarchy"
+# Add pomarchy alias - update path to match your installation location
+# alias pomarchy="/path/to/your/pomarchy/pomarchy"
 
 cd() { 
     builtin cd -- "$@" && { 
