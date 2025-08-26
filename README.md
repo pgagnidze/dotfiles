@@ -9,7 +9,7 @@
   <img src="demo/pomarchy-setup.gif" alt="Pomarchy Demo" width="600"/>
 </p>
 
-![License:WTFPL](https://img.shields.io/static/v1?label=License&message=WTFPL&color=purple&style=flat-square)
+![License:MIT](https://img.shields.io/static/v1?label=License&message=MIT&color=green&style=flat-square)
 ![Shell](https://img.shields.io/badge/Shell-Bash-green?style=flat-square)
 ![Platform](https://img.shields.io/badge/Platform-Omarchy%20Linux-blue?style=flat-square)
 
@@ -195,7 +195,7 @@ Stow conflicts occur when files already exist that aren't managed by stow. Simpl
 
 ## License
 
-This project is licensed under the [WTFPL](LICENSE)
+This project is licensed under the [MIT License](LICENSE)
 
 <div align="center">
 

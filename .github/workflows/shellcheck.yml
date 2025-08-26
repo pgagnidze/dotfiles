@@ -22,3 +22,8 @@ jobs:
         format: gcc
         severity: error
         additional_files: 'pomarchy'
+        ignore_paths: |
+          config
+          demo
+          .git
+          .github
