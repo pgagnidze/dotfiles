@@ -1,0 +1,7 @@
+# Shellcheck configuration for Pomarchy
+# Enable external source following for modular scripts
+external-sources=true
+
+# Disable SC2016 - we intentionally use single quotes to write literal strings to config files
+# These variables should expand when the shell reads the files, not when we write them
+disable=SC2016

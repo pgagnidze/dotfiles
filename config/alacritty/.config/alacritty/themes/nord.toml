@@ -1,11 +1,7 @@
-# Colors (Nord)
-
-# Default colors
 [colors.primary]
 background = '#2E3440'
 foreground = '#D8DEE9'
 
-# Normal colors
 [colors.normal]
 black   = '#3B4252'
 red     = '#BF616A'
@@ -16,7 +12,6 @@ magenta = '#B48EAD'
 cyan    = '#88C0D0'
 white   = '#E5E9F0'
 
-# Bright colors
 [colors.bright]
 black   = '#4C566A'
 red     = '#BF616A'

@@ -1,0 +1,248 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "▶ Starting Pomarchy personal setup..."
+
+POMARCHY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly POMARCHY_ROOT
+source "${POMARCHY_ROOT}/lib/common.sh"
+
+YES=false
+
+show_usage() {
+    echo "Usage: $0 [COMMAND] [OPTIONS]"
+    echo ""
+    echo "Setup Commands:"
+    echo "  setup dotfiles     Install dotfiles configurations"
+    echo "  setup packages     Manage system packages"
+    echo "  setup system       Configure Omarchy system settings"
+    echo "  setup devtools     Setup development environment"
+    echo "  setup all          Run full setup (default)"
+    echo ""
+    echo "Utility Commands:"
+    echo "  doctor             Show system status"
+    echo "  backups            Manage system configuration backups"
+    echo "  update             Update Pomarchy to latest version"
+    echo ""
+    echo "Options:"
+    echo "  --yes, -y          Skip confirmation prompts"
+    echo ""
+    echo "For more help on specific commands:"
+    echo "  $0 setup --help         # Show setup options"
+    echo "  $0 backups --help       # Show backup options"
+    echo ""
+    echo "Examples:"
+    echo "  $0                      # Run full setup"
+    echo "  $0 setup packages --yes # Install packages without prompts"
+    echo "  $0 doctor               # Check system status"
+    echo "  $0 update               # Update to latest version"
+    echo "  $0 backups list         # List available system config backups"
+}
+
+show_setup_usage() {
+    echo "Usage: $0 setup [SUBCOMMAND] [OPTIONS]"
+    echo ""
+    echo "Setup Subcommands:"
+    echo "  dotfiles     Install dotfiles (Alacritty, Micro, Bash configurations)"
+    echo "  packages     Install/remove packages and micro plugins"
+    echo "  system       Configure system settings (keyboard, monitor, input)"
+    echo "  devtools     Setup development environment (Node.js, Go, VS Code)"
+    echo "  all          Run all setup components (default)"
+    echo ""
+    echo "Options:"
+    echo "  --yes, -y    Skip confirmation prompts"
+    echo "  --help, -h   Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0 setup dotfiles       # Install dotfiles only"
+    echo "  $0 setup packages --yes # Install packages without prompts"
+    echo "  $0 setup all            # Full setup"
+}
+
+show_backups_usage() {
+    echo "Usage: $0 backups [SUBCOMMAND] [OPTIONS]"
+    echo ""
+    echo "Backup Subcommands:"
+    echo "  list         List available configuration backups"
+    echo "  restore      Restore configuration from backup"
+    echo "  remove, rm   Remove old backup"
+    echo ""
+    echo "Options:"
+    echo "  --yes, -y    Skip confirmation prompts"
+    echo "  --help, -h   Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0 backups list         # List available backups"
+    echo "  $0 backups restore      # Restore from backup"
+    echo "  $0 backups remove --yes # Remove backup without prompt"
+}
+
+run_dotfiles() {
+    log STEP "Installing dotfiles..."
+    "${POMARCHY_ROOT}/cmd/setup/dotfiles.sh" "$@"
+    log INFO "Dotfiles installation complete!"
+}
+
+run_packages() {
+    log STEP "Running package management..."
+    "${POMARCHY_ROOT}/cmd/setup/packages.sh" "$@"
+    log INFO "Package management complete!"
+}
+
+run_system() {
+    log STEP "Configuring system settings..."
+    "${POMARCHY_ROOT}/cmd/setup/system.sh" "$@"
+    log INFO "System configuration complete!"
+}
+
+run_devtools() {
+    log STEP "Installing development tools..."
+    "${POMARCHY_ROOT}/cmd/setup/devtools.sh" "$@"
+    log INFO "Development tools installation complete!"
+}
+
+run_all() {
+    log STEP "Running full Pomarchy setup"
+    
+    if [[ "$YES" != true ]]; then
+        read -rp "This will customize your Omarchy installation. Continue? (y/N) "
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    fi
+    
+    run_dotfiles
+    run_packages
+    run_system
+    run_devtools
+    
+    log INFO "Setup complete! Restart Hyprland to apply system changes (Super+Esc → Relaunch)"
+}
+
+show_status() {
+    "${POMARCHY_ROOT}/cmd/doctor.sh"
+}
+
+manage_backups() {
+    local action="${1:-}"
+    "${POMARCHY_ROOT}/cmd/backups.sh" "$action"
+}
+
+main() {
+    ensure_command yay
+    ensure_command bash
+    
+    print_pomarchy_banner
+    
+    local command="setup"
+    local subcommand="all"
+    local backup_action=""
+    local remaining_args=()
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --yes|-y)
+                YES=true
+                shift
+                ;;
+            setup)
+                command="setup"
+                shift
+                if [[ $# -gt 0 ]]; then
+                    case "$1" in
+                        dotfiles|packages|system|devtools|all)
+                            subcommand="$1"
+                            shift
+                            ;;
+                        --help|-h|help)
+                            show_setup_usage
+                            exit 0
+                            ;;
+                        *)
+                            ;;
+                    esac
+                fi
+                ;;
+            doctor|backups|update)
+                command="$1"
+                shift
+                ;;
+            list|restore|remove|rm)
+                if [[ "$command" == "backups" ]]; then
+                    backup_action="$1"
+                fi
+                shift
+                ;;
+            -h|--help|help)
+                if [[ "$command" == "setup" && "$subcommand" != "all" ]]; then
+                    remaining_args+=("$1")
+                    shift
+                else
+                    case "$command" in
+                        setup)
+                            show_setup_usage
+                            ;;
+                        backups)
+                            show_backups_usage
+                            ;;
+                        *)
+                            show_usage
+                            ;;
+                    esac
+                    exit 0
+                fi
+                ;;
+            *)
+                remaining_args+=("$1")
+                shift
+                ;;
+        esac
+    done
+    
+    export YES POMARCHY_ROOT
+    
+    case "$command" in
+        setup)
+            case "$subcommand" in
+                dotfiles)
+                    run_dotfiles "${remaining_args[@]+${remaining_args[@]}}"
+                    ;;
+                packages)
+                    run_packages "${remaining_args[@]+${remaining_args[@]}}"
+                    ;;
+                system)
+                    run_system "${remaining_args[@]+${remaining_args[@]}}"
+                    ;;
+                devtools)
+                    run_devtools "${remaining_args[@]+${remaining_args[@]}}"
+                    ;;
+                all)
+                    run_all "${remaining_args[@]+${remaining_args[@]}}"
+                    ;;
+                *)
+                    echo "Error: Unknown setup subcommand '$subcommand'"
+                    echo ""
+                    show_setup_usage
+                    exit 1
+                    ;;
+            esac
+            ;;
+        doctor)
+            show_status
+            ;;
+        backups)
+            manage_backups "$backup_action"
+            ;;
+        update)
+            "${POMARCHY_ROOT}/cmd/update.sh"
+            ;;
+        *)
+            echo "Error: Unknown command '$command'"
+            echo ""
+            show_usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
