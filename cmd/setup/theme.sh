@@ -82,7 +82,7 @@ install_theme() {
     fi
 }
 
-SKIP_CONFIRM=false
+SKIP_CONFIRM="${YES:-false}"
 USER_THEME=""
 
 while [[ $# -gt 0 ]]; do
