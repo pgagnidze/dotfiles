@@ -32,7 +32,7 @@
 - Node.js v20 with TypeScript, ESLint, Prettier
 - Go with language server and development tools  
 - VS Code extensions for Go, Python, Docker, Terraform
-- Enhanced shell with atuin history and custom aliases
+- Enhanced shell with custom aliases
 
 </td>
 <td width="50%">

@@ -161,18 +161,6 @@ EOF
 setup_shell() {
     log STEP "Setting up shell enhancements..."
     
-    if command -v atuin &> /dev/null; then
-        if ! grep -q "atuin init bash" "$HOME/.bashrc" 2>/dev/null; then
-            echo 'eval "$(atuin init bash)"' >> "$HOME/.bashrc"
-            log INFO "Atuin configured for bash"
-        fi
-        
-        if [[ -f "$HOME/.zshrc" ]] && ! grep -q "atuin init zsh" "$HOME/.zshrc" 2>/dev/null; then
-            echo 'eval "$(atuin init zsh)"' >> "$HOME/.zshrc"
-            log INFO "Atuin configured for zsh"
-        fi
-    fi
-    
     readonly ALIAS_FILE="$HOME/.bash_aliases"
     if [[ ! -f "$ALIAS_FILE" ]]; then
         cat > "$ALIAS_FILE" << 'EOF'

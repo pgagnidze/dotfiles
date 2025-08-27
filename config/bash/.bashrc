@@ -8,8 +8,6 @@ export NVM_DIR="$HOME/.nvm"
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
-eval "$(atuin init bash)"
-
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 
 # Add pomarchy alias - automatically detects installation path
@@ -68,3 +66,4 @@ tmuxp() {
 if [[ $UID -ge 1000 && -d $HOME/.npm-global/bin && -z $(echo $PATH | grep -o $HOME/.npm-global/bin) ]]; then
     export PATH=$HOME/.npm-global/bin:${PATH}
 fi
+

@@ -112,11 +112,6 @@ show_status() {
         echo "▢ Bash aliases - not configured"
     fi
     
-    if grep -q "atuin init bash" "$HOME/.bashrc" 2>/dev/null; then
-        echo "▣ Atuin - configured"
-    else
-        echo "▢ Atuin - not configured"
-    fi
     
     if xdg-settings get default-web-browser 2>/dev/null | grep -q firefox; then
         echo "▣ Firefox - default browser"
