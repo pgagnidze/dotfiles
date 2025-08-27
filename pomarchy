@@ -131,6 +131,7 @@ main() {
     ensure_command yay
     ensure_command bash
     
+    load_config
     print_pomarchy_banner
     
     local command="setup"

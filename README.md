@@ -18,6 +18,7 @@
 ## Features
 
 - **Modular execution** - Run specific components (packages, dotfiles, devtools, system)
+- **Configurable** - Simple configuration file system for customizing installations
 - **Automatic backups** - Creates timestamped backups before making changes
 - **Development tools** - Installs Node.js, Go, VS Code extensions, and CLI tools
 - **Omarchy integration** - Extends existing Omarchy Linux configuration
@@ -164,6 +165,43 @@ pomarchy backups remove         # Remove old backup
 ```
 
 ## Configuration
+
+### Customization
+
+Pomarchy uses a simple configuration system. The default config is installed automatically when you include "pomarchy" in your DOTFILES. To customize your setup:
+
+```bash
+# The config is installed to ~/.config/pomarchy/pomarchy.conf via stow
+# Edit ~/.config/pomarchy/pomarchy.conf with your preferences
+```
+
+Or manually copy and edit:
+
+```bash
+mkdir -p ~/.config/pomarchy
+cp config/pomarchy/.config/pomarchy/pomarchy.conf ~/.config/pomarchy/
+# Edit ~/.config/pomarchy/pomarchy.conf with your preferences
+```
+
+The configuration file uses simple `KEY=value` format. See the full default configuration at `config/pomarchy/.config/pomarchy/pomarchy.conf`.
+
+**Key concepts:**
+- Empty values skip components entirely
+- Space-separated lists for multiple items  
+- Mix official and AUR packages in one list
+
+**Example customizations:**
+```bash
+PACKAGES_INSTALL="firefox code"           # Only install these packages
+DOTFILES=""                               # Skip dotfiles entirely  
+THEME=https://github.com/user/theme.git   # Use custom theme
+NODEJS_VERSION=""                         # Skip Node.js setup
+```
+
+**Configuration Rules:**
+- Empty values skip that component entirely
+- User config overrides defaults
+- Command-line arguments override config values
 
 ### Safety Features
 

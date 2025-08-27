@@ -24,6 +24,18 @@ ensure_command() {
     command -v "$1" >/dev/null 2>&1 || { log ERROR "Required command not found: $1"; exit 1; }
 }
 
+load_config() {
+    local default_config="${POMARCHY_ROOT}/config/pomarchy/.config/pomarchy/pomarchy.conf"
+    if [[ -f "$default_config" ]]; then
+        source "$default_config"
+    fi
+    
+    local user_config="${HOME}/.config/pomarchy/pomarchy.conf"
+    if [[ -f "$user_config" ]]; then
+        source "$user_config"
+    fi
+}
+
 print_pomarchy_banner() {
     echo -e "${BLUE}"
     echo "██████╗  ██████╗ ███╗   ███╗ █████╗ ██████╗  ██████╗██╗  ██╗██╗   ██╗"

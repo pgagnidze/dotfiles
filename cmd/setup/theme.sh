@@ -3,6 +3,7 @@ set -euo pipefail
 
 readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
+load_config
 
 show_help() {
     echo "Usage: pomarchy setup theme [THEME_URL] [OPTIONS]"
@@ -76,7 +77,7 @@ install_theme() {
 }
 
 SKIP_CONFIRM=false
-THEME=""
+USER_THEME=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -89,15 +90,16 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         *)
-            if [[ -z "$THEME" ]]; then
-                THEME="$1"
+            if [[ -z "$USER_THEME" ]]; then
+                USER_THEME="$1"
             fi
             shift
             ;;
     esac
 done
 
-THEME_URL=$(get_theme_url "$THEME")
+THEME_TO_INSTALL="${USER_THEME:-$THEME}"
+THEME_URL=$(get_theme_url "$THEME_TO_INSTALL")
 THEME_NAME=$(basename "$THEME_URL" .git)
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then

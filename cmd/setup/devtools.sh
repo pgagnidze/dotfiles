@@ -3,6 +3,7 @@ set -euo pipefail
 
 readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
+load_config
 
 show_help() {
     echo "Usage: pomarchy setup devtools [OPTIONS]"
@@ -39,6 +40,10 @@ ensure_command yay
 log STEP "Development Tools Setup"
 
 setup_node() {
+    if [[ -z "$NODEJS_VERSION" && -z "$NPM_PACKAGES" ]]; then
+        return
+    fi
+    
     log STEP "Setting up Node.js environment..."
     
     if [[ -s "/usr/share/nvm/init-nvm.sh" ]] || yay -Qi nvm &> /dev/null; then
@@ -52,23 +57,32 @@ setup_node() {
     [[ -s "/usr/share/nvm/init-nvm.sh" ]] && source "/usr/share/nvm/init-nvm.sh"
     
     if command -v nvm &> /dev/null; then
-        log INFO "Installing Node.js v20..."
-        nvm install 20
-        nvm alias default 20 > /dev/null
-        nvm use 20 > /dev/null
+        if [[ -n "$NODEJS_VERSION" ]]; then
+            log INFO "Installing Node.js v$NODEJS_VERSION..."
+            nvm install "$NODEJS_VERSION"
+            nvm alias default "$NODEJS_VERSION" > /dev/null
+            nvm use "$NODEJS_VERSION" > /dev/null
+            
+            node_version=$(node --version 2>/dev/null || echo "not installed")
+            log INFO "Node.js version: $node_version"
+        fi
         
-        node_version=$(node --version 2>/dev/null || echo "not installed")
-        log INFO "Node.js version: $node_version"
-        
-        log STEP "Installing global npm packages..."
-        npm install -g typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code
-        log INFO "Global npm packages installed"
+        if [[ -n "$NPM_PACKAGES" ]]; then
+            log STEP "Installing global npm packages..."
+            IFS=' ' read -ra PACKAGES <<< "$NPM_PACKAGES"
+            npm install -g "${PACKAGES[@]}"
+            log INFO "Global npm packages installed"
+        fi
     else
         log ERROR "NVM not available. Please install manually."
     fi
 }
 
 setup_go() {
+    if [[ -z "$GO_TOOLS" ]]; then
+        return
+    fi
+    
     log STEP "Setting up Go environment..."
     
     if command -v go &> /dev/null; then
@@ -83,36 +97,32 @@ setup_go() {
             log INFO "GOPATH set to $HOME/go"
         fi
         
-        log STEP "Installing Go tools..."
-        go install golang.org/x/tools/gopls@latest
-        go install github.com/go-delve/delve/cmd/dlv@latest
-        go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-        log INFO "Go development tools installed"
+        if [[ -n "$GO_TOOLS" ]]; then
+            log STEP "Installing Go tools..."
+            IFS=' ' read -ra TOOLS <<< "$GO_TOOLS"
+            for tool in "${TOOLS[@]}"; do
+                go install "$tool"
+            done
+            log INFO "Go development tools installed"
+        fi
     else
         log ERROR "Go is not installed. Please run package-management.sh first."
     fi
 }
 
 setup_vscode() {
+    if [[ -z "$VSCODE_EXTENSIONS" ]]; then
+        return
+    fi
+    
     log STEP "Setting up VS Code extensions..."
     
     if command -v code &> /dev/null; then
-        readonly EXTENSIONS=(
-            "golang.go"
-            "ms-python.python"
-            "ms-python.debugpy"
-            "dbaeumer.vscode-eslint"
-            "esbenp.prettier-vscode"
-            "eamodio.gitlens"
-            "ms-azuretools.vscode-docker"
-            "ms-azuretools.vscode-containers"
-            "hashicorp.terraform"
-            "redhat.vscode-yaml"
-            "ms-vscode.makefile-tools"
-            "bungcip.better-toml"
-            "davidanson.vscode-markdownlint"
-            "arcticicestudio.nord-visual-studio-code"
-        )
+        if [[ -n "$VSCODE_EXTENSIONS" ]]; then
+            IFS=' ' read -ra EXTENSIONS <<< "$VSCODE_EXTENSIONS"
+        else
+            return
+        fi
         
         for ext in "${EXTENSIONS[@]}"; do
             log INFO "Installing VS Code extension: $ext"

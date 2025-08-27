@@ -3,6 +3,7 @@ set -euo pipefail
 
 readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
+load_config
 
 show_help() {
     echo "Usage: pomarchy setup packages [OPTIONS]"
@@ -36,27 +37,9 @@ done
 
 log STEP "Package Management"
 
-readonly REMOVE_PACKAGES=(
-    "1password-beta"
-    "1password-cli"
-    "kdenlive"
-    "obsidian"
-    "pinta"
-    "signal-desktop"
-    "typora"
-    "spotify"
-)
-
-readonly INSTALL_PACKAGES=(
-    "firefox"
-    "code"
-    "lite-xl"
-    "lua"
-    "atuin"
-    "micro"
-    "go"
-    "ttf-ubuntu-mono-nerd"
-)
+readonly CORE_PACKAGES=("ttf-ubuntu-mono-nerd" "micro")
+IFS=' ' read -ra REMOVE_PACKAGES <<< "$PACKAGES_REMOVE"
+IFS=' ' read -ra INSTALL_PACKAGES <<< "$PACKAGES_INSTALL"
 
 echo ""
 log STEP "Removing unwanted packages..."
@@ -70,52 +53,52 @@ for pkg in "${REMOVE_PACKAGES[@]}"; do
 done
 
 echo ""
-log STEP "Installing required packages..."
+log STEP "Installing core packages (always installed)..."
+for pkg in "${CORE_PACKAGES[@]}"; do
+    if ! yay -Qi "$pkg" &> /dev/null; then
+        log INFO "Installing core package: $pkg..."
+        yay -S --noconfirm "$pkg" || log ERROR "Failed to install core package $pkg"
+    else
+        log INFO "Core package $pkg is already installed"
+    fi
+done
+
+echo ""
+log STEP "Installing optional packages..."
 for pkg in "${INSTALL_PACKAGES[@]}"; do
     if ! yay -Qi "$pkg" &> /dev/null; then
         log INFO "Installing $pkg..."
-        yay -S --noconfirm "$pkg" || log ERROR "Failed to install $pkg"
+        yay -S --noconfirm "$pkg" || log WARN "Failed to install $pkg"
     else
         log INFO "$pkg is already installed"
     fi
 done
 
-echo ""
-log STEP "Installing AUR packages..."
-
-if ! yay -Qi awsvpnclient &> /dev/null; then
-    log INFO "Installing AWS Client VPN from AUR..."
-    yay -S --noconfirm awsvpnclient || {
-        log WARN "awsvpnclient not found in AUR, you may need to install it manually"
-        echo "Visit: https://docs.aws.amazon.com/vpn/latest/clientvpn-user/client-vpn-connect-linux.html"
-    }
-else
-    log INFO "AWS Client VPN is already installed"
+if [[ -n "$DEFAULT_BROWSER" ]]; then
+    echo ""
+    log INFO "Setting $DEFAULT_BROWSER as default browser..."
+    xdg-settings set default-web-browser "$DEFAULT_BROWSER.desktop" || log WARN "Failed to set $DEFAULT_BROWSER as default"
 fi
-
-if ! yay -Qi k6-bin &> /dev/null; then
-    log INFO "Installing k6 from AUR..."
-    yay -S --noconfirm k6-bin || log ERROR "Failed to install k6-bin"
-else
-    log INFO "k6 is already installed"
-fi
-
-echo ""
-log INFO "Setting Firefox as default browser..."
-xdg-settings set default-web-browser firefox.desktop || log WARN "Failed to set Firefox as default"
 
 install_micro_plugins() {
+    if [[ -z "$MICRO_PLUGINS" ]]; then
+        return
+    fi
+    
+    if ! command -v micro &> /dev/null; then
+        log WARN "Micro editor not installed, skipping plugin installation"
+        log INFO "To install micro plugins, ensure 'micro' is in PACKAGES_INSTALL"
+        return
+    fi
+    
     local plugins_dir="$HOME/.config/micro/plug"
+    IFS=' ' read -ra PLUGINS <<< "$MICRO_PLUGINS"
     
     if [[ ! -d "$plugins_dir" ]] || [[ -z "$(ls -A "$plugins_dir" 2>/dev/null)" ]]; then
         log INFO "Installing micro plugins..."
-        micro -plugin install fzf
-        micro -plugin install editorconfig
-        micro -plugin install detectindent
-        micro -plugin install snippets
-        micro -plugin install bookmark
-        micro -plugin install lsp
-        micro -plugin install wc
+        for plugin in "${PLUGINS[@]}"; do
+            micro -plugin install "$plugin"
+        done
         log INFO "Micro plugin installation complete"
     else
         log INFO "Micro plugins already installed"

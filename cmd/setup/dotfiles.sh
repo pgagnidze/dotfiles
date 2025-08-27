@@ -3,6 +3,7 @@ set -euo pipefail
 
 readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
+load_config
 
 show_help() {
     echo "Usage: pomarchy setup dotfiles [OPTIONS]"
@@ -33,6 +34,11 @@ show_help() {
 }
 
 stow_config() {
+    if [[ -z "$DOTFILES" ]]; then
+        log INFO "Skipping dotfiles installation (DOTFILES empty)"
+        return
+    fi
+    
     log INFO "Installing dotfiles with stow..."
     
     if ! command -v stow >/dev/null 2>&1; then
@@ -40,7 +46,7 @@ stow_config() {
         yay -S --noconfirm stow
     fi
     
-    local configs=("bash" "micro" "alacritty")
+    IFS=' ' read -ra configs <<< "$DOTFILES"
     for config in "${configs[@]}"; do
         if [[ -d "${POMARCHY_ROOT}/config/${config}" ]]; then
             log INFO "Installing ${config} configuration..."
@@ -60,4 +66,6 @@ done
 
 log STEP "Installing dotfiles..."
 stow_config
-log INFO "Dotfiles installation complete!"
+if [[ -n "$DOTFILES" ]]; then
+    log INFO "Dotfiles installation complete!"
+fi

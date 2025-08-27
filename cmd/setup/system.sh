@@ -3,6 +3,7 @@ set -euo pipefail
 
 readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
+load_config
 
 show_help() {
     echo "Usage: pomarchy setup system [OPTIONS]"
@@ -68,47 +69,61 @@ backup_to_snapshot "$WAYBAR_CONFIG" "$BACKUP_DIR"
 
 log STEP "Configuring keyboard layouts and input..."
 
-cat > "$INPUT_CONF" << 'EOF'
+if [[ -n "$KEYBOARD_LAYOUTS" ]]; then
+cat > "$INPUT_CONF" << EOF
 input {
-  kb_layout = us,ge
+  kb_layout = $KEYBOARD_LAYOUTS
   kb_options = compose:caps,grp:alt_space_toggle
 
   repeat_rate = 40
   repeat_delay = 600
 
   touchpad {
-    natural_scroll = true
+    natural_scroll = ${NATURAL_SCROLL:-true}
     scroll_factor = 0.4
-    disable_while_typing = false
+    disable_while_typing = ${DISABLE_WHILE_TYPING:-false}
   }
 }
 
 windowrule = scrolltouchpad 1.5, class:Alacritty
 EOF
-
-log INFO "Keyboard layout switching configured (US/GE with Left Alt + Space)"
-log INFO "Natural scrolling enabled for touchpad"
-log INFO "Simultaneous touchpad and keyboard use enabled"
+    log INFO "Keyboard layout switching configured ($KEYBOARD_LAYOUTS with Left Alt + Space)"
+    log INFO "Natural scrolling $([ "$NATURAL_SCROLL" = "true" ] && echo "enabled" || echo "disabled") for touchpad"
+    log INFO "Touchpad while typing $([ "$DISABLE_WHILE_TYPING" = "false" ] && echo "enabled" || echo "disabled")"
+else
+    log INFO "Skipping keyboard/input configuration (KEYBOARD_LAYOUTS empty)"
+fi
 
 log STEP "Configuring monitor settings..."
 
 
-cat > "$MONITOR_CONF" << 'EOF'
-env = GDK_SCALE,2
+if [[ -n "$MONITOR_RESOLUTION" ]]; then
+cat > "$MONITOR_CONF" << EOF
+env = GDK_SCALE,$MONITOR_SCALE
 
-monitor = eDP-1, 2880x1800@120, auto, 2
+monitor = eDP-1, $MONITOR_RESOLUTION, auto, $MONITOR_SCALE
 EOF
-
-log INFO "Monitor configuration set for X1 Carbon Gen 13 OLED"
-
-log STEP "Configuring Waybar clock format..."
-if [[ -f "$WAYBAR_CONFIG" ]]; then
-    
-    sed -i 's/"format": "{:%A %H:%M}"/"format": "{:%A %I:%M %p}"/' "$WAYBAR_CONFIG"
-    log INFO "Waybar clock set to 12-hour format"
+    log INFO "Monitor configuration set: ${MONITOR_RESOLUTION} at ${MONITOR_SCALE}x scale"
 else
-    log WARN "Waybar config not found at $WAYBAR_CONFIG"
-    log WARN "You may need to manually edit the clock format"
+    log INFO "Skipping monitor configuration (MONITOR_RESOLUTION empty)"
+fi
+
+if [[ -n "$CLOCK_FORMAT" ]]; then
+    log STEP "Configuring Waybar clock format..."
+    if [[ -f "$WAYBAR_CONFIG" ]]; then
+        if [[ "$CLOCK_FORMAT" == "12h" ]]; then
+            sed -i 's/"format": "{:%A %H:%M}"/"format": "{:%A %I:%M %p}"/' "$WAYBAR_CONFIG"
+            log INFO "Waybar clock set to 12-hour format"
+        else
+            sed -i 's/"format": "{:%A %I:%M %p}"/"format": "{:%A %H:%M}"/' "$WAYBAR_CONFIG"
+            log INFO "Waybar clock set to 24-hour format"
+        fi
+    else
+        log WARN "Waybar config not found at $WAYBAR_CONFIG"
+        log WARN "You may need to manually edit the clock format"
+    fi
+else
+    log INFO "Skipping Waybar configuration (CLOCK_FORMAT empty)"
 fi
 
 log INFO "Configuration complete!"
