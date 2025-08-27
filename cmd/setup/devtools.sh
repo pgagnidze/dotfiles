@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
 load_config
 
@@ -46,7 +46,7 @@ setup_node() {
     
     log STEP "Setting up Node.js environment..."
     
-    if [[ -s "/usr/share/nvm/init-nvm.sh" ]] || yay -Qi nvm &> /dev/null; then
+    if [[ -s "${NVM_INIT_PATH}" ]] || yay -Qi nvm &> /dev/null; then
         log INFO "NVM is already installed"
     else
         log INFO "Installing NVM..."
@@ -54,7 +54,7 @@ setup_node() {
     fi
     
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-    [[ -s "/usr/share/nvm/init-nvm.sh" ]] && source "/usr/share/nvm/init-nvm.sh"
+    [[ -s "${NVM_INIT_PATH}" ]] && source "${NVM_INIT_PATH}"
     
     if command -v nvm &> /dev/null; then
         if [[ -n "$NODEJS_VERSION" ]]; then

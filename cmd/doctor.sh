@@ -3,31 +3,25 @@ set -euo pipefail
 
 readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
+load_config
 
 show_status() {
     log STEP "Checking system status..."
     
     echo ""
     echo "▶ Package Status"
-    local packages=("firefox" "code" "lite-xl" "lua" "atuin" "micro" "go")
-    for pkg in "${packages[@]}"; do
-        if yay -Qi "$pkg" &> /dev/null; then
-            echo "▣ $pkg - installed"
-        else
-            echo "▢ $pkg - not installed"
-        fi
-    done
-    
-    echo ""
-    echo "▶ AUR Package Status"
-    local aur_packages=("awsvpnclient" "k6-bin")
-    for pkg in "${aur_packages[@]}"; do
-        if yay -Qi "$pkg" &> /dev/null; then
-            echo "▣ $pkg - installed"
-        else
-            echo "▢ $pkg - not installed"
-        fi
-    done
+    if [[ -n "$PACKAGES_INSTALL" ]]; then
+        IFS=' ' read -ra packages <<< "$PACKAGES_INSTALL"
+        for pkg in "${packages[@]}"; do
+            if yay -Qi "$pkg" &> /dev/null; then
+                echo "▣ $pkg - installed"
+            else
+                echo "▢ $pkg - not installed"
+            fi
+        done
+    else
+        echo "▢ No packages configured for installation"
+    fi
     
     echo ""
     echo "▶ Dotfiles Status"
@@ -132,23 +126,28 @@ show_status() {
     
     echo ""
     echo "▶ Global Tools"
-    local npm_packages=("typescript" "ts-node" "nodemon" "prettier" "eslint")
-    for pkg in "${npm_packages[@]}"; do
-        if npm list -g "$pkg" &>/dev/null; then
-            echo "▣ npm: $pkg - installed"
-        else
-            echo "▢ npm: $pkg - not installed"
-        fi
-    done
+    if [[ -n "$NPM_PACKAGES" ]]; then
+        IFS=' ' read -ra npm_packages <<< "$NPM_PACKAGES"
+        for pkg in "${npm_packages[@]}"; do
+            if npm list -g "$pkg" &>/dev/null; then
+                echo "▣ npm: $pkg - installed"
+            else
+                echo "▢ npm: $pkg - not installed"
+            fi
+        done
+    fi
     
-    local go_tools=("gopls" "dlv" "golangci-lint")
-    for tool in "${go_tools[@]}"; do
-        if command -v "$tool" &>/dev/null; then
-            echo "▣ go: $tool - installed"
-        else
-            echo "▢ go: $tool - not installed"
-        fi
-    done
+    if [[ -n "$GO_TOOLS" ]]; then
+        IFS=' ' read -ra go_tools <<< "$GO_TOOLS"
+        for tool in "${go_tools[@]}"; do
+            tool_name=$(basename "$tool" | cut -d'@' -f1)
+            if command -v "$tool_name" &>/dev/null; then
+                echo "▣ go: $tool_name - installed"
+            else
+                echo "▢ go: $tool_name - not installed"
+            fi
+        done
+    fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
 load_config
+validate_config
 
 show_help() {
     echo "Usage: pomarchy setup system [OPTIONS]"
@@ -54,7 +55,7 @@ backup_to_snapshot() {
     fi
 }
 
-BACKUP_DIR="$HOME/.config/omarchy-backups/$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR="${BACKUP_BASE_PATH:-$HOME/.config/omarchy-backups}/$(date +%Y%m%d_%H%M%S)"
 readonly BACKUP_DIR
 mkdir -p "$BACKUP_DIR"
 log STEP "Creating configuration backup..."

@@ -3,10 +3,11 @@ set -euo pipefail
 
 readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
+load_config
 
 manage_backups() {
     local action="${1:-}"
-    local backup_base="$HOME/.config/omarchy-backups"
+    local backup_base="${BACKUP_BASE_PATH:-$HOME/.config/omarchy-backups}"
     
     case "$action" in
         list)
@@ -47,10 +48,14 @@ manage_backups() {
             
             log STEP "Restoring from $selected_backup..."
             if [[ -d "$selected_backup/.config" ]]; then
-                cp -r "$selected_backup/.config/"* "$HOME/.config/" 2>/dev/null || true
-                log INFO "Restore complete!"
+                if cp -r "$selected_backup/.config/"* "$HOME/.config/" 2>/dev/null; then
+                    log INFO "Restore complete!"
+                else
+                    log ERROR "Failed to restore some files - check permissions"
+                    exit 1
+                fi
             else
-                log ERROR "Invalid backup structure"
+                log ERROR "Invalid backup structure - missing .config directory"
                 exit 1
             fi
             ;;

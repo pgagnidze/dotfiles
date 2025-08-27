@@ -17,227 +17,176 @@
 
 ## Features
 
-- **Modular execution** - Run specific components (packages, dotfiles, devtools, system)
-- **Configurable** - Simple configuration file system for customizing installations
-- **Automatic backups** - Creates timestamped backups before making changes
-- **Development tools** - Installs Node.js, Go, VS Code extensions, and CLI tools
-- **Omarchy integration** - Extends existing Omarchy Linux configuration
-- **Command help** - Built-in help system for all commands and subcommands
-
-## Installation
-
-<details>
-<summary>Quick Setup (Recommended)</summary>
-
-```bash
-git clone https://github.com/papungag/dotfiles.git
-cd dotfiles
-chmod +x pomarchy
-./pomarchy
-```
-
-</details>
-
-<details>
-<summary>Modular Installation</summary>
-
-```bash
-# Install specific components
-./pomarchy setup dotfiles    # Dotfiles only
-./pomarchy setup packages    # Package management only  
-./pomarchy setup system      # System configuration only
-./pomarchy setup devtools    # Development tools only
-./pomarchy setup theme       # Install omarchy themes (midnight default)
-```
-
-</details>
-
-## Usage
-
-**After installation, use from anywhere:**
-
-```bash
-# Configure the pomarchy alias in your ~/.bashrc:
-# alias pomarchy="/path/to/your/pomarchy/pomarchy"
-
-pomarchy doctor              # Check system status
-pomarchy setup packages -y   # Install packages without prompts
-pomarchy update              # Update to latest version
-pomarchy backups list        # Manage configuration backups
-```
-
-**Available commands:**
-
-```bash
-pomarchy [command] [options]
-
-Setup Commands:
-  setup dotfiles     Install dotfiles configurations
-  setup packages     Manage system packages
-  setup system       Configure Omarchy system settings
-  setup devtools     Setup development environment
-  setup theme        Install omarchy themes (supports custom URLs)
-  setup all          Run full setup (default)
-
-Utility Commands:
-  doctor             Show system status
-  backups            Manage system configuration backups
-  update             Update Pomarchy to latest version
-
-Options:
-  --yes, -y          Skip confirmation prompts
-  --help, -h         Show contextual help for any command
-```
-
-**Get help for any command:**
-
-```bash
-pomarchy --help                  # Show all commands
-pomarchy setup --help            # Show setup options
-pomarchy setup packages --help   # Show what packages installs
-pomarchy backups --help          # Show backup commands
-```
-
-## What Pomarchy Installs
-
 <table>
 <tr>
 <td width="50%">
 
 ### Package Management
 
-- **Removes:** Unnecessary software (1password, kdenlive, obsidian, pinta, signal-desktop, typora, spotify)
-- **Installs:** Essential tools (Firefox, VS Code, Lite-XL, Go, Node.js v20, atuin, micro, k6, AWS VPN client, Claude Code)
-- **Sets:** Firefox as default browser
+- Removes unnecessary software (1password, kdenlive, obsidian)
+- Installs essential tools (Firefox, VS Code, Go, Node.js, Claude Code)
+- Manages both official and AUR packages seamlessly
 
-### Dotfiles
+### Development Environment
 
-- **Terminal:** Alacritty with Omarchy theme integration, UbuntuMono Nerd Font
-- **Editor:** Micro with plugins (fzf, LSP, snippets, bookmarks)
-- **Shell:** Clean bash configuration extending Omarchy defaults
-- **Themes:** Support for omarchy themes (midnight default, custom URLs supported)
-- **Stow-based:** Easy installation and management
+- Node.js v20 with TypeScript, ESLint, Prettier
+- Go with language server and development tools  
+- VS Code extensions for Go, Python, Docker, Terraform
+- Enhanced shell with atuin history and custom aliases
 
 </td>
 <td width="50%">
 
-### System Configuration  
+### System Configuration
 
-- **Keyboard:** US/Georgian layouts with Alt+Space switching
-- **Monitor:** X1 Carbon Gen 13 OLED optimization (2880x1800@120Hz, 2x scaling)
-- **Input:** Natural scrolling, 12-hour clock format
-- **Touchpad:** Enhanced settings with simultaneous typing support
+- Keyboard layouts (US/Georgian) with Alt+Space switching
+- X1 Carbon Gen 13 OLED optimization (2880x1800@120Hz)
+- Natural scrolling and enhanced touchpad settings
+- 12-hour clock format and system theming
 
-### Development Environment
+### Safety & Flexibility
 
-- **Node.js:** v20 via NVM with global packages (TypeScript, ESLint, Prettier, Claude Code)
-- **Go:** Latest with development tools (gopls, delve, golangci-lint)
-- **VS Code:** Extensions for Go, Python, Docker, Terraform, and more
-- **Shell:** Enhanced bash with atuin history, custom aliases, improved prompts
+- Automatic timestamped backups before changes
+- Modular execution - run only what you need
+- Configurable via simple key=value files
+- Idempotent - safe to run multiple times
 
 </td>
 </tr>
 </table>
 
-## Examples
+## Installation
+
+**Quick Setup (Recommended):**
 
 ```bash
-# Full setup with confirmation
-pomarchy
+git clone https://github.com/papungag/dotfiles.git
+cd dotfiles
+chmod +x pomarchy
+./pomarchy                       # Full setup with confirmation
+```
 
-# Install specific components
-pomarchy setup dotfiles         # Install dotfiles only
-pomarchy setup packages --yes   # Install packages without prompts
-pomarchy setup devtools         # Setup development environment
-pomarchy setup system           # Configure system settings
-pomarchy setup theme            # Install midnight theme (default)
-pomarchy setup theme midnight   # Install midnight theme explicitly
-pomarchy setup theme [URL]      # Install custom theme from GitHub
+**Modular Installation:**
 
-# System management
-pomarchy doctor                 # Check what's installed/configured
-pomarchy update                 # Update to latest version
+```bash
+./pomarchy setup dotfiles        # Terminal configs, micro editor, themes
+./pomarchy setup packages        # System packages and applications
+./pomarchy setup system          # Keyboard, monitor, input settings
+./pomarchy setup devtools        # Node.js, Go, VS Code extensions
+./pomarchy setup theme           # Install omarchy themes
+```
 
-# Backup management
-pomarchy backups list           # List available system config backups
-pomarchy backups restore        # Restore from backup
-pomarchy backups remove         # Remove old backup
+## Usage
+
+| Command | Description |
+|---------|-------------|
+| `pomarchy` | Full setup (dotfiles, packages, system, devtools, theme) |
+| `pomarchy doctor` | Show system status and installed components |
+| `pomarchy setup [component]` | Install specific component |
+| `pomarchy backups list` | List available configuration backups |
+| `pomarchy backups restore` | Restore from backup |
+| `pomarchy update` | Update Pomarchy to latest version |
+
+**Examples:**
+
+```bash
+# Install packages without confirmation prompts
+pomarchy setup packages --yes
+
+# Install custom theme from GitHub
+pomarchy setup theme https://github.com/user/theme.git
+
+# Check what's installed and configured
+pomarchy doctor
+
+# Restore previous configuration if needed
+pomarchy backups restore
 ```
 
 ## Configuration
 
-### Customization
+Pomarchy uses a simple configuration system with sensible defaults. The configuration is automatically installed when you include "pomarchy" in your DOTFILES setting.
 
-Pomarchy uses a simple configuration system. The default config is installed automatically when you include "pomarchy" in your DOTFILES. To customize your setup:
+**Default configuration:** `config/pomarchy/.config/pomarchy/pomarchy.conf`
 
-```bash
-# The config is installed to ~/.config/pomarchy/pomarchy.conf via stow
-# Edit ~/.config/pomarchy/pomarchy.conf with your preferences
-```
-
-Or manually copy and edit:
+**Customize your setup:**
 
 ```bash
-mkdir -p ~/.config/pomarchy
-cp config/pomarchy/.config/pomarchy/pomarchy.conf ~/.config/pomarchy/
-# Edit ~/.config/pomarchy/pomarchy.conf with your preferences
+# Edit user configuration (overrides defaults)
+~/.config/pomarchy/pomarchy.conf
 ```
 
-The configuration file uses simple `KEY=value` format. See the full default configuration at `config/pomarchy/.config/pomarchy/pomarchy.conf`.
+**Key configuration options:**
 
-**Key concepts:**
-- Empty values skip components entirely
-- Space-separated lists for multiple items  
-- Mix official and AUR packages in one list
-
-**Example customizations:**
 ```bash
-PACKAGES_INSTALL="firefox code"           # Only install these packages
-DOTFILES=""                               # Skip dotfiles entirely  
-THEME=https://github.com/user/theme.git   # Use custom theme
-NODEJS_VERSION=""                         # Skip Node.js setup
+# Skip components by setting to empty
+DOTFILES=""                      # Skip dotfiles installation
+NODEJS_VERSION=""                # Skip Node.js setup
+
+# Customize package lists  
+PACKAGES_INSTALL="firefox code"  # Only install specific packages
+THEME="https://github.com/user/custom-theme.git"  # Custom theme
+
+# System settings
+KEYBOARD_LAYOUTS="us,de"         # Different keyboard layouts
+CLOCK_FORMAT="24h"               # Use 24-hour clock
+
+# System paths (advanced)
+NVM_INIT_PATH="/usr/share/nvm/init-nvm.sh"  # NVM initialization script path
+BACKUP_BASE_PATH="$HOME/.config/omarchy-backups"  # Backup directory
+TRASH_PATH="/tmp/.trash"         # Trash directory for del() function
 ```
 
-**Configuration Rules:**
+**Configuration rules:**
+
 - Empty values skip that component entirely
-- User config overrides defaults
+- User config overrides defaults  
 - Command-line arguments override config values
+- Space-separated lists for multiple items
+- Config validation prevents invalid formats (monitor resolution, clock format, etc.)
 
-### Safety Features
+**Additional features:**
 
-- **Automatic backups** with timestamps before making changes
-- **Idempotent scripts** - safe to run multiple times
-- **Modular execution** - run only what you need
-- **Status checking** - verify installation state
-- **Backup restoration** - rollback configurations if needed
+- **Automatic pomarchy alias:** Detects installation path and creates global alias
+- **Config validation:** Validates monitor resolution, scale, and clock format on startup
+- **Enhanced error handling:** Better error messages and validation throughout
 
-### Requirements
+## Requirements
 
 - **Omarchy Linux** (installed from ISO)
-- **yay** (AUR helper, pre-installed in Omarchy)
+- **yay** (AUR helper, pre-installed in Omarchy)  
 - **stow** (installed automatically if missing)
 
-### Notes
+## Notes
 
-> **Note:** System configuration changes (keyboard, monitor, Waybar) require Hyprland restart (`Super+Esc` → Relaunch)
+> **System changes require Hyprland restart:** `Super+Esc` → Relaunch
 
-- **Steam:** Install via Omarchy menu (`Super + Alt + Space` → Install → Steam) for GPU support
-- **Discord/WhatsApp:** Pre-installed as web apps (`Super + Space`)
-- **Fingerprint:** Setup via Omarchy menu (`Super + Alt + Space` → Setup → Fingerprint)
+- **Steam:** Install via Omarchy menu for GPU support
 - **Micro plugins:** Installed automatically after micro editor setup
-- **Claude Code:** Configured with powerline status line
+- **Claude Code:** Configured with enhanced status line
+- **Themes:** Default midnight theme, custom GitHub URLs supported
+- **Configurable paths:** NVM, backup directory, and trash paths can be customized in config
 
 ## Troubleshooting
 
-**Stow conflicts with existing dotfiles:**
+**Stow conflicts with existing files:**
 
 ```bash
-# If you get "existing target is not owned by stow" errors
-rm ~/.bashrc                    # Remove conflicting file (example)
-./pomarchy dotfiles             # Then retry installation
+# Remove conflicting files mentioned in error message
+rm ~/.bashrc ~/.config/alacritty/alacritty.toml
+pomarchy setup dotfiles
 ```
 
-Stow conflicts occur when files already exist that aren't managed by stow. Simply remove or backup the conflicting files mentioned in the error message.
+**Configuration not taking effect:**
+
+```bash
+# Ensure configuration is properly formatted
+cat ~/.config/pomarchy/pomarchy.conf
+
+# Check for bash syntax errors (no spaces around = in variable assignments)
+PACKAGES_INSTALL="firefox code"    # Correct - no spaces around =
+PACKAGES_INSTALL = "firefox code"  # Wrong - spaces make this a command, not assignment
+```
 
 ## License
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
 load_config
 
@@ -43,7 +43,11 @@ stow_config() {
     
     if ! command -v stow >/dev/null 2>&1; then
         log WARN "Stow not found, installing..."
-        yay -S --noconfirm stow
+        ensure_command yay
+        if ! yay -S --noconfirm stow; then
+            log ERROR "Failed to install stow"
+            exit 1
+        fi
     fi
     
     IFS=' ' read -ra configs <<< "$DOTFILES"

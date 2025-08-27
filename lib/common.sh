@@ -15,6 +15,7 @@ log() {
         STEP) color="$BLUE" ;;
         WARN) color="$YELLOW" ;;
         ERROR) color="$RED" ;;
+        SUCCESS) color="$GREEN" ;;
         *) color="$BLUE" ;;
     esac
     echo -e "${color}[$(date +'%H:%M:%S')] ${level}: $*${RESET}" >&2
@@ -33,6 +34,26 @@ load_config() {
     local user_config="${HOME}/.config/pomarchy/pomarchy.conf"
     if [[ -f "$user_config" ]]; then
         source "$user_config"
+    fi
+}
+
+validate_config() {
+    if [[ -n "$MONITOR_RESOLUTION" && ! "$MONITOR_RESOLUTION" =~ ^[0-9]+x[0-9]+(@[0-9]+)?$ ]]; then
+        log ERROR "Invalid MONITOR_RESOLUTION format: $MONITOR_RESOLUTION"
+        log ERROR "Expected format: WIDTHxHEIGHT or WIDTHxHEIGHT@RATE (e.g., 2880x1800@120)"
+        exit 1
+    fi
+    
+    if [[ -n "$MONITOR_SCALE" && ! "$MONITOR_SCALE" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+        log ERROR "Invalid MONITOR_SCALE format: $MONITOR_SCALE"
+        log ERROR "Expected format: NUMBER (e.g., 2, 1.5)"
+        exit 1
+    fi
+    
+    if [[ -n "$CLOCK_FORMAT" && "$CLOCK_FORMAT" != "12h" && "$CLOCK_FORMAT" != "24h" ]]; then
+        log ERROR "Invalid CLOCK_FORMAT: $CLOCK_FORMAT"
+        log ERROR "Expected: 12h or 24h"
+        exit 1
     fi
 }
 

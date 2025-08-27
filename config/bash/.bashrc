@@ -12,8 +12,25 @@ eval "$(atuin init bash)"
 
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
 
-# Add pomarchy alias - update path to match your installation location
-# alias pomarchy="/path/to/your/pomarchy/pomarchy"
+# Add pomarchy alias - automatically detects installation path
+if [[ -n "${POMARCHY_ROOT:-}" && -x "${POMARCHY_ROOT}/pomarchy" ]]; then
+    alias pomarchy="${POMARCHY_ROOT}/pomarchy"
+elif command -v pomarchy >/dev/null 2>&1; then
+    # pomarchy already in PATH, use as-is
+    :
+else
+    # Try common installation locations
+    for pomarchy_path in \
+        "$HOME/dotfiles/pomarchy" \
+        "$HOME/pomarchy/pomarchy" \
+        "$HOME/.local/bin/pomarchy" \
+        "/usr/local/bin/pomarchy"; do
+        if [[ -x "$pomarchy_path" ]]; then
+            alias pomarchy="$pomarchy_path"
+            break
+        fi
+    done
+fi
 
 cd() { 
     builtin cd -- "$@" && { 
@@ -30,7 +47,8 @@ lsgrep() {
 }
 
 del() {
-    mkdir -p /tmp/.trash && mv "$@" /tmp/.trash
+    local trash_path="${TRASH_PATH:-/tmp/.trash}"
+    mkdir -p "$trash_path" && mv "$@" "$trash_path"
 }
 
 buf() {

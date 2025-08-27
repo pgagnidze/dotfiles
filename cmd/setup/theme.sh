@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 source "${POMARCHY_ROOT}/lib/common.sh"
 load_config
 
@@ -38,7 +38,13 @@ get_theme_url() {
             echo "https://github.com/JaxonWright/omarchy-midnight-theme.git"
             ;;
         *.git)
-            echo "$theme_name"
+            if [[ "$theme_name" =~ ^https://github\.com/[^/]+/[^/]+\.git$ ]]; then
+                echo "$theme_name"
+            else
+                log ERROR "Invalid GitHub URL format: $theme_name"
+                log ERROR "Expected format: https://github.com/user/repo.git"
+                exit 1
+            fi
             ;;
         *)
             log ERROR "Unknown theme: $theme_name"
