@@ -17,6 +17,7 @@ show_usage() {
     echo "  setup packages     Manage system packages"
     echo "  setup system       Configure Omarchy system settings"
     echo "  setup devtools     Setup development environment"
+    echo "  setup theme        Install omarchy themes (supports custom URLs)"
     echo "  setup all          Run full setup (default)"
     echo ""
     echo "Utility Commands:"
@@ -47,6 +48,7 @@ show_setup_usage() {
     echo "  packages     Install/remove packages and micro plugins"
     echo "  system       Configure system settings (keyboard, monitor, input)"
     echo "  devtools     Setup development environment (Node.js, Go, VS Code)"
+    echo "  theme        Install omarchy themes (midnight default, supports custom URLs)"
     echo "  all          Run all setup components (default)"
     echo ""
     echo "Options:"
@@ -78,27 +80,23 @@ show_backups_usage() {
 }
 
 run_dotfiles() {
-    log STEP "Installing dotfiles..."
     "${POMARCHY_ROOT}/cmd/setup/dotfiles.sh" "$@"
-    log INFO "Dotfiles installation complete!"
 }
 
 run_packages() {
-    log STEP "Running package management..."
     "${POMARCHY_ROOT}/cmd/setup/packages.sh" "$@"
-    log INFO "Package management complete!"
 }
 
 run_system() {
-    log STEP "Configuring system settings..."
     "${POMARCHY_ROOT}/cmd/setup/system.sh" "$@"
-    log INFO "System configuration complete!"
 }
 
 run_devtools() {
-    log STEP "Installing development tools..."
     "${POMARCHY_ROOT}/cmd/setup/devtools.sh" "$@"
-    log INFO "Development tools installation complete!"
+}
+
+run_theme() {
+    "${POMARCHY_ROOT}/cmd/setup/theme.sh" "$@"
 }
 
 run_all() {
@@ -115,6 +113,7 @@ run_all() {
     run_packages
     run_system
     run_devtools
+    run_theme
     
     log INFO "Setup complete! Restart Hyprland to apply system changes (Super+Esc → Relaunch)"
 }
@@ -150,7 +149,7 @@ main() {
                 shift
                 if [[ $# -gt 0 ]]; then
                     case "$1" in
-                        dotfiles|packages|system|devtools|all)
+                        dotfiles|packages|system|devtools|theme|all)
                             subcommand="$1"
                             shift
                             ;;
@@ -215,6 +214,9 @@ main() {
                     ;;
                 devtools)
                     run_devtools "${remaining_args[@]+${remaining_args[@]}}"
+                    ;;
+                theme)
+                    run_theme "${remaining_args[@]+${remaining_args[@]}}"
                     ;;
                 all)
                     run_all "${remaining_args[@]+${remaining_args[@]}}"

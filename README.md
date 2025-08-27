@@ -46,6 +46,7 @@ chmod +x pomarchy
 ./pomarchy setup packages    # Package management only  
 ./pomarchy setup system      # System configuration only
 ./pomarchy setup devtools    # Development tools only
+./pomarchy setup theme       # Install omarchy themes (midnight default)
 ```
 
 </details>
@@ -74,6 +75,7 @@ Setup Commands:
   setup packages     Manage system packages
   setup system       Configure Omarchy system settings
   setup devtools     Setup development environment
+  setup theme        Install omarchy themes (supports custom URLs)
   setup all          Run full setup (default)
 
 Utility Commands:
@@ -112,6 +114,7 @@ pomarchy backups --help          # Show backup commands
 - **Terminal:** Alacritty with Omarchy theme integration, UbuntuMono Nerd Font
 - **Editor:** Micro with plugins (fzf, LSP, snippets, bookmarks)
 - **Shell:** Clean bash configuration extending Omarchy defaults
+- **Themes:** Support for omarchy themes (midnight default, custom URLs supported)
 - **Stow-based:** Easy installation and management
 
 </td>
@@ -146,6 +149,9 @@ pomarchy setup dotfiles         # Install dotfiles only
 pomarchy setup packages --yes   # Install packages without prompts
 pomarchy setup devtools         # Setup development environment
 pomarchy setup system           # Configure system settings
+pomarchy setup theme            # Install midnight theme (default)
+pomarchy setup theme midnight   # Install midnight theme explicitly
+pomarchy setup theme [URL]      # Install custom theme from GitHub
 
 # System management
 pomarchy doctor                 # Check what's installed/configured
