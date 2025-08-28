@@ -39,7 +39,7 @@
 
 ### System Configuration
 
-- Keyboard layouts (US/Georgian) with Alt+Space switching
+- Keyboard layouts (US/Georgian) with Caps Lock switching
 - Active keyboard layout display in Waybar with click-to-switch
 - X1 Carbon Gen 13 OLED optimization (2880x1800@120Hz)
 - Natural scrolling and enhanced touchpad settings

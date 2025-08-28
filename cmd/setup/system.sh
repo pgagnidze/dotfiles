@@ -12,10 +12,10 @@ show_help() {
     echo "Configure Omarchy Linux system settings for X1 Carbon Gen 13 OLED."
     echo ""
     echo "What this command does:"
-    echo "  • Configures keyboard layouts (US/Georgian with Alt+Space switching)"
-    echo "  • Sets up monitor configuration (2880x1800@120Hz, 2x scaling)"
+    echo "  • Configures keyboard layouts with Caps Lock switching"
+    echo "  • Sets up monitor configuration and scaling"
     echo "  • Enables natural scrolling and touchpad settings"
-    echo "  • Sets Waybar to 12-hour clock format"
+    echo "  • Sets Waybar clock format"
     echo "  • Displays active keyboard layout in Waybar with click-to-switch"
     echo "  • Creates automatic configuration backup before changes"
     echo ""
@@ -77,7 +77,7 @@ if [[ -n "$KEYBOARD_LAYOUTS" ]]; then
 cat > "$INPUT_CONF" << EOF
 input {
   kb_layout = $KEYBOARD_LAYOUTS
-  kb_options = compose:caps,grp:alt_space_toggle
+  kb_options = compose:caps,grp:caps_toggle
 
   repeat_rate = 40
   repeat_delay = 600
@@ -91,7 +91,7 @@ input {
 
 windowrule = scrolltouchpad 1.5, class:Alacritty
 EOF
-    log INFO "Keyboard layout switching configured ($KEYBOARD_LAYOUTS with Left Alt + Space)"
+    log INFO "Keyboard layout switching configured ($KEYBOARD_LAYOUTS with Caps Lock)"
     log INFO "Natural scrolling $([ "$NATURAL_SCROLL" = "true" ] && echo "enabled" || echo "disabled") for touchpad"
     log INFO "Touchpad while typing $([ "$DISABLE_WHILE_TYPING" = "false" ] && echo "enabled" || echo "disabled")"
 else
