@@ -16,6 +16,7 @@ show_help() {
     echo "  • Sets up monitor configuration (2880x1800@120Hz, 2x scaling)"
     echo "  • Enables natural scrolling and touchpad settings"
     echo "  • Sets Waybar to 12-hour clock format"
+    echo "  • Displays active keyboard layout in Waybar with click-to-switch"
     echo "  • Creates automatic configuration backup before changes"
     echo ""
     echo "Options:"
@@ -63,10 +64,12 @@ log STEP "Creating configuration backup..."
 readonly INPUT_CONF="$HYPR_CONFIG_DIR/input.conf"
 readonly MONITOR_CONF="$HYPR_CONFIG_DIR/monitors.conf"  
 readonly WAYBAR_CONFIG="$WAYBAR_CONFIG_DIR/config.jsonc"
+readonly WAYBAR_STYLE="$WAYBAR_CONFIG_DIR/style.css"
 
 backup_to_snapshot "$INPUT_CONF" "$BACKUP_DIR"
 backup_to_snapshot "$MONITOR_CONF" "$BACKUP_DIR"
 backup_to_snapshot "$WAYBAR_CONFIG" "$BACKUP_DIR"
+backup_to_snapshot "$WAYBAR_STYLE" "$BACKUP_DIR"
 
 log STEP "Configuring keyboard layouts and input..."
 
@@ -127,5 +130,55 @@ else
     log INFO "Skipping Waybar configuration (CLOCK_FORMAT empty)"
 fi
 
+if [[ -n "$KEYBOARD_LAYOUTS" && -f "$WAYBAR_CONFIG" ]]; then
+    log STEP "Configuring Waybar keyboard layout display..."
+    
+    if ! grep -q '"hyprland/language"' "$WAYBAR_CONFIG"; then
+        sed -i '/"modules-right": \[/,/\]/ {
+            /"modules-right": \[/ {
+                a\    "hyprland/language",
+            }
+        }' "$WAYBAR_CONFIG"
+        log INFO "Added hyprland/language module to waybar"
+    fi
+    
+    if ! grep -q '"hyprland/language":' "$WAYBAR_CONFIG"; then
+        layout_formats=""
+        IFS=',' read -ra LAYOUTS <<< "$KEYBOARD_LAYOUTS"
+        for layout in "${LAYOUTS[@]}"; do
+            case "$layout" in
+                "us") layout_formats="$layout_formats\n    \"format-en\": \"US\"," ;;
+                "ge") layout_formats="$layout_formats\n    \"format-ka\": \"GE\"," ;;
+                "de") layout_formats="$layout_formats\n    \"format-de\": \"DE\"," ;;
+                "fr") layout_formats="$layout_formats\n    \"format-fr\": \"FR\"," ;;
+                "es") layout_formats="$layout_formats\n    \"format-es\": \"ES\"," ;;
+                "ru") layout_formats="$layout_formats\n    \"format-ru\": \"RU\"," ;;
+                *) layout_formats="$layout_formats\n    \"format-$layout\": \"${layout^^}\"," ;;
+            esac
+        done
+        
+        sed -i '/^  }$/i\  "hyprland/language": {\
+    "format": "{}",'"$layout_formats"'\
+    "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"\
+  },' "$WAYBAR_CONFIG"
+        log INFO "Added hyprland/language configuration to waybar"
+    fi
+    
+    if [[ -f "$WAYBAR_STYLE" ]] && ! grep -q '#language' "$WAYBAR_STYLE"; then
+        sed -i '/#pulseaudio,/a\#language,' "$WAYBAR_STYLE"
+        log INFO "Added language module to waybar CSS"
+    fi
+    
+    log INFO "Keyboard layout display configured for waybar"
+fi
+
 log INFO "Configuration complete!"
 log INFO "Backup stored in $BACKUP_DIR"
+
+if pgrep -x "waybar" > /dev/null; then
+    log STEP "Restarting waybar to apply changes..."
+    pkill waybar
+    sleep 1
+    hyprctl dispatch exec waybar
+    log INFO "Waybar restarted with new configuration"
+fi
