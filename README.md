@@ -189,6 +189,34 @@ PACKAGES_INSTALL="firefox code"    # Correct - no spaces around =
 PACKAGES_INSTALL = "firefox code"  # Wrong - spaces make this a command, not assignment
 ```
 
+## Local Development
+
+### Prerequisites
+
+```bash
+make install
+```
+
+### Commands
+
+```bash
+make help      # Show available commands
+make lint      # Run shellcheck on all scripts
+make test      # Run all tests
+make clean     # Clean test artifacts
+```
+
+### Testing
+
+Tests use bats-core framework with isolated test environments. Coverage includes command help, basic functionality, and some error conditions.
+
+### Contributing
+
+1. Install dependencies: `make install`
+2. Make your changes
+3. Run lint and tests: `make lint && make test`
+4. Ensure all checks pass
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE)

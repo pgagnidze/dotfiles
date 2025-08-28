@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-source "${POMARCHY_ROOT}/lib/common.sh"
+readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}"
+source "${POMARCHY_ROOT}/src/lib/common.sh"
 load_config
 validate_config
 
@@ -134,7 +134,7 @@ if [[ -n "$KEYBOARD_LAYOUTS" && -f "$WAYBAR_CONFIG" ]]; then
     log STEP "Configuring Waybar keyboard layout display..."
     
     if ! grep -q '"hyprland/language"' "$WAYBAR_CONFIG"; then
-        sed -i '/"modules-right": \[/,/\]/ {
+        sed -i '/"modules-right": \[/,/../../..
             /"modules-right": \[/ {
                 a\    "hyprland/language",
             }

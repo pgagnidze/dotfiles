@@ -3,6 +3,5 @@
 external-sources=true
 
 # Disable SC2016 - we intentionally use single quotes to write literal strings to config files
-# These variables should expand when the shell reads the files, not when we write them
 # Disable SC1090 - we intentionally use dynamic sourcing for config files (user and default configs)
 disable=SC2016,SC1090

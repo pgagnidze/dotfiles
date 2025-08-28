@@ -5,7 +5,7 @@ echo "▶ Starting Pomarchy personal setup..."
 
 POMARCHY_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly POMARCHY_ROOT
-source "${POMARCHY_ROOT}/lib/common.sh"
+source "${POMARCHY_ROOT}/src/lib/common.sh"
 
 YES=false
 
@@ -80,23 +80,23 @@ show_backups_usage() {
 }
 
 run_dotfiles() {
-    "${POMARCHY_ROOT}/cmd/setup/dotfiles.sh" "$@"
+    "${POMARCHY_ROOT}/src/cmd/setup/dotfiles.sh" "$@"
 }
 
 run_packages() {
-    "${POMARCHY_ROOT}/cmd/setup/packages.sh" "$@"
+    "${POMARCHY_ROOT}/src/cmd/setup/packages.sh" "$@"
 }
 
 run_system() {
-    "${POMARCHY_ROOT}/cmd/setup/system.sh" "$@"
+    "${POMARCHY_ROOT}/src/cmd/setup/system.sh" "$@"
 }
 
 run_devtools() {
-    "${POMARCHY_ROOT}/cmd/setup/devtools.sh" "$@"
+    "${POMARCHY_ROOT}/src/cmd/setup/devtools.sh" "$@"
 }
 
 run_theme() {
-    "${POMARCHY_ROOT}/cmd/setup/theme.sh" "$@"
+    "${POMARCHY_ROOT}/src/cmd/setup/theme.sh" "$@"
 }
 
 run_all() {
@@ -119,12 +119,12 @@ run_all() {
 }
 
 show_status() {
-    "${POMARCHY_ROOT}/cmd/doctor.sh"
+    "${POMARCHY_ROOT}/src/cmd/doctor.sh"
 }
 
 manage_backups() {
     local action="${1:-}"
-    "${POMARCHY_ROOT}/cmd/backups.sh" "$action"
+    "${POMARCHY_ROOT}/src/cmd/backups.sh" "$action"
 }
 
 main() {
@@ -238,7 +238,7 @@ main() {
             manage_backups "$backup_action"
             ;;
         update)
-            "${POMARCHY_ROOT}/cmd/update.sh"
+            "${POMARCHY_ROOT}/src/cmd/update.sh"
             ;;
         *)
             echo "Error: Unknown command '$command'"

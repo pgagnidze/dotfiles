@@ -21,3 +21,9 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+fixtures/
+
+# Local files
+*.local.md
+*.local.txt
+*.local.sh

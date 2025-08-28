@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-readonly BLUE='\033[0;34m'
-readonly GREEN='\033[0;32m'
-readonly RED='\033[0;31m'
-readonly YELLOW='\033[1;33m'
-readonly RESET='\033[0m'
+if [[ -z "${BLUE:-}" ]]; then
+    readonly BLUE='\033[0;34m'
+    readonly GREEN='\033[0;32m'
+    readonly RED='\033[0;31m'
+    readonly YELLOW='\033[1;33m'
+    readonly RESET='\033[0m'
+fi
 
 log() {
     local level=$1
@@ -26,7 +28,7 @@ ensure_command() {
 }
 
 load_config() {
-    local default_config="${POMARCHY_ROOT}/config/pomarchy/.config/pomarchy/pomarchy.conf"
+    local default_config="${POMARCHY_ROOT}/src/config/pomarchy/.config/pomarchy/pomarchy.conf"
     if [[ -f "$default_config" ]]; then
         source "$default_config"
     fi

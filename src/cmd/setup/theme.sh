@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
-source "${POMARCHY_ROOT}/lib/common.sh"
+readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}"
+source "${POMARCHY_ROOT}/src/lib/common.sh"
 load_config
 
 show_help() {
@@ -104,9 +104,10 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-THEME_TO_INSTALL="${USER_THEME:-$THEME}"
-THEME_URL=$(get_theme_url "$THEME_TO_INSTALL")
-THEME_NAME=$(basename "$THEME_URL" .git)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    THEME_TO_INSTALL="${USER_THEME:-$THEME}"
+    THEME_URL=$(get_theme_url "$THEME_TO_INSTALL")
+    THEME_NAME=$(basename "$THEME_URL" .git)
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Installing omarchy theme: $THEME_NAME..."
@@ -120,6 +121,7 @@ if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     fi
 fi
 
-log STEP "Installing omarchy theme: $THEME_NAME..."
-install_theme "$THEME_URL"
-log INFO "Theme installation complete!"
+    log STEP "Installing omarchy theme: $THEME_NAME..."
+    install_theme "$THEME_URL"
+    log INFO "Theme installation complete!"
+fi

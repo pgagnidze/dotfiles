@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
-source "${POMARCHY_ROOT}/lib/common.sh"
+readonly POMARCHY_ROOT="${POMARCHY_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+source "${POMARCHY_ROOT}/src/lib/common.sh"
 load_config
 
 show_status() {
@@ -26,7 +26,7 @@ show_status() {
     echo ""
     echo "▶ Dotfiles Status"
     
-    local config_dir="${POMARCHY_ROOT}/config"
+    local config_dir="${POMARCHY_ROOT}/src/config"
     
     if [[ -L "$HOME/.bashrc" ]]; then
         local bashrc_target
