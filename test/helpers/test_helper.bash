@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-POMARCHY_ROOT="$(cd "${SRC_DIR}/.." && pwd)"
-FIXTURES="${SRC_DIR}/fixtures"
-TEST_TMP="${SRC_DIR}/test_tmp"
+TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+POMARCHY_ROOT="$(cd "${TEST_DIR}/.." && pwd)"
+FIXTURES="${TEST_DIR}/fixtures"
+TEST_TMP="${TEST_DIR}/tmp"
 
 export POMARCHY_ROOT
 export PATH="${POMARCHY_ROOT}:${PATH}"
@@ -11,7 +11,7 @@ export FIXTURES
 export TEST_TMP
 export TEST_CONFIG_DIR="${TEST_TMP}/config"
 export HOME="${TEST_TMP}/home"
-export SRC_DIR
+export TEST_DIR
 
 create_mock() {
     local cmd="$1"

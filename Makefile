@@ -22,12 +22,12 @@ lint: ## Run shellcheck on all scripts
 	@echo "Checking source scripts..."
 	@shellcheck --format=gcc --severity=error --shell=bash $$(find src -name "*.sh")
 	@echo "Checking test helpers..."
-	@shellcheck --format=gcc --severity=error --shell=bash $$(find src -name "*.bash")
+	@shellcheck --format=gcc --severity=error --shell=bash $$(find test -name "*.bash")
 	@echo "All scripts pass shellcheck"
 
 test: ## Run all tests
 	@echo "Running all tests..."
-	@find src -name "*.bats" -exec bats {} \;
+	@find test -name "*_test.bats" -exec bats {} \;
 
 format: ## Format bash scripts with shfmt
 	@echo "Formatting bash scripts..."
@@ -36,7 +36,7 @@ format: ## Format bash scripts with shfmt
 	@echo "All scripts formatted"
 
 clean: ## Clean test artifacts
-	@rm -rf src/test_tmp
-	@find src -name "*.tmp" -delete 2>/dev/null || true
-	@find src -name "*.log" -delete 2>/dev/null || true
+	@rm -rf test/tmp
+	@find test -name "*.tmp" -delete 2>/dev/null || true
+	@find test -name "*.log" -delete 2>/dev/null || true
 

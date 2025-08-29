@@ -21,7 +21,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
-test_tmp/
+test/tmp/
 *.log
 
 # Local files

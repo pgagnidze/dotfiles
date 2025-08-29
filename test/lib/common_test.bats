@@ -2,7 +2,7 @@
 
 bats_require_minimum_version 1.5.0
 
-load ../test_helper
+load ../helpers/test_helper
 
 setup() {
     setup_test_environment
@@ -13,20 +13,20 @@ teardown() {
 }
 
 @test "common.sh library exists and loads correctly" {
-    [ -f "$BATS_TEST_DIRNAME/common.sh" ]
-    run source "$BATS_TEST_DIRNAME/common.sh"
+    [ -f "$POMARCHY_ROOT/src/lib/common.sh" ]
+    run source "$POMARCHY_ROOT/src/lib/common.sh"
     [ "$status" -eq 0 ]
 }
 
 @test "config loading works with defaults" {
-    source "$BATS_TEST_DIRNAME/common.sh"
+    source "$POMARCHY_ROOT/src/lib/common.sh"
     load_config
     [ -n "$THEME" ]
     [ -n "$PACKAGES_INSTALL" ]
 }
 
 @test "create_safety_backup creates backup with manifest" {
-    source "$BATS_TEST_DIRNAME/common.sh"
+    source "$POMARCHY_ROOT/src/lib/common.sh"
     load_config
     
     echo "test content" > "${HOME}/.test_file"
