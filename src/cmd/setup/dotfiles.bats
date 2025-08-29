@@ -6,6 +6,7 @@ load ../../test_helper
 
 setup() {
     setup_test_environment
+    mock_stow
 }
 
 teardown() {
@@ -18,31 +19,9 @@ teardown() {
     [[ "$output" =~ "dotfiles" ]]
 }
 
-@test "dotfiles script is executable" {
-    [ -x "$POMARCHY_ROOT/src/cmd/setup/dotfiles.sh" ]
-}
-
-@test "dotfiles command sources common.sh correctly" {
-    run -0 bash -n "$POMARCHY_ROOT/src/cmd/setup/dotfiles.sh"
-}
-
-@test "stow command availability is checked" {
-    run bash -c "source $POMARCHY_ROOT/src/lib/common.sh && ensure_command stow"
-    if command -v stow &>/dev/null; then
-        [ "$status" -eq 0 ]
-    else
-        [ "$status" -eq 1 ]
-    fi
-}
-
-@test "dotfiles detects config directory" {
-    run bash -c "source $POMARCHY_ROOT/src/lib/common.sh; load_config; echo \$POMARCHY_ROOT/src/config"
+@test "installs dotfiles with stow" {
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/dotfiles.sh" --yes
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "src/config" ]]
-}
-
-@test "dotfiles lists available configurations" {
-    [ -d "$POMARCHY_ROOT/src/config/bash" ]
-    [ -d "$POMARCHY_ROOT/src/config/micro" ]
-    [ -d "$POMARCHY_ROOT/src/config/alacritty" ]
+    
+    assert_command_called_with "stow" "MOCK: stow -v -d"
 }

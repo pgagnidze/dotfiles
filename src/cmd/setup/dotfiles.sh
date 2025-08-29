@@ -38,9 +38,9 @@ stow_config() {
         log INFO "Skipping dotfiles installation (DOTFILES empty)"
         return
     fi
-    
+
     log INFO "Installing dotfiles with stow..."
-    
+
     if ! command -v stow >/dev/null 2>&1; then
         log WARN "Stow not found, installing..."
         ensure_command yay
@@ -49,8 +49,8 @@ stow_config() {
             exit 1
         fi
     fi
-    
-    IFS=' ' read -ra configs <<< "$DOTFILES"
+
+    IFS=' ' read -ra configs <<<"$DOTFILES"
     for config in "${configs[@]}"; do
         if [[ -d "${POMARCHY_ROOT}/src/config/${config}" ]]; then
             log INFO "Installing ${config} configuration..."
@@ -63,11 +63,11 @@ SKIP_CONFIRM="${YES:-false}"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --help|-h|help)
+        --help | -h | help)
             show_help
             exit 0
             ;;
-        --yes|-y)
+        --yes | -y)
             SKIP_CONFIRM=true
             shift
             ;;
@@ -93,7 +93,7 @@ if [[ "${SKIP_CONFIRM}" == "false" ]]; then
 fi
 
 if [[ -n "$DOTFILES" ]]; then
-    IFS=' ' read -ra configs <<< "$DOTFILES"
+    IFS=' ' read -ra configs <<<"$DOTFILES"
     backup_files=()
     for config in "${configs[@]}"; do
         case "$config" in

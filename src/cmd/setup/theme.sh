@@ -34,7 +34,7 @@ show_help() {
 get_theme_url() {
     local theme_name="$1"
     case "$theme_name" in
-        midnight|"")
+        midnight | "")
             echo "https://github.com/JaxonWright/omarchy-midnight-theme.git"
             ;;
         *.git)
@@ -57,21 +57,21 @@ get_theme_url() {
 install_theme() {
     local theme_url="$1"
     local theme_name
-    
+
     if [[ "$theme_url" == *"midnight"* ]]; then
         theme_name="midnight"
     else
         theme_name="$(basename "$theme_url" .git)"
     fi
-    
+
     log INFO "Installing omarchy theme: $theme_name..."
-    
+
     if ! command -v omarchy-theme-install >/dev/null 2>&1; then
         log ERROR "omarchy-theme-install command not found"
         log ERROR "This command requires Omarchy Linux with omarchy-theme-install available"
         exit 1
     fi
-    
+
     log INFO "Running omarchy-theme-install ${theme_url}..."
     if omarchy-theme-install "${theme_url}"; then
         log SUCCESS "Theme installation completed successfully!"
@@ -87,11 +87,11 @@ USER_THEME=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --help|-h|help)
+        --help | -h | help)
             show_help
             exit 0
             ;;
-        --yes|-y)
+        --yes | -y)
             SKIP_CONFIRM=true
             shift
             ;;
@@ -107,22 +107,22 @@ done
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     setup_error_handling "theme"
     pre_setup_validation
-    
+
     THEME_TO_INSTALL="${USER_THEME:-$THEME}"
     THEME_URL=$(get_theme_url "$THEME_TO_INSTALL")
     THEME_NAME=$(basename "$THEME_URL" .git)
 
-if [[ "${SKIP_CONFIRM}" == "false" ]]; then
-    log STEP "Installing omarchy theme: $THEME_NAME..."
-    echo "This will install the '$THEME_NAME' theme for Omarchy."
-    echo "The theme includes configurations for terminal, desktop, and applications."
-    echo ""
-    read -rp "Do you want to continue? (y/N) "
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        log INFO "Theme installation cancelled."
-        exit 0
+    if [[ "${SKIP_CONFIRM}" == "false" ]]; then
+        log STEP "Installing omarchy theme: $THEME_NAME..."
+        echo "This will install the '$THEME_NAME' theme for Omarchy."
+        echo "The theme includes configurations for terminal, desktop, and applications."
+        echo ""
+        read -rp "Do you want to continue? (y/N) "
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log INFO "Theme installation cancelled."
+            exit 0
+        fi
     fi
-fi
 
     log STEP "Installing omarchy theme: $THEME_NAME..."
     install_theme "$THEME_URL"

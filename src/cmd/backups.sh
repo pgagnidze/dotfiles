@@ -9,19 +9,19 @@ manage_backups() {
     local action="${1:-}"
     local backup_base="${BACKUP_BASE_PATH:-$HOME/.config/omarchy-backups}"
     local safety_backup_base="${HOME}/.local/share/pomarchy/backups"
-    
+
     case "$action" in
         list)
             log STEP "Available backups:"
             echo ""
-            
+
             if [[ -d "$backup_base" ]]; then
                 log INFO "Permanent backups (system configurations):"
                 for backup in "$backup_base"/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]/; do
                     [[ -d "$backup" ]] && echo "  $(basename "$backup")"
                 done | sort -r
             fi
-            
+
             if [[ -d "$safety_backup_base" ]]; then
                 echo ""
                 log INFO "Temporary backups (operation-specific):"
@@ -40,7 +40,7 @@ manage_backups() {
                     fi
                 done | sort -r
             fi
-            
+
             if [[ ! -d "$backup_base" && ! -d "$safety_backup_base" ]]; then
                 log INFO "No backups found"
             fi
@@ -50,12 +50,12 @@ manage_backups() {
                 log ERROR "No backups directory found"
                 exit 1
             fi
-            
+
             echo "Available backups:"
             echo ""
-            
+
             local backup_options=()
-            
+
             if [[ -d "$backup_base" ]]; then
                 log INFO "Permanent backups:"
                 local permanent_list=()
@@ -70,7 +70,7 @@ manage_backups() {
                 printf '%s\n' "${permanent_list[@]}" | sort -r
                 echo ""
             fi
-            
+
             if [[ -d "$safety_backup_base" ]]; then
                 log INFO "Temporary backups:"
                 local temporary_list=()
@@ -89,66 +89,66 @@ manage_backups() {
                 done
                 printf '%s\n' "${temporary_list[@]}" | sort -r
             fi
-            
+
             if [[ ${#backup_options[@]} -eq 0 ]]; then
                 log ERROR "No backups available"
                 exit 1
             fi
-            
+
             echo ""
             read -rp "Enter full backup directory name to restore: "
-            
+
             local selected_backup
             if [[ "$REPLY" == *"temporary_"* ]]; then
                 selected_backup="$safety_backup_base/$REPLY"
             else
                 selected_backup="$backup_base/$REPLY"
             fi
-            
+
             if [[ ! -d "$selected_backup" ]]; then
                 log ERROR "Backup not found: $selected_backup"
                 exit 1
             fi
-            
+
             if [[ -f "$selected_backup/.backup_manifest" ]]; then
                 show_backup_info "$selected_backup"
             fi
-            
+
             if [[ "${YES:-false}" != true ]]; then
                 read -rp "This will overwrite current files. Continue? (y/N) "
                 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
                     exit 1
                 fi
             fi
-            
+
             restore_backup_files "$selected_backup"
             ;;
-        remove|rm)
+        remove | rm)
             if [[ ! -d "$backup_base" ]]; then
                 log ERROR "No backups directory found"
                 exit 1
             fi
-            
+
             echo "Available backups:"
             for backup in "$backup_base"/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]/; do
                 [[ -d "$backup" ]] && basename "$backup"
             done | sort -r
             echo ""
             read -rp "Enter backup timestamp to remove (YYYYMMDD_HHMMSS): "
-            
+
             local selected_backup="$backup_base/$REPLY"
             if [[ ! -d "$selected_backup" ]]; then
                 log ERROR "Backup not found: $selected_backup"
                 exit 1
             fi
-            
+
             if [[ "${YES:-false}" != true ]]; then
                 read -rp "This will permanently delete backup $REPLY. Continue? (y/N) "
                 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
                     exit 1
                 fi
             fi
-            
+
             log STEP "Removing backup $REPLY..."
             if rm -rf "$selected_backup"; then
                 log INFO "Backup removed successfully!"
@@ -167,11 +167,11 @@ manage_backups() {
 show_backup_info() {
     local backup_path="$1"
     local manifest_file="${backup_path}/.backup_manifest"
-    
+
     if [[ ! -f "$manifest_file" ]]; then
         return
     fi
-    
+
     echo ""
     log INFO "Backup Information:"
     while IFS='=' read -r key value; do
@@ -180,24 +180,24 @@ show_backup_info() {
             timestamp) echo "  Created: $value" ;;
             type) echo "  Type: $value" ;;
         esac
-    done < "$manifest_file"
-    
+    done <"$manifest_file"
+
     echo ""
     log INFO "Files in backup:"
     while IFS='=' read -r key value; do
         if [[ "$key" == "file" || "$key" == "dir" ]]; then
             echo "    $value"
         fi
-    done < "$manifest_file"
+    done <"$manifest_file"
     echo ""
 }
 
 restore_backup_files() {
     local backup_path="$1"
     local manifest_file="${backup_path}/.backup_manifest"
-    
+
     log STEP "Restoring from $(basename "$backup_path")..."
-    
+
     if [[ -f "$manifest_file" ]]; then
         local files_restored=0
         while IFS='=' read -r key value; do
@@ -209,14 +209,14 @@ restore_backup_files() {
                 else
                     relative_path="$source_file"
                 fi
-                
+
                 local backup_file_path="$backup_path/$relative_path"
-                
+
                 if [[ -f "$backup_file_path" || -d "$backup_file_path" || -L "$backup_file_path" ]]; then
                     local target_dir
                     target_dir=$(dirname "$source_file")
                     mkdir -p "$target_dir"
-                    
+
                     if [[ -L "$backup_file_path" ]]; then
                         \cp -P "$backup_file_path" "$source_file"
                     elif [[ -d "$backup_file_path" ]]; then
@@ -224,14 +224,14 @@ restore_backup_files() {
                     else
                         \cp -f "$backup_file_path" "$source_file"
                     fi
-                    
+
                     log INFO "Restored: $source_file"
                     ((files_restored++)) || true
                 else
                     log WARN "Backup file not found: $backup_file_path"
                 fi
             fi
-        done < "$manifest_file"
+        done <"$manifest_file"
         log INFO "Restoration complete: $files_restored files restored"
     else
         if [[ -d "$backup_path/.config" ]]; then

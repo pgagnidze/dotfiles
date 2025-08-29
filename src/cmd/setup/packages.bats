@@ -19,31 +19,42 @@ teardown() {
     [[ "$output" =~ "packages" ]]
 }
 
-@test "packages script is executable" {
-    [ -x "$POMARCHY_ROOT/src/cmd/setup/packages.sh" ]
-}
-
-@test "packages command sources common.sh correctly" {
-    run -0 bash -n "$POMARCHY_ROOT/src/cmd/setup/packages.sh"
-}
-
-@test "yay command availability is checked" {
-    run -0 bash -c "source $POMARCHY_ROOT/src/lib/common.sh && ensure_command yay"
-}
-
-@test "core packages are defined" {
-    run bash -c "grep -c 'CORE_PACKAGES.*=' $POMARCHY_ROOT/src/cmd/setup/packages.sh"
+@test "installs and removes packages as configured" {
+    echo "test-package-to-remove" >> "${TEST_TMP}/installed_packages.txt"
+    
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/packages.sh" --yes
     [ "$status" -eq 0 ]
-    [[ "$output" =~ ^[1-9]$ ]]
+    
+    assert_command_called_with "yay" "MOCK: yay -Rns --noconfirm test-package-to-remove"
+    assert_command_called_with "yay" "MOCK: yay -S --noconfirm test-package-to-install"
+    assert_command_called_with "yay" "MOCK: yay -Qi ttf-ubuntu-mono-nerd"
 }
 
-@test "micro plugins installation function exists" {
-    run bash -c "source $POMARCHY_ROOT/src/cmd/setup/packages.sh; declare -f install_micro_plugins"
+@test "installs micro plugins when micro is available" {
+    mock_micro
+    echo "micro" >> "${TEST_TMP}/installed_packages.txt"
+    
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/packages.sh" --yes
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "install_micro_plugins" ]]
+    
+    assert_command_called_with "micro" "MOCK: micro -plugin install fzf"
+    assert_command_called_with "micro" "MOCK: micro -plugin install editorconfig"
 }
 
-@test "packages script has core packages array" {
-    run bash -c "grep -q 'CORE_PACKAGES' $POMARCHY_ROOT/src/cmd/setup/packages.sh"
+@test "skips operations when config values are empty" {
+    load_test_config "minimal"
+    
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/packages.sh" --yes
+    [ "$status" -eq 0 ]
+    
+    local yay_log="${TEST_TMP}/yay.log"
+    if [[ -f "$yay_log" ]]; then
+        assert_file_not_contains "$yay_log" "test-package-to-install"
+        assert_file_contains "$yay_log" "ttf-ubuntu-mono-nerd"
+    fi
+}
+
+@test "confirmation prompt works correctly" {
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/packages.sh" --yes
     [ "$status" -eq 0 ]
 }

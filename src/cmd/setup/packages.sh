@@ -30,11 +30,11 @@ SKIP_CONFIRM="${YES:-false}"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --help|-h|help)
+        --help | -h | help)
             show_help
             exit 0
             ;;
-        --yes|-y)
+        --yes | -y)
             SKIP_CONFIRM=true
             shift
             ;;
@@ -65,13 +65,13 @@ create_safety_backup "packages" "$HOME/.config/micro/plug"
 log STEP "Package Management"
 
 readonly CORE_PACKAGES=("ttf-ubuntu-mono-nerd" "micro")
-IFS=' ' read -ra REMOVE_PACKAGES <<< "$PACKAGES_REMOVE"
-IFS=' ' read -ra INSTALL_PACKAGES <<< "$PACKAGES_INSTALL"
+IFS=' ' read -ra REMOVE_PACKAGES <<<"$PACKAGES_REMOVE"
+IFS=' ' read -ra INSTALL_PACKAGES <<<"$PACKAGES_INSTALL"
 
 echo ""
 log STEP "Removing unwanted packages..."
 for pkg in "${REMOVE_PACKAGES[@]}"; do
-    if yay -Qi "$pkg" &> /dev/null; then
+    if yay -Qi "$pkg" &>/dev/null; then
         log INFO "Removing $pkg..."
         yay -Rns --noconfirm "$pkg" || log WARN "Failed to remove $pkg (might be already removed)"
     else
@@ -82,7 +82,7 @@ done
 echo ""
 log STEP "Installing core packages (always installed)..."
 for pkg in "${CORE_PACKAGES[@]}"; do
-    if ! yay -Qi "$pkg" &> /dev/null; then
+    if ! yay -Qi "$pkg" &>/dev/null; then
         log INFO "Installing core package: $pkg..."
         yay -S --noconfirm "$pkg" || log ERROR "Failed to install core package $pkg"
     else
@@ -93,7 +93,7 @@ done
 echo ""
 log STEP "Installing optional packages..."
 for pkg in "${INSTALL_PACKAGES[@]}"; do
-    if ! yay -Qi "$pkg" &> /dev/null; then
+    if ! yay -Qi "$pkg" &>/dev/null; then
         log INFO "Installing $pkg..."
         yay -S --noconfirm "$pkg" || log WARN "Failed to install $pkg"
     else
@@ -111,16 +111,16 @@ install_micro_plugins() {
     if [[ -z "$MICRO_PLUGINS" ]]; then
         return
     fi
-    
-    if ! command -v micro &> /dev/null; then
+
+    if ! command -v micro &>/dev/null; then
         log WARN "Micro editor not installed, skipping plugin installation"
         log INFO "To install micro plugins, ensure 'micro' is in PACKAGES_INSTALL"
         return
     fi
-    
+
     local plugins_dir="$HOME/.config/micro/plug"
-    IFS=' ' read -ra PLUGINS <<< "$MICRO_PLUGINS"
-    
+    IFS=' ' read -ra PLUGINS <<<"$MICRO_PLUGINS"
+
     if [[ ! -d "$plugins_dir" ]] || [[ -z "$(ls -A "$plugins_dir" 2>/dev/null)" ]]; then
         log INFO "Installing micro plugins..."
         for plugin in "${PLUGINS[@]}"; do

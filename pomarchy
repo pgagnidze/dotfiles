@@ -101,20 +101,20 @@ run_theme() {
 
 run_all() {
     log STEP "Running full Pomarchy setup"
-    
+
     if [[ "$YES" != true ]]; then
         read -rp "This will customize your Omarchy installation. Continue? (y/N) "
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
             exit 1
         fi
     fi
-    
+
     run_dotfiles
     run_packages
     run_system
     run_devtools
     run_theme
-    
+
     log INFO "Setup complete! Restart Hyprland to apply system changes (Super+Esc → Relaunch)"
 }
 
@@ -130,19 +130,19 @@ manage_backups() {
 main() {
     ensure_command yay
     ensure_command bash
-    
+
     load_config
     validate_config
     print_pomarchy_banner
-    
+
     local command="setup"
     local subcommand="all"
     local backup_action=""
     local remaining_args=()
-    
+
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --yes|-y)
+            --yes | -y)
                 YES=true
                 shift
                 ;;
@@ -151,30 +151,29 @@ main() {
                 shift
                 if [[ $# -gt 0 ]]; then
                     case "$1" in
-                        dotfiles|packages|system|devtools|theme|all)
+                        dotfiles | packages | system | devtools | theme | all)
                             subcommand="$1"
                             shift
                             ;;
-                        --help|-h|help)
+                        --help | -h | help)
                             show_setup_usage
                             exit 0
                             ;;
-                        *)
-                            ;;
+                        *) ;;
                     esac
                 fi
                 ;;
-            doctor|backups|update)
+            doctor | backups | update)
                 command="$1"
                 shift
                 ;;
-            list|restore|remove|rm)
+            list | restore | remove | rm)
                 if [[ "$command" == "backups" ]]; then
                     backup_action="$1"
                 fi
                 shift
                 ;;
-            -h|--help|help)
+            -h | --help | help)
                 if [[ "$command" == "setup" && "$subcommand" != "all" ]]; then
                     remaining_args+=("$1")
                     shift
@@ -199,9 +198,9 @@ main() {
                 ;;
         esac
     done
-    
+
     export YES POMARCHY_ROOT
-    
+
     case "$command" in
         setup)
             case "$subcommand" in

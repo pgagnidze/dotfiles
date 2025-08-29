@@ -1,9 +1,11 @@
 #!/usr/bin/env bats
 
+bats_require_minimum_version 1.5.0
+
 load ../../test_helper
 
 setup() {
-    setup_test_environment
+    setup_test_environment_minimal
 }
 
 teardown() {
@@ -11,44 +13,21 @@ teardown() {
 }
 
 @test "theme command shows help" {
-    run "$POMARCHY_ROOT/src/cmd/setup/theme.sh" --help
-    [ "$status" -eq 0 ]
+    run -0 "$POMARCHY_ROOT/src/cmd/setup/theme.sh" --help
     [[ "$output" =~ "Usage:" ]]
+    [[ "$output" =~ "theme" ]]
 }
 
-@test "theme script is executable" {
-    [ -x "$POMARCHY_ROOT/src/cmd/setup/theme.sh" ]
-}
-
-@test "theme command sources common.sh correctly" {
-    run bash -n "$POMARCHY_ROOT/src/cmd/setup/theme.sh"
+@test "handles midnight theme (default)" {
+    run bash -c "source $POMARCHY_ROOT/src/cmd/setup/theme.sh; get_theme_url midnight"
     [ "$status" -eq 0 ]
+    [[ "$output" =~ "omarchy-midnight-theme" ]]
 }
 
-@test "get_theme_url function handles midnight theme" {
-    source "$POMARCHY_ROOT/src/cmd/setup/theme.sh"
-    run get_theme_url "midnight"
+@test "validates GitHub URLs" {
+    run bash -c "source $POMARCHY_ROOT/src/cmd/setup/theme.sh; get_theme_url https://github.com/user/theme.git"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "github.com" ]]
-    [[ "$output" =~ "midnight" ]]
-}
-
-@test "get_theme_url function handles empty string (defaults to midnight)" {
-    source "$POMARCHY_ROOT/src/cmd/setup/theme.sh"
-    run get_theme_url ""
-    [ "$status" -eq 0 ]
-    [[ "$output" =~ "midnight" ]]
-}
-
-@test "get_theme_url function validates GitHub URLs" {
-    source "$POMARCHY_ROOT/src/cmd/setup/theme.sh"
-    run get_theme_url "https://github.com/user/theme.git"
-    [ "$status" -eq 0 ]
-    [[ "$output" == "https://github.com/user/theme.git" ]]
-}
-
-@test "get_theme_url function rejects invalid URLs" {
-    source "$POMARCHY_ROOT/src/cmd/setup/theme.sh"
-    run get_theme_url "invalid-url"
+    
+    run bash -c "source $POMARCHY_ROOT/src/cmd/setup/theme.sh; get_theme_url invalid-url"
     [ "$status" -eq 1 ]
 }

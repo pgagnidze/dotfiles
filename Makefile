@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install lint test clean
+.PHONY: help install lint test clean format
 
 help: ## Show usage and commands
 	@printf "Pomarchy - Personal Omarchy Setup\n\n"
@@ -11,9 +11,9 @@ help: ## Show usage and commands
 
 install: ## Install development dependencies
 	@if command -v yay >/dev/null 2>&1; then \
-		yay -S --needed bats-core shellcheck; \
+		yay -S --needed bats-core shellcheck shfmt; \
 	else \
-		sudo pacman -S --needed bats shellcheck; \
+		sudo pacman -S --needed bats shellcheck shfmt; \
 	fi
 
 lint: ## Run shellcheck on all scripts
@@ -29,7 +29,14 @@ test: ## Run all tests
 	@echo "Running all tests..."
 	@find src -name "*.bats" -exec bats {} \;
 
+format: ## Format bash scripts with shfmt
+	@echo "Formatting bash scripts..."
+	@shfmt -w -i 4 -ci pomarchy
+	@shfmt -w -i 4 -ci $$(find src -name "*.sh" -o -name "*.bash")
+	@echo "All scripts formatted"
+
 clean: ## Clean test artifacts
-	@rm -rf src/fixtures
+	@rm -rf src/test_tmp
 	@find src -name "*.tmp" -delete 2>/dev/null || true
+	@find src -name "*.log" -delete 2>/dev/null || true
 

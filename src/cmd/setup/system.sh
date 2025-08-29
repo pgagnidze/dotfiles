@@ -34,11 +34,11 @@ SKIP_CONFIRM="${YES:-false}"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --help|-h|help)
+        --help | -h | help)
             show_help
             exit 0
             ;;
-        --yes|-y)
+        --yes | -y)
             SKIP_CONFIRM=true
             shift
             ;;
@@ -67,7 +67,7 @@ fi
 readonly HYPR_CONFIG_DIR="$HOME/.config/hypr"
 readonly WAYBAR_CONFIG_DIR="$HOME/.config/waybar"
 readonly INPUT_CONF="$HYPR_CONFIG_DIR/input.conf"
-readonly MONITOR_CONF="$HYPR_CONFIG_DIR/monitors.conf"  
+readonly MONITOR_CONF="$HYPR_CONFIG_DIR/monitors.conf"
 readonly WAYBAR_CONFIG="$WAYBAR_CONFIG_DIR/config.jsonc"
 readonly WAYBAR_STYLE="$WAYBAR_CONFIG_DIR/style.css"
 
@@ -79,14 +79,14 @@ create_permanent_backup() {
     local backup_timestamp
     backup_timestamp=$(date +%Y%m%d_%H%M%S)
     local permanent_backup_dir="${BACKUP_BASE_DIR}/permanent_system_${backup_timestamp}"
-    
+
     mkdir -p "$permanent_backup_dir"
-    
+
     local backup_manifest="${permanent_backup_dir}/.backup_manifest"
-    echo "operation=system" > "$backup_manifest"
-    echo "timestamp=$(date)" >> "$backup_manifest"
-    echo "type=permanent" >> "$backup_manifest"
-    
+    echo "operation=system" >"$backup_manifest"
+    echo "timestamp=$(date)" >>"$backup_manifest"
+    echo "type=permanent" >>"$backup_manifest"
+
     local files_backed_up=0
     for file in "$INPUT_CONF" "$MONITOR_CONF" "$WAYBAR_CONFIG" "$WAYBAR_STYLE"; do
         if [[ -f "$file" ]]; then
@@ -94,8 +94,8 @@ create_permanent_backup() {
             ((files_backed_up++)) || true
         fi
     done
-    
-    if (( files_backed_up > 0 )); then
+
+    if ((files_backed_up > 0)); then
         log INFO "Permanent backup created: $permanent_backup_dir"
     else
         rm -rf "$permanent_backup_dir"
@@ -107,7 +107,7 @@ create_permanent_backup
 log STEP "Configuring keyboard layouts and input..."
 
 if [[ -n "$KEYBOARD_LAYOUTS" ]]; then
-cat > "$INPUT_CONF" << EOF
+    cat >"$INPUT_CONF" <<EOF
 input {
   kb_layout = $KEYBOARD_LAYOUTS
   kb_options = compose:caps,grp:caps_toggle
@@ -133,9 +133,8 @@ fi
 
 log STEP "Configuring monitor settings..."
 
-
 if [[ -n "$MONITOR_RESOLUTION" ]]; then
-cat > "$MONITOR_CONF" << EOF
+    cat >"$MONITOR_CONF" <<EOF
 env = GDK_SCALE,$MONITOR_SCALE
 
 monitor = eDP-1, $MONITOR_RESOLUTION, auto, $MONITOR_SCALE
@@ -165,19 +164,15 @@ fi
 
 if [[ -n "$KEYBOARD_LAYOUTS" && -f "$WAYBAR_CONFIG" ]]; then
     log STEP "Configuring Waybar keyboard layout display..."
-    
+
     if ! grep -q '"hyprland/language"' "$WAYBAR_CONFIG"; then
-        sed -i '/"modules-right": \[/,/../../..
-            /"modules-right": \[/ {
-                a\    "hyprland/language",
-            }
-        }' "$WAYBAR_CONFIG"
+        sed -i '/"modules-right": \[/a\    "hyprland/language",' "$WAYBAR_CONFIG"
         log INFO "Added hyprland/language module to waybar"
     fi
-    
+
     if ! grep -q '"hyprland/language":' "$WAYBAR_CONFIG"; then
         layout_formats=""
-        IFS=',' read -ra LAYOUTS <<< "$KEYBOARD_LAYOUTS"
+        IFS=',' read -ra LAYOUTS <<<"$KEYBOARD_LAYOUTS"
         for layout in "${LAYOUTS[@]}"; do
             case "$layout" in
                 "us") layout_formats="$layout_formats\n    \"format-en\": \"US\"," ;;
@@ -189,25 +184,25 @@ if [[ -n "$KEYBOARD_LAYOUTS" && -f "$WAYBAR_CONFIG" ]]; then
                 *) layout_formats="$layout_formats\n    \"format-$layout\": \"${layout^^}\"," ;;
             esac
         done
-        
+
         sed -i '/^  }$/i\  "hyprland/language": {\
     "format": "{}",'"$layout_formats"'\
     "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"\
   },' "$WAYBAR_CONFIG"
         log INFO "Added hyprland/language configuration to waybar"
     fi
-    
+
     if [[ -f "$WAYBAR_STYLE" ]] && ! grep -q '#language' "$WAYBAR_STYLE"; then
         sed -i '/#pulseaudio,/a\#language,' "$WAYBAR_STYLE"
         log INFO "Added language module to waybar CSS"
     fi
-    
+
     log INFO "Keyboard layout display configured for waybar"
 fi
 
 log INFO "Configuration complete!"
 
-if pgrep -x "waybar" > /dev/null; then
+if pgrep -x "waybar" >/dev/null; then
     log STEP "Restarting waybar to apply changes..."
     pkill waybar
     sleep 1

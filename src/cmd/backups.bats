@@ -13,33 +13,25 @@ teardown() {
 }
 
 @test "backups command shows help" {
-    run "$POMARCHY_ROOT/src/cmd/backups.sh" --help
-    [ "$status" -eq 0 ]
+    run_in_test_env "$POMARCHY_ROOT/src/cmd/backups.sh" invalid_action
+    [ "$status" -eq 1 ]
     [[ "$output" =~ "Usage:" ]]
     [[ "$output" =~ "backups" ]]
 }
 
-@test "backups script is executable" {
-    [ -x "$POMARCHY_ROOT/src/cmd/backups.sh" ]
-}
-
-@test "backups command sources common.sh correctly" {
-    run -0 bash -n "$POMARCHY_ROOT/src/cmd/backups.sh"
-}
-
-@test "backup base path configuration exists" {
-    source "$POMARCHY_ROOT/src/lib/common.sh"
-    load_config
-    [ -n "$BACKUP_BASE_PATH" ]
-}
-
-@test "backups list function exists" {
-    run bash -c "source $POMARCHY_ROOT/src/cmd/backups.sh; declare -f manage_backups"
-    [ "$status" -eq 0 ]
-    [[ "$output" =~ "manage_backups" ]]
-}
-
-@test "backups script has main execution guard" {
-    run bash -c "grep -q 'BASH_SOURCE.*0.*0' $POMARCHY_ROOT/src/cmd/backups.sh"
-    [ "$status" -eq 0 ]
+@test "lists available backups" {
+    local backup_dir="${HOME}/.local/share/pomarchy/backups/temporary_test_20240101_120000"
+    mkdir -p "$backup_dir"
+    cat > "$backup_dir/.backup_manifest" << 'EOF'
+operation=test
+timestamp=2024-01-01 12:00:00
+type=temporary
+EOF
+    
+    [ -d "$backup_dir" ]
+    [ -f "$backup_dir/.backup_manifest" ]
+    
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/backups.sh" list
+    
+    [[ "$output" =~ "temporary_test_20240101_120000" ]]
 }

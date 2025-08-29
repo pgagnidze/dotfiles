@@ -6,6 +6,9 @@ load ../../test_helper
 
 setup() {
     setup_test_environment
+    mock_nvm
+    mock_go
+    mock_code
 }
 
 teardown() {
@@ -18,22 +21,18 @@ teardown() {
     [[ "$output" =~ "devtools" ]]
 }
 
-@test "devtools script is executable" {
-    [ -x "$POMARCHY_ROOT/src/cmd/setup/devtools.sh" ]
+@test "installs Node.js and npm packages" {
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/devtools.sh" --yes
+    [ "$status" -eq 0 ]
+    
+    assert_command_called_with "nvm" "MOCK: nvm install 18"
+    assert_command_called_with "npm" "MOCK: npm install -g typescript eslint"
 }
 
-@test "devtools command sources common.sh correctly" {
-    run -0 bash -n "$POMARCHY_ROOT/src/cmd/setup/devtools.sh"
-}
-
-@test "nvm init path configuration exists" {
-    source "$POMARCHY_ROOT/src/lib/common.sh"
-    load_config
-    [ -n "$NVM_INIT_PATH" ]
-}
-
-@test "nodejs version configuration exists" {
-    source "$POMARCHY_ROOT/src/lib/common.sh"
-    load_config
-    [ -n "$NODEJS_VERSION" ]
+@test "installs Go tools and VS Code extensions" {
+    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/devtools.sh" --yes
+    [ "$status" -eq 0 ]
+    
+    assert_command_called_with "go" "MOCK: go install golang.org/x/tools/gopls@latest"
+    assert_command_called_with "code" "MOCK: code --install-extension golang.go"
 }

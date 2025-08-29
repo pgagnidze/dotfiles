@@ -7,13 +7,13 @@ load_config
 
 show_status() {
     log STEP "Checking system status..."
-    
+
     echo ""
     echo "▶ Package Status"
     if [[ -n "$PACKAGES_INSTALL" ]]; then
-        IFS=' ' read -ra packages <<< "$PACKAGES_INSTALL"
+        IFS=' ' read -ra packages <<<"$PACKAGES_INSTALL"
         for pkg in "${packages[@]}"; do
-            if yay -Qi "$pkg" &> /dev/null; then
+            if yay -Qi "$pkg" &>/dev/null; then
                 echo "▣ $pkg - installed"
             else
                 echo "▢ $pkg - not installed"
@@ -22,12 +22,12 @@ show_status() {
     else
         echo "▢ No packages configured for installation"
     fi
-    
+
     echo ""
     echo "▶ Dotfiles Status"
-    
+
     local config_dir="${POMARCHY_ROOT}/src/config"
-    
+
     if [[ -L "$HOME/.bashrc" ]]; then
         local bashrc_target
         bashrc_target=$(readlink -f "$HOME/.bashrc" 2>/dev/null)
@@ -39,7 +39,7 @@ show_status() {
     else
         echo "▢ bash - not stowed"
     fi
-    
+
     if [[ -L "$HOME/.config/micro/bindings.json" ]]; then
         local micro_target
         micro_target=$(readlink -f "$HOME/.config/micro/bindings.json" 2>/dev/null)
@@ -49,9 +49,9 @@ show_status() {
             echo "▢ micro - not stowed (points elsewhere)"
         fi
     else
-        echo "▢ micro - not stowed"  
+        echo "▢ micro - not stowed"
     fi
-    
+
     if [[ -L "$HOME/.config/alacritty/alacritty.toml" ]]; then
         local alacritty_target
         alacritty_target=$(readlink -f "$HOME/.config/alacritty/alacritty.toml" 2>/dev/null)
@@ -63,7 +63,7 @@ show_status() {
     else
         echo "▢ alacritty - not stowed"
     fi
-    
+
     echo ""
     echo "▶ Configuration Status"
     if [[ -f "$HOME/.config/hypr/input.conf" ]]; then
@@ -71,33 +71,33 @@ show_status() {
     else
         echo "▢ Hyprland input not configured"
     fi
-    
+
     if [[ -f "$HOME/.config/hypr/monitors.conf" ]]; then
-        echo "▣ Hyprland monitors configured"  
+        echo "▣ Hyprland monitors configured"
     else
         echo "▢ Hyprland monitors not configured"
     fi
-    
+
     echo ""
     echo "▶ Development Environment"
-    if command -v node &> /dev/null; then
+    if command -v node &>/dev/null; then
         echo "▣ Node.js - $(node --version)"
     else
         echo "▢ Node.js - not installed"
     fi
-    
-    if command -v go &> /dev/null; then
+
+    if command -v go &>/dev/null; then
         echo "▣ Go - $(go version | cut -d' ' -f3)"
     else
         echo "▢ Go - not installed"
     fi
-    
-    if command -v claude &> /dev/null; then
+
+    if command -v claude &>/dev/null; then
         echo "▣ Claude Code - installed"
     else
         echo "▢ Claude Code - not installed"
     fi
-    
+
     echo ""
     echo "▶ Additional Configuration"
     if [[ -f "$HOME/.claude/settings.json" ]]; then
@@ -105,24 +105,23 @@ show_status() {
     else
         echo "▢ Claude Code settings - not configured"
     fi
-    
+
     if [[ -f "$HOME/.bash_aliases" ]]; then
         echo "▣ Bash aliases - configured"
     else
         echo "▢ Bash aliases - not configured"
     fi
-    
-    
+
     if xdg-settings get default-web-browser 2>/dev/null | grep -q firefox; then
         echo "▣ Firefox - default browser"
     else
         echo "▢ Firefox - not default browser"
     fi
-    
+
     echo ""
     echo "▶ Global Tools"
     if [[ -n "$NPM_PACKAGES" ]]; then
-        IFS=' ' read -ra npm_packages <<< "$NPM_PACKAGES"
+        IFS=' ' read -ra npm_packages <<<"$NPM_PACKAGES"
         for pkg in "${npm_packages[@]}"; do
             if npm list -g "$pkg" &>/dev/null; then
                 echo "▣ npm: $pkg - installed"
@@ -131,9 +130,9 @@ show_status() {
             fi
         done
     fi
-    
+
     if [[ -n "$GO_TOOLS" ]]; then
-        IFS=' ' read -ra go_tools <<< "$GO_TOOLS"
+        IFS=' ' read -ra go_tools <<<"$GO_TOOLS"
         for tool in "${go_tools[@]}"; do
             tool_name=$(basename "$tool" | cut -d'@' -f1)
             if command -v "$tool_name" &>/dev/null; then
