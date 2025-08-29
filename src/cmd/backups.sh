@@ -7,8 +7,7 @@ load_config
 
 manage_backups() {
     local action="${1:-}"
-    local backup_base="${BACKUP_BASE_PATH:-$HOME/.config/omarchy-backups}"
-    local safety_backup_base="${HOME}/.local/share/pomarchy/backups"
+    local backup_base="${BACKUP_BASE_PATH:-$HOME/.local/share/pomarchy/backups}"
 
     case "$action" in
         list)
@@ -16,37 +15,30 @@ manage_backups() {
             echo ""
 
             if [[ -d "$backup_base" ]]; then
-                log INFO "Permanent backups (system configurations):"
-                for backup in "$backup_base"/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]/; do
-                    [[ -d "$backup" ]] && echo "  $(basename "$backup")"
-                done | sort -r
-            fi
-
-            if [[ -d "$safety_backup_base" ]]; then
-                echo ""
-                log INFO "Temporary backups (operation-specific):"
-                for backup in "$safety_backup_base"/temporary_*/; do
+                for backup in "$backup_base"/permanent_system_*/; do
+                    [[ -d "$backup" ]] && echo "  $(basename "$backup") (system configuration)"
+                done | sort -r || true
+                
+                for backup in "$backup_base"/temporary_*/; do
                     if [[ -d "$backup" ]]; then
                         local backup_name
                         backup_name=$(basename "$backup")
                         if [[ -f "$backup/.backup_manifest" ]]; then
                             local operation timestamp
-                            operation=$(grep '^operation=' "$backup/.backup_manifest" | cut -d= -f2)
-                            timestamp=$(grep '^timestamp=' "$backup/.backup_manifest" | cut -d= -f2)
+                            operation=$(grep '^operation=' "$backup/.backup_manifest" | cut -d= -f2 2>/dev/null || echo "unknown")
+                            timestamp=$(grep '^timestamp=' "$backup/.backup_manifest" | cut -d= -f2 2>/dev/null || echo "unknown")
                             echo "  $backup_name ($operation - $timestamp)"
                         else
-                            echo "  $backup_name"
+                            echo "  $backup_name (temporary)"
                         fi
                     fi
-                done | sort -r
-            fi
-
-            if [[ ! -d "$backup_base" && ! -d "$safety_backup_base" ]]; then
+                done | sort -r || true
+            else
                 log INFO "No backups found"
             fi
             ;;
         restore)
-            if [[ ! -d "$backup_base" && ! -d "$safety_backup_base" ]]; then
+            if [[ ! -d "$backup_base" ]]; then
                 log ERROR "No backups directory found"
                 exit 1
             fi
@@ -57,37 +49,32 @@ manage_backups() {
             local backup_options=()
 
             if [[ -d "$backup_base" ]]; then
-                log INFO "Permanent backups:"
-                local permanent_list=()
-                for backup in "$backup_base"/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]/; do
+                local backup_list=()
+                
+                for backup in "$backup_base"/permanent_system_*/; do
                     if [[ -d "$backup" ]]; then
                         local backup_name
                         backup_name=$(basename "$backup")
-                        permanent_list+=("  $backup_name (permanent)")
+                        backup_list+=("  $backup_name (system configuration)")
                         backup_options+=("$backup")
                     fi
                 done
-                printf '%s\n' "${permanent_list[@]}" | sort -r
-                echo ""
-            fi
-
-            if [[ -d "$safety_backup_base" ]]; then
-                log INFO "Temporary backups:"
-                local temporary_list=()
-                for backup in "$safety_backup_base"/temporary_*/; do
+                
+                for backup in "$backup_base"/temporary_*/; do
                     if [[ -d "$backup" ]]; then
                         local backup_name operation
                         backup_name=$(basename "$backup")
                         if [[ -f "$backup/.backup_manifest" ]]; then
                             operation=$(grep '^operation=' "$backup/.backup_manifest" | cut -d= -f2 2>/dev/null || echo "unknown")
-                            temporary_list+=("  $backup_name ($operation)")
+                            backup_list+=("  $backup_name ($operation)")
                         else
-                            temporary_list+=("  $backup_name")
+                            backup_list+=("  $backup_name (temporary)")
                         fi
                         backup_options+=("$backup")
                     fi
                 done
-                printf '%s\n' "${temporary_list[@]}" | sort -r
+                
+                printf '%s\n' "${backup_list[@]}" | sort -r
             fi
 
             if [[ ${#backup_options[@]} -eq 0 ]]; then
@@ -100,7 +87,7 @@ manage_backups() {
 
             local selected_backup
             if [[ "$REPLY" == *"temporary_"* ]]; then
-                selected_backup="$safety_backup_base/$REPLY"
+                selected_backup="$backup_base/$REPLY"
             else
                 selected_backup="$backup_base/$REPLY"
             fi

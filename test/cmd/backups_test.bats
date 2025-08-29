@@ -20,18 +20,24 @@ teardown() {
 }
 
 @test "lists available backups" {
-    local backup_dir="${HOME}/.local/share/pomarchy/backups/temporary_test_20240101_120000"
-    mkdir -p "$backup_dir"
-    cat > "$backup_dir/.backup_manifest" << 'EOF'
+    local temp_backup_dir="${TEST_TMP}/home/.local/share/pomarchy/backups/temporary_test_20240101_120000"
+    local perm_backup_dir="${TEST_TMP}/home/.local/share/pomarchy/backups/permanent_system_20240102_140000"
+    
+    mkdir -p "$temp_backup_dir"
+    cat > "$temp_backup_dir/.backup_manifest" << 'EOF'
 operation=test
 timestamp=2024-01-01 12:00:00
 type=temporary
 EOF
     
-    [ -d "$backup_dir" ]
-    [ -f "$backup_dir/.backup_manifest" ]
+    mkdir -p "$perm_backup_dir"
+    
+    [ -d "$temp_backup_dir" ]
+    [ -f "$temp_backup_dir/.backup_manifest" ]
+    [ -d "$perm_backup_dir" ]
     
     run_in_test_env "${POMARCHY_ROOT}/src/cmd/backups.sh" list
     
     [[ "$output" =~ "temporary_test_20240101_120000" ]]
+    [[ "$output" =~ "permanent_system_20240102_140000" ]]
 }

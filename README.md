@@ -120,26 +120,29 @@ Pomarchy uses a simple configuration system with sensible defaults. The configur
 ~/.config/pomarchy/pomarchy.conf
 ```
 
-**Key configuration options:**
+**Available configuration options:**
 
-```bash
-# Skip components by setting to empty
-DOTFILES=""                      # Skip dotfiles installation
-NODEJS_VERSION=""                # Skip Node.js setup
-
-# Customize package lists  
-PACKAGES_INSTALL="firefox code"  # Only install specific packages
-THEME="midnight"  # Default OLED theme (or custom GitHub URL)
-
-# System settings
-KEYBOARD_LAYOUTS="us,de"         # Different keyboard layouts
-CLOCK_FORMAT="24h"               # Use 24-hour clock
-
-# System paths (advanced)
-NVM_INIT_PATH="/usr/share/nvm/init-nvm.sh"  # NVM initialization script path
-BACKUP_BASE_PATH="$HOME/.config/omarchy-backups"  # Backup directory
-TRASH_PATH="/tmp/.trash"         # Trash directory for del() function
-```
+| Category | Variable | Default | Description |
+|----------|----------|---------|-------------|
+| **Theme** | `THEME` | `midnight` | Default OLED theme or custom GitHub URL |
+| **Package Management** | `PACKAGES_REMOVE` | `1password-beta 1password-cli kdenlive obsidian pinta signal-desktop typora spotify` | Packages to uninstall |
+| | `PACKAGES_INSTALL` | `firefox code lite-xl lua go awsvpnclient k6-bin` | Packages to install |
+| **Dotfiles** | `DOTFILES` | `bash micro alacritty pomarchy` | Dotfiles configurations to install |
+| **System Settings** | `KEYBOARD_LAYOUTS` | `us,ge` | Keyboard layouts (comma-separated) |
+| | `MONITOR_RESOLUTION` | `2880x1800@120` | Monitor resolution and refresh rate |
+| | `MONITOR_SCALE` | `2` | Display scaling factor |
+| | `NATURAL_SCROLL` | `true` | Enable natural scrolling |
+| | `DISABLE_WHILE_TYPING` | `false` | Disable touchpad while typing |
+| | `CLOCK_FORMAT` | `12h` | Clock format (`12h` or `24h`) |
+| **Development Tools** | `NODEJS_VERSION` | `20` | Node.js version to install |
+| | `NPM_PACKAGES` | `typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code` | npm packages to install globally |
+| | `GO_TOOLS` | `golang.org/x/tools/gopls@latest github.com/go-delve/delve/cmd/dlv@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest` | Go tools to install |
+| | `VSCODE_EXTENSIONS` | `golang.go ms-python.python ms-python.debugpy dbaeumer.vscode-eslint esbenp.prettier-vscode eamodio.gitlens ms-azuretools.vscode-docker ms-azuretools.vscode-containers hashicorp.terraform redhat.vscode-yaml ms-vscode.makefile-tools bungcip.better-toml davidanson.vscode-markdownlint arcticicestudio.nord-visual-studio-code amerey.blackplusplus` | VS Code extensions to install |
+| **Editor** | `MICRO_PLUGINS` | `fzf editorconfig detectindent snippets bookmark lsp wc` | Micro editor plugins |
+| **Browser** | `DEFAULT_BROWSER` | `firefox` | Default browser |
+| **System Paths** | `NVM_INIT_PATH` | `/usr/share/nvm/init-nvm.sh` | NVM initialization script path |
+| | `BACKUP_BASE_PATH` | `$HOME/.local/share/pomarchy/backups` | Backup directory location |
+| | `TRASH_PATH` | `/tmp/.trash` | Trash directory for del() function |
 
 **Configuration rules:**
 
