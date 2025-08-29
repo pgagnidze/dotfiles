@@ -6,7 +6,7 @@
 *Omarchy is opinionated Arch/Hyprland setup. Pomarchy is opinionated Omarchy.*
 
 <p align="center">
-  <img src="demo/pomarchy-setup.gif" alt="Pomarchy Demo" width="600"/>
+  <img src="demo/demo.gif" alt="Pomarchy Demo" width="600"/>
 </p>
 
 ![License:MIT](https://img.shields.io/static/v1?label=License&message=MIT&color=green&style=flat-square)
@@ -26,6 +26,7 @@
 - Removes unnecessary software (1password, kdenlive, obsidian)
 - Installs essential tools (Firefox, VS Code, Go, Node.js, Claude Code)
 - Manages both official and AUR packages seamlessly
+- Automatic micro plugins installation after editor setup
 
 ### Development Environment
 
@@ -39,21 +40,17 @@
 
 ### System Configuration
 
-- Keyboard layouts (US/Georgian) with Caps Lock switching
+- Multi-language keyboard layouts with Caps Lock switching
 - Active keyboard layout display in Waybar with click-to-switch
-- X1 Carbon Gen 13 OLED optimization (2880x1800@120Hz)
-- Natural scrolling and enhanced touchpad settings
-- 12-hour clock format and system theming
+- Monitor resolution and scaling optimization
+- Configurable touchpad and natural scrolling settings
 
 ### Safety & Flexibility
 
 - **Automatic rollback system** - Failed operations preserve backups for easy restoration
 - **Pre-setup validation** - Checks disk space, connectivity, and permissions before changes
 - **Targeted backups** - Only backs up files each operation will modify (not entire system)
-- **Comprehensive restore** - Handles files, directories, and symlinks with `pomarchy backups restore`
-- Modular execution - run only what you need
-- Configurable via simple key=value files
-- Idempotent - safe to run multiple times
+- **Modular execution** - Run only what you need, configurable via simple key=value files
 
 </td>
 </tr>
@@ -207,6 +204,7 @@ make install
 make help      # Show available commands
 make lint      # Run shellcheck on all scripts
 make test      # Run all tests
+make format    # Format bash scripts with shfmt
 make clean     # Clean test artifacts
 ```
 
@@ -218,7 +216,7 @@ Tests use bats-core framework with isolated test environments. Coverage includes
 
 1. Install dependencies: `make install`
 2. Make your changes
-3. Run lint and tests: `make lint && make test`
+3. Run format, lint and tests: `make format && make lint && make test`
 4. Ensure all checks pass
 
 ## License

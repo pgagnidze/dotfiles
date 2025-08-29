@@ -1,9 +1,9 @@
-Output demo/pomarchy-setup.gif
+Output demo/demo.gif
 
-Set FontSize 14
+Set FontSize 18
 Set Width 1200
-Set Height 800
-Set Theme "nord"
+Set Height 650
+Set Theme "Dracula"
 
 Type "# Pomarchy Setup Demo"
 Sleep 1s
@@ -24,6 +24,11 @@ Sleep 1s
 Enter
 
 Type "./pomarchy setup dotfiles"
+Sleep 500ms
+Enter
+
+Sleep 1s
+Type "y"
 Sleep 500ms
 Enter
 
