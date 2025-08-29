@@ -143,9 +143,11 @@ setup_claude_code() {
     log STEP "Setting up Claude Code configuration..."
     
     local claude_config_dir="$HOME/.claude"
+    local commands_dir="$claude_config_dir/commands"
     local settings_file="$claude_config_dir/settings.json"
+    local commit_command="$commands_dir/pomarchy-commit.md"
     
-    mkdir -p "$claude_config_dir"
+    mkdir -p "$claude_config_dir" "$commands_dir"
     
     if [[ ! -f "$settings_file" ]]; then
         cat > "$settings_file" << 'EOF'
@@ -159,6 +161,15 @@ EOF
         log INFO "Claude Code settings.json created with powerline status line"
     else
         log INFO "Claude Code settings.json already exists"
+    fi
+    
+    if [[ ! -f "$commit_command" ]]; then
+        cat > "$commit_command" << 'EOF'
+add semantic commit message, one-liner, lowercase, without mentioning claude code.
+EOF
+        log INFO "Claude Code pomarchy-commit command created"
+    else
+        log INFO "Claude Code pomarchy-commit command already exists"
     fi
 }
 
