@@ -171,6 +171,8 @@ main() {
             list | restore | remove | rm)
                 if [[ "$command" == "backups" ]]; then
                     backup_action="$1"
+                else
+                    remaining_args+=("$1")
                 fi
                 shift
                 ;;

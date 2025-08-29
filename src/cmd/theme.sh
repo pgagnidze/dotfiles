@@ -142,7 +142,7 @@ list_themes() {
         if [[ -e "$theme" ]]; then
             local theme_name=$(basename "$theme")
             echo "  • $theme_name"
-            ((count++))
+            ((count++)) || true
         fi
     done
 
@@ -150,7 +150,7 @@ list_themes() {
         echo "  No themes installed"
     else
         echo ""
-        echo "Use: pomarchy setup theme <theme_name>"
+        echo "Use: pomarchy theme use <theme_name>"
         echo "Or activate via: Ctrl+Shift+Super+Space"
     fi
 }
