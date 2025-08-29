@@ -52,9 +52,9 @@ stow_config() {
     
     IFS=' ' read -ra configs <<< "$DOTFILES"
     for config in "${configs[@]}"; do
-        if [[ -d "${POMARCHY_ROOT}/config/${config}" ]]; then
+        if [[ -d "${POMARCHY_ROOT}/src/config/${config}" ]]; then
             log INFO "Installing ${config} configuration..."
-            stow -v -d "${POMARCHY_ROOT}/config" -t "${HOME}" "${config}"
+            stow -v -d "${POMARCHY_ROOT}/src/config" -t "${HOME}" "${config}"
         fi
     done
 }
