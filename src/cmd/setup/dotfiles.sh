@@ -68,8 +68,28 @@ for arg in "$@"; do
     esac
 done
 
+setup_error_handling "dotfiles"
+pre_setup_validation
+
+if [[ -n "$DOTFILES" ]]; then
+    IFS=' ' read -ra configs <<< "$DOTFILES"
+    backup_files=()
+    for config in "${configs[@]}"; do
+        case "$config" in
+            "alacritty") backup_files+=("$HOME/.config/alacritty") ;;
+            "micro") backup_files+=("$HOME/.config/micro") ;;
+            "pomarchy") backup_files+=("$HOME/.config/pomarchy") ;;
+            "bash") backup_files+=("$HOME/.bashrc" "$HOME/.bash_profile") ;;
+        esac
+    done
+    if [[ ${#backup_files[@]} -gt 0 ]]; then
+        create_safety_backup "dotfiles" "${backup_files[@]}"
+    fi
+fi
+
 log STEP "Installing dotfiles..."
 stow_config
+exit 1
 if [[ -n "$DOTFILES" ]]; then
     log INFO "Dotfiles installation complete!"
 fi

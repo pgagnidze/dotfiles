@@ -35,6 +35,10 @@ for arg in "$@"; do
     esac
 done
 
+setup_error_handling "packages"
+pre_setup_validation
+create_safety_backup "packages" "$HOME/.config/micro/plug"
+
 log STEP "Package Management"
 
 readonly CORE_PACKAGES=("ttf-ubuntu-mono-nerd" "micro")

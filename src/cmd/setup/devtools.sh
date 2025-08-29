@@ -35,6 +35,10 @@ for arg in "$@"; do
     esac
 done
 
+setup_error_handling "devtools"
+pre_setup_validation
+create_safety_backup "devtools" "$HOME/.nvmrc" "$HOME/.claude/settings.json" "$HOME/.bashrc"
+
 ensure_command yay
 
 log STEP "Development Tools Setup"
@@ -158,47 +162,12 @@ EOF
     fi
 }
 
-setup_shell() {
-    log STEP "Setting up shell enhancements..."
-    
-    readonly ALIAS_FILE="$HOME/.bash_aliases"
-    if [[ ! -f "$ALIAS_FILE" ]]; then
-        cat > "$ALIAS_FILE" << 'EOF'
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias gs='git status'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git log --oneline --graph --decorate'
-alias docker-clean='docker system prune -a'
-alias k='kubectl'
-alias tf='terraform'
-
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../../..'
-
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-EOF
-        log INFO "Bash aliases created"
-        
-        if ! grep -q "bash_aliases" "$HOME/.bashrc" 2>/dev/null; then
-            echo '[ -f ~/.bash_aliases ] && source ~/.bash_aliases' >> "$HOME/.bashrc"
-        fi
-    else
-        log INFO "Bash aliases already exist"
-    fi
-}
 
 
 setup_node
 setup_go
 setup_vscode
 setup_claude_code
-setup_shell
 
 log INFO "Development tools setup complete!"
 echo ""

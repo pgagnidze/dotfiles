@@ -39,37 +39,48 @@ for arg in "$@"; do
     esac
 done
 
-log STEP "System Configuration"
+setup_error_handling "system"
+pre_setup_validation
 
 readonly HYPR_CONFIG_DIR="$HOME/.config/hypr"
 readonly WAYBAR_CONFIG_DIR="$HOME/.config/waybar"
-
-backup_to_snapshot() {
-    local file="$1"
-    local backup_dir="$2"
-    if [[ -f "$file" ]]; then
-        local relative_path="${file#"$HOME"/}"
-        local backup_file_dir
-        backup_file_dir="$(dirname "$backup_dir/$relative_path")"
-        mkdir -p "$backup_file_dir"
-        cp "$file" "$backup_dir/$relative_path"
-    fi
-}
-
-BACKUP_DIR="${BACKUP_BASE_PATH:-$HOME/.config/omarchy-backups}/$(date +%Y%m%d_%H%M%S)"
-readonly BACKUP_DIR
-mkdir -p "$BACKUP_DIR"
-log STEP "Creating configuration backup..."
-
 readonly INPUT_CONF="$HYPR_CONFIG_DIR/input.conf"
 readonly MONITOR_CONF="$HYPR_CONFIG_DIR/monitors.conf"  
 readonly WAYBAR_CONFIG="$WAYBAR_CONFIG_DIR/config.jsonc"
 readonly WAYBAR_STYLE="$WAYBAR_CONFIG_DIR/style.css"
 
-backup_to_snapshot "$INPUT_CONF" "$BACKUP_DIR"
-backup_to_snapshot "$MONITOR_CONF" "$BACKUP_DIR"
-backup_to_snapshot "$WAYBAR_CONFIG" "$BACKUP_DIR"
-backup_to_snapshot "$WAYBAR_STYLE" "$BACKUP_DIR"
+create_safety_backup "system" "$INPUT_CONF" "$MONITOR_CONF" "$WAYBAR_CONFIG" "$WAYBAR_STYLE"
+
+log STEP "System Configuration"
+
+create_permanent_backup() {
+    local backup_timestamp
+    backup_timestamp=$(date +%Y%m%d_%H%M%S)
+    local permanent_backup_dir="${BACKUP_BASE_DIR}/permanent_system_${backup_timestamp}"
+    
+    mkdir -p "$permanent_backup_dir"
+    
+    local backup_manifest="${permanent_backup_dir}/.backup_manifest"
+    echo "operation=system" > "$backup_manifest"
+    echo "timestamp=$(date)" >> "$backup_manifest"
+    echo "type=permanent" >> "$backup_manifest"
+    
+    local files_backed_up=0
+    for file in "$INPUT_CONF" "$MONITOR_CONF" "$WAYBAR_CONFIG" "$WAYBAR_STYLE"; do
+        if [[ -f "$file" ]]; then
+            backup_single_file "$file" "$permanent_backup_dir" "$backup_manifest"
+            ((files_backed_up++)) || true
+        fi
+    done
+    
+    if (( files_backed_up > 0 )); then
+        log INFO "Permanent backup created: $permanent_backup_dir"
+    else
+        rm -rf "$permanent_backup_dir"
+    fi
+}
+
+create_permanent_backup
 
 log STEP "Configuring keyboard layouts and input..."
 
@@ -173,7 +184,6 @@ if [[ -n "$KEYBOARD_LAYOUTS" && -f "$WAYBAR_CONFIG" ]]; then
 fi
 
 log INFO "Configuration complete!"
-log INFO "Backup stored in $BACKUP_DIR"
 
 if pgrep -x "waybar" > /dev/null; then
     log STEP "Restarting waybar to apply changes..."

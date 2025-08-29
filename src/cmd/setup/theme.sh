@@ -105,6 +105,9 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    setup_error_handling "theme"
+    pre_setup_validation
+    
     THEME_TO_INSTALL="${USER_THEME:-$THEME}"
     THEME_URL=$(get_theme_url "$THEME_TO_INSTALL")
     THEME_NAME=$(basename "$THEME_URL" .git)

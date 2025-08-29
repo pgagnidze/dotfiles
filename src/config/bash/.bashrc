@@ -8,8 +8,6 @@ export NVM_DIR="$HOME/.nvm"
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
-[ -f ~/.bash_aliases ] && source ~/.bash_aliases
-
 # Add pomarchy alias - automatically detects installation path
 if [[ -n "${POMARCHY_ROOT:-}" && -x "${POMARCHY_ROOT}/pomarchy" ]]; then
     alias pomarchy="${POMARCHY_ROOT}/pomarchy"
@@ -19,7 +17,8 @@ elif command -v pomarchy >/dev/null 2>&1; then
 else
     # Try common installation locations
     for pomarchy_path in \
-        "$HOME/dotfiles/pomarchy" \
+        "$HOME/Development/personal/pomarchy/pomarchy" \
+        "$HOME/dotfiles/pomarchy/pomarchy" \
         "$HOME/pomarchy/pomarchy" \
         "$HOME/.local/bin/pomarchy" \
         "/usr/local/bin/pomarchy"; do
@@ -66,4 +65,3 @@ tmuxp() {
 if [[ $UID -ge 1000 && -d $HOME/.npm-global/bin && -z $(echo $PATH | grep -o $HOME/.npm-global/bin) ]]; then
     export PATH=$HOME/.npm-global/bin:${PATH}
 fi
-

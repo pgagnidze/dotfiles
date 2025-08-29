@@ -72,3 +72,154 @@ print_pomarchy_banner() {
     echo ""
 }
 
+if [[ -z "${BACKUP_BASE_DIR:-}" ]]; then
+    readonly BACKUP_BASE_DIR="${HOME}/.local/share/pomarchy/backups"
+fi
+
+pre_setup_validation() {
+    log INFO "Performing pre-setup validation..."
+    
+    local available_space
+    available_space=$(df "$HOME" | awk 'NR==2 {print $4}')
+    if (( available_space < 1048576 )); then
+        log ERROR "Insufficient disk space. At least 1GB free space required."
+        log ERROR "Current available space: $(( available_space / 1024 ))MB"
+        exit 1
+    fi
+    
+    if ! ping -c 1 -W 5 google.com &>/dev/null; then
+        log WARN "No internet connection detected. Some operations may fail."
+    fi
+    
+    if [[ ! -w "$HOME" ]]; then
+        log ERROR "Cannot write to home directory: $HOME"
+        exit 1
+    fi
+    
+    if [[ -n "${POMARCHY_SKIP_VALIDATION:-}" ]]; then
+        log INFO "Pre-setup validation skipped (POMARCHY_SKIP_VALIDATION set)"
+        return
+    fi
+    
+    log INFO "Pre-setup validation completed successfully"
+}
+
+create_safety_backup() {
+    local operation_name="$1"
+    shift
+    local files_to_backup=("$@")
+    
+    
+    if [[ ${#files_to_backup[@]} -eq 0 ]]; then
+        log INFO "No files specified for safety backup"
+        return
+    fi
+    
+    local backup_timestamp
+    backup_timestamp=$(date +%Y%m%d_%H%M%S)
+    local operation_backup_dir="${BACKUP_BASE_DIR}/temporary_${operation_name}_${backup_timestamp}"
+    
+    mkdir -p "$operation_backup_dir"
+    
+    local backup_manifest="${operation_backup_dir}/.backup_manifest"
+    echo "operation=$operation_name" > "$backup_manifest"
+    echo "timestamp=$(date)" >> "$backup_manifest"
+    echo "type=temporary" >> "$backup_manifest"
+    
+    local files_backed_up=0
+    for file_pattern in "${files_to_backup[@]}"; do
+        if [[ "$file_pattern" == *"*"* ]] || [[ "$file_pattern" == *"?"* ]]; then
+            for file in $file_pattern; do
+                if [[ -f "$file" || -d "$file" ]]; then
+                    backup_single_file "$file" "$operation_backup_dir" "$backup_manifest"
+                    ((files_backed_up++)) || true
+                fi
+            done
+        else
+            if [[ -f "$file_pattern" || -d "$file_pattern" ]]; then
+                backup_single_file "$file_pattern" "$operation_backup_dir" "$backup_manifest"
+                ((files_backed_up++)) || true
+            fi
+        fi
+    done
+    
+    if (( files_backed_up > 0 )); then
+        export POMARCHY_SAFETY_BACKUP_DIR="$operation_backup_dir"
+        log INFO "Temporary backup created: $operation_backup_dir ($files_backed_up files)"
+    else
+        rm -rf "$operation_backup_dir"
+        log INFO "No existing files found to backup for $operation_name"
+    fi
+}
+
+backup_single_file() {
+    local source_file="$1"
+    local backup_base_dir="$2"
+    local manifest_file="$3"
+    
+    local relative_path
+    if [[ "$source_file" == "$HOME"* ]]; then
+        relative_path="${source_file#"$HOME"/}"
+    else
+        relative_path="$source_file"
+    fi
+    
+    local backup_file_path="$backup_base_dir/$relative_path"
+    local backup_dir
+    backup_dir=$(dirname "$backup_file_path")
+    
+    mkdir -p "$backup_dir"
+    
+    if [[ -d "$source_file" ]]; then
+        cp -r "$source_file" "$backup_file_path"
+        echo "dir=$source_file" >> "$manifest_file"
+    else
+        cp "$source_file" "$backup_file_path"
+        echo "file=$source_file" >> "$manifest_file"
+    fi
+}
+
+handle_setup_failure() {
+    local operation_name="$1"
+    local exit_code="$2"
+    
+    log ERROR "$operation_name failed with exit code $exit_code"
+    
+    if [[ -n "${POMARCHY_SAFETY_BACKUP_DIR:-}" && -d "$POMARCHY_SAFETY_BACKUP_DIR" ]]; then
+        log ERROR ""
+        log ERROR "Temporary backup preserved at: $POMARCHY_SAFETY_BACKUP_DIR"
+        log ERROR "To restore: pomarchy restore \"$POMARCHY_SAFETY_BACKUP_DIR\""
+        log ERROR "Backup manifest: $POMARCHY_SAFETY_BACKUP_DIR/.backup_manifest"
+    else
+        log ERROR "No temporary backup was created (no existing files were modified)"
+    fi
+    
+    exit "$exit_code"
+}
+
+cleanup_successful_backup() {
+    if [[ -n "${POMARCHY_SAFETY_BACKUP_DIR:-}" && -d "$POMARCHY_SAFETY_BACKUP_DIR" ]]; then
+        log INFO "Cleaning up temporary backup (operation succeeded): $(basename "$POMARCHY_SAFETY_BACKUP_DIR")"
+        rm -rf "$POMARCHY_SAFETY_BACKUP_DIR"
+        unset POMARCHY_SAFETY_BACKUP_DIR
+    fi
+}
+
+setup_error_handling() {
+    local operation_name="$1"
+    export POMARCHY_OPERATION_NAME="$operation_name"
+    
+    cleanup_on_exit() {
+        local exit_code=$?
+        if (( exit_code != 0 )); then
+            handle_setup_failure "${POMARCHY_OPERATION_NAME}" "$exit_code"
+        else
+            cleanup_successful_backup
+        fi
+    }
+    
+    trap cleanup_on_exit EXIT
+    trap 'exit 130' INT
+    trap 'exit 143' TERM
+}
+

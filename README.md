@@ -47,7 +47,10 @@
 
 ### Safety & Flexibility
 
-- Automatic timestamped backups before changes
+- **Automatic rollback system** - Failed operations preserve backups for easy restoration
+- **Pre-setup validation** - Checks disk space, connectivity, and permissions before changes
+- **Targeted backups** - Only backs up files each operation will modify (not entire system)
+- **Comprehensive restore** - Handles files, directories, and symlinks with `pomarchy backups restore`
 - Modular execution - run only what you need
 - Configurable via simple key=value files
 - Idempotent - safe to run multiple times
@@ -150,7 +153,8 @@ TRASH_PATH="/tmp/.trash"         # Trash directory for del() function
 
 - **Automatic pomarchy alias:** Detects installation path and creates global alias
 - **Config validation:** Validates monitor resolution, scale, and clock format on startup
-- **Enhanced error handling:** Better error messages and validation throughout
+- **Enhanced error handling:** Comprehensive error trapping with automatic backup preservation on failure
+- **Backup manifest system:** Tracks exactly which files were backed up for precise restoration
 
 ## Requirements
 
