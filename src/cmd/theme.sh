@@ -34,22 +34,22 @@ show_help() {
 
 detect_theme_type() {
     local input="$1"
-    
+
     if [[ -z "$input" || "$input" == "midnight" ]]; then
         echo "predefined"
         return
     fi
-    
+
     if [[ "$input" =~ ^https://github\.com/[^/]+/[^/]+\.git$ ]]; then
         echo "url"
         return
     fi
-    
+
     if [[ -d "/home/$(whoami)/.config/omarchy/themes/$input" ]]; then
         echo "installed"
         return
     fi
-    
+
     echo "unknown"
 }
 
@@ -107,7 +107,7 @@ install_theme_from_url() {
 
 set_installed_theme() {
     local theme_name="$1"
-    
+
     log INFO "Setting omarchy theme to: $theme_name..."
 
     if ! command -v omarchy-theme-set >/dev/null 2>&1; then
@@ -128,15 +128,15 @@ set_installed_theme() {
 
 list_themes() {
     local themes_dir="$HOME/.config/omarchy/themes"
-    
+
     if [[ ! -d "$themes_dir" ]]; then
         log ERROR "Themes directory not found: $themes_dir"
         exit 1
     fi
-    
+
     log INFO "Installed omarchy themes:"
     echo ""
-    
+
     local count=0
     for theme in "$themes_dir"/*; do
         if [[ -e "$theme" ]]; then
@@ -145,7 +145,7 @@ list_themes() {
             ((count++))
         fi
     done
-    
+
     if [[ $count -eq 0 ]]; then
         echo "  No themes installed"
     else
@@ -197,29 +197,29 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         list_themes
         exit 0
     fi
-    
+
     if [[ -z "$THEME_COMMAND" ]]; then
         show_help
         exit 0
     fi
-    
+
     if [[ "$THEME_COMMAND" == "use" && -z "$THEME_INPUT" ]]; then
         echo "Error: 'use' command requires a theme name or URL"
         echo "Use 'pomarchy theme --help' for usage information"
         exit 1
     fi
-    
+
     setup_error_handling "theme"
     pre_setup_validation
 
     if [[ "$THEME_COMMAND" == "use" ]]; then
         THEME_TYPE=$(detect_theme_type "$THEME_INPUT")
-        
+
         case "$THEME_TYPE" in
             "predefined" | "url")
                 THEME_URL=$(get_theme_url "$THEME_INPUT")
                 THEME_NAME=$(basename "$THEME_URL" .git)
-                
+
                 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
                     log STEP "Installing omarchy theme: $THEME_NAME..."
                     echo "This will install the '$THEME_NAME' theme for Omarchy."
@@ -231,11 +231,11 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
                         exit 0
                     fi
                 fi
-                
+
                 log STEP "Installing omarchy theme: $THEME_NAME..."
                 install_theme_from_url "$THEME_URL"
                 ;;
-                
+
             "installed")
                 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
                     log STEP "Setting omarchy theme: $THEME_INPUT..."
@@ -247,11 +247,11 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
                         exit 0
                     fi
                 fi
-                
+
                 log STEP "Activating omarchy theme: $THEME_INPUT..."
                 set_installed_theme "$THEME_INPUT"
                 ;;
-                
+
             "unknown")
                 log ERROR "Unknown theme: $THEME_INPUT"
                 log ERROR "Available options:"
@@ -261,7 +261,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
                 exit 1
                 ;;
         esac
-        
+
         log INFO "Theme operation complete!"
     fi
 fi

@@ -18,7 +18,7 @@ manage_backups() {
                 for backup in "$backup_base"/permanent_system_*/; do
                     [[ -d "$backup" ]] && echo "  $(basename "$backup") (system configuration)"
                 done | sort -r || true
-                
+
                 for backup in "$backup_base"/temporary_*/; do
                     if [[ -d "$backup" ]]; then
                         local backup_name
@@ -50,7 +50,7 @@ manage_backups() {
 
             if [[ -d "$backup_base" ]]; then
                 local backup_list=()
-                
+
                 for backup in "$backup_base"/permanent_system_*/; do
                     if [[ -d "$backup" ]]; then
                         local backup_name
@@ -59,7 +59,7 @@ manage_backups() {
                         backup_options+=("$backup")
                     fi
                 done
-                
+
                 for backup in "$backup_base"/temporary_*/; do
                     if [[ -d "$backup" ]]; then
                         local backup_name operation
@@ -73,7 +73,7 @@ manage_backups() {
                         backup_options+=("$backup")
                     fi
                 done
-                
+
                 printf '%s\n' "${backup_list[@]}" | sort -r
             fi
 
