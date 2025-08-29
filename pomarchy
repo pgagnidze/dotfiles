@@ -17,12 +17,12 @@ show_usage() {
     echo "  setup packages     Manage system packages"
     echo "  setup system       Configure Omarchy system settings"
     echo "  setup devtools     Setup development environment"
-    echo "  setup theme        Install omarchy themes (supports custom URLs)"
     echo "  setup all          Run full setup (default)"
     echo ""
     echo "Utility Commands:"
     echo "  doctor             Show system status"
     echo "  backups            Manage system configuration backups"
+    echo "  theme              Manage omarchy themes (list, install, activate)"
     echo "  update             Update Pomarchy to latest version"
     echo ""
     echo "Options:"
@@ -31,6 +31,7 @@ show_usage() {
     echo "For more help on specific commands:"
     echo "  $0 setup --help         # Show setup options"
     echo "  $0 backups --help       # Show backup options"
+    echo "  $0 theme --help         # Show theme options"
     echo ""
     echo "Examples:"
     echo "  $0                      # Run full setup"
@@ -38,6 +39,7 @@ show_usage() {
     echo "  $0 doctor               # Check system status"
     echo "  $0 update               # Update to latest version"
     echo "  $0 backups list         # List available system config backups"
+    echo "  $0 theme list           # List installed themes"
 }
 
 show_setup_usage() {
@@ -48,7 +50,6 @@ show_setup_usage() {
     echo "  packages     Install/remove packages and micro plugins"
     echo "  system       Configure system settings (keyboard, monitor, input)"
     echo "  devtools     Setup development environment (Node.js, Go, VS Code)"
-    echo "  theme        Install omarchy themes (midnight default, supports custom URLs)"
     echo "  all          Run all setup components (default)"
     echo ""
     echo "Options:"
@@ -96,7 +97,7 @@ run_devtools() {
 }
 
 run_theme() {
-    "${POMARCHY_ROOT}/src/cmd/setup/theme.sh" "$@"
+    "${POMARCHY_ROOT}/src/cmd/theme.sh" "$@"
 }
 
 run_all() {
@@ -151,7 +152,7 @@ main() {
                 shift
                 if [[ $# -gt 0 ]]; then
                     case "$1" in
-                        dotfiles | packages | system | devtools | theme | all)
+                        dotfiles | packages | system | devtools | all)
                             subcommand="$1"
                             shift
                             ;;
@@ -163,7 +164,7 @@ main() {
                     esac
                 fi
                 ;;
-            doctor | backups | update)
+            doctor | backups | update | theme)
                 command="$1"
                 shift
                 ;;
@@ -216,9 +217,6 @@ main() {
                 devtools)
                     run_devtools "${remaining_args[@]+${remaining_args[@]}}"
                     ;;
-                theme)
-                    run_theme "${remaining_args[@]+${remaining_args[@]}}"
-                    ;;
                 all)
                     run_all "${remaining_args[@]+${remaining_args[@]}}"
                     ;;
@@ -238,6 +236,9 @@ main() {
             ;;
         update)
             "${POMARCHY_ROOT}/src/cmd/update.sh"
+            ;;
+        theme)
+            run_theme "${remaining_args[@]+${remaining_args[@]}}"
             ;;
         *)
             echo "Error: Unknown command '$command'"

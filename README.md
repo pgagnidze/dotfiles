@@ -70,20 +70,21 @@ chmod +x pomarchy
 **Modular Installation:**
 
 ```bash
-./pomarchy setup dotfiles        # Terminal configs, micro editor, themes
+./pomarchy setup dotfiles        # Terminal configs, micro editor
 ./pomarchy setup packages        # System packages and applications
 ./pomarchy setup system          # Keyboard, monitor, input settings
 ./pomarchy setup devtools        # Node.js, Go, VS Code extensions
-./pomarchy setup theme           # Install omarchy themes
 ```
 
 ## Usage
 
 | Command | Description |
 |---------|-------------|
-| `pomarchy` | Full setup (dotfiles, packages, system, devtools, theme) |
+| `pomarchy` | Full setup (dotfiles, packages, system, devtools) |
 | `pomarchy doctor` | Show system status and installed components |
 | `pomarchy setup [component]` | Install specific component |
+| `pomarchy theme list` | List installed themes |
+| `pomarchy theme use <name\|url>` | Install or activate theme |
 | `pomarchy backups list` | List available configuration backups |
 | `pomarchy backups restore` | Restore from backup |
 | `pomarchy update` | Update Pomarchy to latest version |
@@ -94,8 +95,10 @@ chmod +x pomarchy
 # Install packages without confirmation prompts
 pomarchy setup packages --yes
 
-# Install custom theme from GitHub
-pomarchy setup theme https://github.com/user/theme.git
+# List and manage themes
+pomarchy theme list
+pomarchy theme use gruvbox                    # Activate installed theme
+pomarchy theme use https://github.com/user/theme.git  # Install from GitHub
 
 # Check what's installed and configured
 pomarchy doctor
@@ -126,7 +129,7 @@ NODEJS_VERSION=""                # Skip Node.js setup
 
 # Customize package lists  
 PACKAGES_INSTALL="firefox code"  # Only install specific packages
-THEME="https://github.com/user/custom-theme.git"  # Custom theme
+THEME="midnight"  # Default OLED theme (or custom GitHub URL)
 
 # System settings
 KEYBOARD_LAYOUTS="us,de"         # Different keyboard layouts
@@ -166,7 +169,7 @@ TRASH_PATH="/tmp/.trash"         # Trash directory for del() function
 - **Steam:** Install via Omarchy menu for GPU support
 - **Micro plugins:** Installed automatically after micro editor setup
 - **Claude Code:** Configured with enhanced status line
-- **Themes:** Default midnight theme, custom GitHub URLs supported
+- **Themes:** Smart theme management - install from URLs or activate installed themes
 - **Configurable paths:** NVM, backup directory, and trash paths can be customized in config
 
 ## Troubleshooting
