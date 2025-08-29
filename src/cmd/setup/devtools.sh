@@ -83,13 +83,12 @@ setup_node() {
     fi
 
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-    
+
     if [[ -n "${TEST_TMP:-}" && -s "${TEST_TMP}/usr/share/nvm/init-nvm.sh" ]]; then
         source "${TEST_TMP}/usr/share/nvm/init-nvm.sh"
     elif [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
         source "/usr/share/nvm/init-nvm.sh"
     fi
-    
 
     if command -v nvm &>/dev/null; then
         if [[ -n "$NODEJS_VERSION" ]]; then
