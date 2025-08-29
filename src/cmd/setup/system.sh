@@ -30,17 +30,39 @@ show_help() {
     echo "Note: Requires Hyprland restart to apply changes (Super+Esc → Relaunch)"
 }
 
-for arg in "$@"; do
-    case "$arg" in
+SKIP_CONFIRM="${YES:-false}"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
         --help|-h|help)
             show_help
             exit 0
+            ;;
+        --yes|-y)
+            SKIP_CONFIRM=true
+            shift
+            ;;
+        *)
+            shift
             ;;
     esac
 done
 
 setup_error_handling "system"
 pre_setup_validation
+
+if [[ "${SKIP_CONFIRM}" == "false" ]]; then
+    log STEP "Configuring system settings for Omarchy..."
+    echo "This will configure keyboard layouts, monitor settings, and Waybar."
+    echo "Keyboard layouts: ${KEYBOARD_LAYOUTS}"
+    echo "Monitor resolution: ${MONITOR_RESOLUTION} at ${MONITOR_SCALE}x scale"
+    echo ""
+    read -rp "Do you want to continue? (y/N) "
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log INFO "System configuration cancelled."
+        exit 0
+    fi
+fi
 
 readonly HYPR_CONFIG_DIR="$HOME/.config/hypr"
 readonly WAYBAR_CONFIG_DIR="$HOME/.config/waybar"

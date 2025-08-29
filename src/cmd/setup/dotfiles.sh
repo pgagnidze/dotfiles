@@ -59,17 +59,38 @@ stow_config() {
     done
 }
 
-for arg in "$@"; do
-    case "$arg" in
+SKIP_CONFIRM="${YES:-false}"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
         --help|-h|help)
             show_help
             exit 0
+            ;;
+        --yes|-y)
+            SKIP_CONFIRM=true
+            shift
+            ;;
+        *)
+            shift
             ;;
     esac
 done
 
 setup_error_handling "dotfiles"
 pre_setup_validation
+
+if [[ "${SKIP_CONFIRM}" == "false" ]]; then
+    log STEP "Installing dotfiles for Omarchy..."
+    echo "This will install configurations for Alacritty, Micro, and Bash."
+    echo "Dotfiles to install: ${DOTFILES}"
+    echo ""
+    read -rp "Do you want to continue? (y/N) "
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log INFO "Dotfiles installation cancelled."
+        exit 0
+    fi
+fi
 
 if [[ -n "$DOTFILES" ]]; then
     IFS=' ' read -ra configs <<< "$DOTFILES"
@@ -89,7 +110,6 @@ fi
 
 log STEP "Installing dotfiles..."
 stow_config
-exit 1
 if [[ -n "$DOTFILES" ]]; then
     log INFO "Dotfiles installation complete!"
 fi

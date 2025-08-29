@@ -26,17 +26,42 @@ show_help() {
     echo "  pomarchy setup devtools --yes   # Setup development tools without prompts"
 }
 
-for arg in "$@"; do
-    case "$arg" in
+SKIP_CONFIRM="${YES:-false}"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
         --help|-h|help)
             show_help
             exit 0
+            ;;
+        --yes|-y)
+            SKIP_CONFIRM=true
+            shift
+            ;;
+        *)
+            shift
             ;;
     esac
 done
 
 setup_error_handling "devtools"
 pre_setup_validation
+
+if [[ "${SKIP_CONFIRM}" == "false" ]]; then
+    log STEP "Setting up development tools for Omarchy..."
+    echo "This will install Node.js, Go tools, VS Code extensions, and Claude Code."
+    echo "Node.js version: ${NODEJS_VERSION}"
+    echo "NPM packages: ${NPM_PACKAGES}"
+    echo "Go tools: ${GO_TOOLS}"
+    echo "VS Code extensions: ${VSCODE_EXTENSIONS}"
+    echo ""
+    read -rp "Do you want to continue? (y/N) "
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log INFO "Development tools setup cancelled."
+        exit 0
+    fi
+fi
+
 create_safety_backup "devtools" "$HOME/.nvmrc" "$HOME/.claude/settings.json" "$HOME/.bashrc"
 
 ensure_command yay

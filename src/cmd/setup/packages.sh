@@ -26,17 +26,40 @@ show_help() {
     echo "  pomarchy setup packages --yes   # Install packages without prompts"
 }
 
-for arg in "$@"; do
-    case "$arg" in
+SKIP_CONFIRM="${YES:-false}"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
         --help|-h|help)
             show_help
             exit 0
+            ;;
+        --yes|-y)
+            SKIP_CONFIRM=true
+            shift
+            ;;
+        *)
+            shift
             ;;
     esac
 done
 
 setup_error_handling "packages"
 pre_setup_validation
+
+if [[ "${SKIP_CONFIRM}" == "false" ]]; then
+    log STEP "Installing packages for Omarchy..."
+    echo "This will remove unwanted packages and install essential packages."
+    echo "Packages to remove: ${PACKAGES_REMOVE}"
+    echo "Packages to install: ${PACKAGES_INSTALL}"
+    echo ""
+    read -rp "Do you want to continue? (y/N) "
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log INFO "Package installation cancelled."
+        exit 0
+    fi
+fi
+
 create_safety_backup "packages" "$HOME/.config/micro/plug"
 
 log STEP "Package Management"
