@@ -140,9 +140,6 @@ Pomarchy uses a simple configuration system with sensible defaults. The configur
 | | `VSCODE_EXTENSIONS` | `golang.go ms-python.python ms-python.debugpy dbaeumer.vscode-eslint esbenp.prettier-vscode eamodio.gitlens ms-azuretools.vscode-docker ms-azuretools.vscode-containers hashicorp.terraform redhat.vscode-yaml ms-vscode.makefile-tools bungcip.better-toml davidanson.vscode-markdownlint arcticicestudio.nord-visual-studio-code amerey.blackplusplus` | VS Code extensions to install |
 | **Editor** | `MICRO_PLUGINS` | `fzf editorconfig detectindent snippets bookmark lsp wc` | Micro editor plugins |
 | **Browser** | `DEFAULT_BROWSER` | `firefox` | Default browser |
-| **System Paths** | `NVM_INIT_PATH` | `/usr/share/nvm/init-nvm.sh` | NVM initialization script path |
-| | `BACKUP_BASE_PATH` | `$HOME/.local/share/pomarchy/backups` | Backup directory location |
-| | `TRASH_PATH` | `/tmp/.trash` | Trash directory for del() function |
 
 **Configuration rules:**
 

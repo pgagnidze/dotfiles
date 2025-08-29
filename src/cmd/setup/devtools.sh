@@ -75,7 +75,7 @@ setup_node() {
 
     log STEP "Setting up Node.js environment..."
 
-    if [[ -s "${NVM_INIT_PATH}" ]] || yay -Qi nvm &>/dev/null; then
+    if yay -Qi nvm &>/dev/null; then
         log INFO "NVM is already installed"
     else
         log INFO "Installing NVM..."
@@ -83,7 +83,13 @@ setup_node() {
     fi
 
     export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-    [[ -s "${NVM_INIT_PATH}" ]] && source "${NVM_INIT_PATH}"
+    
+    if [[ -n "${TEST_TMP:-}" && -s "${TEST_TMP}/usr/share/nvm/init-nvm.sh" ]]; then
+        source "${TEST_TMP}/usr/share/nvm/init-nvm.sh"
+    elif [[ -s "/usr/share/nvm/init-nvm.sh" ]]; then
+        source "/usr/share/nvm/init-nvm.sh"
+    fi
+    
 
     if command -v nvm &>/dev/null; then
         if [[ -n "$NODEJS_VERSION" ]]; then

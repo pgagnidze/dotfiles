@@ -44,7 +44,7 @@ lsgrep() {
 }
 
 del() {
-    local trash_path="${TRASH_PATH:-/tmp/.trash}"
+    local trash_path="/tmp/.trash"
     mkdir -p "$trash_path" && mv "$@" "$trash_path"
 }
 

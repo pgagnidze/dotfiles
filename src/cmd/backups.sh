@@ -7,7 +7,7 @@ load_config
 
 manage_backups() {
     local action="${1:-}"
-    local backup_base="${BACKUP_BASE_PATH:-$HOME/.local/share/pomarchy/backups}"
+    local backup_base="$HOME/.local/share/pomarchy/backups"
 
     case "$action" in
         list)

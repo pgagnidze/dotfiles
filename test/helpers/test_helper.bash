@@ -86,8 +86,15 @@ mock_nvm() {
     mkdir -p "${TEST_TMP}/.nvm"
     mkdir -p "${TEST_TMP}/usr/share/nvm"
 
-    echo '#!/bin/bash
-export NVM_DIR="${TEST_TMP}/.nvm"' >"${TEST_TMP}/usr/share/nvm/init-nvm.sh"
+    cat > "${TEST_TMP}/usr/share/nvm/init-nvm.sh" << EOF
+#!/bin/bash
+export NVM_DIR="${TEST_TMP}/.nvm"
+# Make nvm function available
+nvm() {
+    "${TEST_TMP}/bin/nvm" "\$@"
+}
+export -f nvm
+EOF
 
     create_mock "nvm" 'case "$1" in
         install) echo "Installing Node.js $2"; exit 0 ;;
