@@ -172,6 +172,48 @@ Pomarchy uses a simple configuration system with sensible defaults. The configur
 - **Themes:** Smart theme management - install from URLs or activate installed themes
 - **Configurable paths:** NVM, backup directory, and trash paths can be customized in config
 
+<details>
+<summary><strong>GPG Setup for Git Commit Signing</strong></summary>
+
+Pomarchy includes a comprehensive Git configuration with commit signing enabled. To set up GPG for signed commits:
+
+### Generate a GPG Key
+
+```bash
+# Generate a new GPG key
+gpg --full-generate-key
+
+# Follow the prompts and use default settings unless you have specific requirements
+# Enter your name and email (must match your Git config)
+```
+
+### Configure Git with Your GPG Key
+
+```bash
+# List your GPG keys to get the key ID
+gpg --list-secret-keys --keyid-format=long
+
+# Copy the long key ID (between sec and uid sections)
+
+# Set your signing key in Git
+git config --global user.signingkey YOUR_KEY_ID
+
+# Enable commit signing (already enabled in Pomarchy's .gitconfig)
+git config --global commit.gpgsign true
+```
+
+### Add GPG Key to GitHub
+
+```bash
+# Export your public key
+gpg --armor --export YOUR_KEY_ID
+
+# Copy the output and add it to GitHub:
+# Settings → SSH and GPG keys → New GPG key
+```
+
+</details>
+
 ## Troubleshooting
 
 **Stow conflicts with existing files:**
@@ -221,6 +263,10 @@ Tests use bats-core framework with isolated test environments. Coverage includes
 2. Make your changes
 3. Run format, lint and tests: `make format && make lint && make test`
 4. Ensure all checks pass
+
+## Acknowledgments
+
+Git configuration inspired by [micahkepe](https://github.com/micahkepe)'s dotfiles.
 
 ## License
 

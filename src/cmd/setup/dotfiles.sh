@@ -101,6 +101,7 @@ if [[ -n "$DOTFILES" ]]; then
             "micro") backup_files+=("$HOME/.config/micro") ;;
             "pomarchy") backup_files+=("$HOME/.config/pomarchy") ;;
             "bash") backup_files+=("$HOME/.bashrc" "$HOME/.bash_profile") ;;
+            "git") backup_files+=("$HOME/.gitconfig") ;;
         esac
     done
     if [[ ${#backup_files[@]} -gt 0 ]]; then

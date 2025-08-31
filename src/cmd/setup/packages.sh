@@ -64,7 +64,7 @@ create_safety_backup "packages" "$HOME/.config/micro/plug"
 
 log STEP "Package Management"
 
-readonly CORE_PACKAGES=("ttf-ubuntu-mono-nerd" "micro")
+readonly CORE_PACKAGES=("ttf-ubuntu-mono-nerd" "micro" "gnupg" "diff-so-fancy")
 IFS=' ' read -ra REMOVE_PACKAGES <<<"$PACKAGES_REMOVE"
 IFS=' ' read -ra INSTALL_PACKAGES <<<"$PACKAGES_INSTALL"
 
