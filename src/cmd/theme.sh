@@ -199,8 +199,14 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     fi
 
     if [[ -z "$THEME_COMMAND" ]]; then
-        show_help
-        exit 0
+        if [[ -n "$THEME" ]]; then
+            THEME_COMMAND="use"
+            THEME_INPUT="$THEME"
+            log INFO "Applying configured theme: $THEME"
+        else
+            show_help
+            exit 0
+        fi
     fi
 
     if [[ "$THEME_COMMAND" == "use" && -z "$THEME_INPUT" ]]; then
