@@ -131,6 +131,7 @@ manage_backups() {
 main() {
     ensure_command yay
     ensure_command bash
+    ensure_command git
 
     load_config
     validate_config

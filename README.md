@@ -111,43 +111,61 @@ pomarchy backups restore
 
 Pomarchy uses a simple configuration system with sensible defaults. The configuration is automatically installed when you include "pomarchy" in your DOTFILES setting.
 
-**Default configuration:** `config/pomarchy/.config/pomarchy/pomarchy.conf`
+**Default configuration:** `config/pomarchy/.config/pomarchy/pomarchy.ini`
 
 **Customize your setup:**
 
 ```bash
 # Edit user configuration (overrides defaults)
-~/.config/pomarchy/pomarchy.conf
+~/.config/pomarchy/pomarchy.ini
 ```
 
-**Available configuration options:**
+**Configuration format:**
 
-| Category | Variable | Default | Description |
-|----------|----------|---------|-------------|
-| **Theme** | `THEME` | `midnight` | Default OLED theme or custom GitHub URL |
-| **Package Management** | `PACKAGES_REMOVE` | `1password-beta 1password-cli kdenlive obsidian pinta signal-desktop typora spotify` | Packages to uninstall |
-| | `PACKAGES_INSTALL` | `firefox code lite-xl lua go awsvpnclient k6-bin` | Packages to install |
-| **Dotfiles** | `DOTFILES` | `bash micro alacritty pomarchy` | Dotfiles configurations to install |
-| **System Settings** | `KEYBOARD_LAYOUTS` | `us,ge` | Keyboard layouts (comma-separated) |
-| | `MONITOR_RESOLUTION` | `2880x1800@120` | Monitor resolution and refresh rate |
-| | `MONITOR_SCALE` | `2` | Display scaling factor |
-| | `NATURAL_SCROLL` | `true` | Enable natural scrolling |
-| | `DISABLE_WHILE_TYPING` | `false` | Disable touchpad while typing |
-| | `CLOCK_FORMAT` | `12h` | Clock format (`12h` or `24h`) |
-| **Development Tools** | `NODEJS_VERSION` | `20` | Node.js version to install |
-| | `NPM_PACKAGES` | `typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code` | npm packages to install globally |
-| | `GO_TOOLS` | `golang.org/x/tools/gopls@latest github.com/go-delve/delve/cmd/dlv@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest` | Go tools to install |
-| | `VSCODE_EXTENSIONS` | `golang.go ms-python.python ms-python.debugpy dbaeumer.vscode-eslint esbenp.prettier-vscode eamodio.gitlens ms-azuretools.vscode-docker ms-azuretools.vscode-containers hashicorp.terraform redhat.vscode-yaml ms-vscode.makefile-tools bungcip.better-toml davidanson.vscode-markdownlint arcticicestudio.nord-visual-studio-code amerey.blackplusplus` | VS Code extensions to install |
-| **Editor** | `MICRO_PLUGINS` | `fzf editorconfig detectindent snippets bookmark lsp wc` | Micro editor plugins |
-| **Browser** | `DEFAULT_BROWSER` | `firefox` | Default browser |
+Pomarchy uses a secure INI-style configuration organized by setup commands. Each section corresponds to a `pomarchy setup` command:
 
-**Configuration rules:**
+```ini
+[theme]
+	name = midnight
 
-- Empty values skip that component entirely
-- User config overrides defaults  
-- Command-line arguments override config values
-- Space-separated lists for multiple items
-- Config validation prevents invalid formats (monitor resolution, clock format, etc.)
+[dotfiles]
+	enabled = bash micro alacritty pomarchy git
+
+[packages]
+	remove = 1password-beta 1password-cli kdenlive obsidian pinta signal-desktop typora spotify
+	install = firefox code lite-xl lua go awsvpnclient k6-bin
+
+[system]
+	keyboard-layouts = us,ge
+	monitor-resolution = 2880x1800@120
+	monitor-scale = 2
+	natural-scroll = true
+	disable-while-typing = false
+	clock-format = 12h
+	default-browser = firefox
+
+[devtools]
+	nodejs-version = 20
+	npm-packages = typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code
+	go-tools = golang.org/x/tools/gopls@latest github.com/go-delve/delve/cmd/dlv@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	vscode-extensions = golang.go ms-python.python ms-python.debugpy dbaeumer.vscode-eslint esbenp.prettier-vscode eamodio.gitlens ms-azuretools.vscode-docker ms-azuretools.vscode-containers hashicorp.terraform redhat.vscode-yaml ms-vscode.makefile-tools bungcip.better-toml davidanson.vscode-markdownlint arcticicestudio.nord-visual-studio-code amerey.blackplusplus
+	micro-plugins = fzf editorconfig detectindent snippets bookmark lsp wc
+```
+
+**Section mapping:**
+- `[theme]` → `pomarchy theme` commands
+- `[dotfiles]` → `pomarchy setup dotfiles` 
+- `[packages]` → `pomarchy setup packages`
+- `[system]` → `pomarchy setup system`
+- `[devtools]` → `pomarchy setup devtools`
+
+**Configuration features:**
+- **Secure**: Git config backend prevents code execution vulnerabilities
+- **Organized**: Sections match setup commands for easy navigation
+- **Override hierarchy**: User config → Default config
+- **Empty values**: Skip components by setting empty values (`key = `)
+- **Space-separated lists**: Multiple items separated by spaces
+- **Built-in validation**: Monitor resolution, clock format, etc.
 
 **Additional features:**
 
@@ -227,13 +245,22 @@ pomarchy setup dotfiles
 **Configuration not taking effect:**
 
 ```bash
-# Ensure configuration is properly formatted
-cat ~/.config/pomarchy/pomarchy.conf
+# Check your configuration file
+cat ~/.config/pomarchy/pomarchy.ini
 
-# Check for bash syntax errors (no spaces around = in variable assignments)
-PACKAGES_INSTALL="firefox code"    # Correct - no spaces around =
-PACKAGES_INSTALL = "firefox code"  # Wrong - spaces make this a command, not assignment
+# Edit configuration with any text editor
+nano ~/.config/pomarchy/pomarchy.ini
+
+# Or use git config command for individual settings
+git config -f ~/.config/pomarchy/pomarchy.ini packages.install "firefox code vim"
+git config -f ~/.config/pomarchy/pomarchy.ini system.clock-format "24h"
 ```
+
+**Configuration troubleshooting:**
+- Ensure INI format with `[sections]` and `key = value` pairs
+- Use tabs or spaces for indentation (git config handles both)
+- Empty values should be `key = ` (space after equals)
+- Check syntax with `git config -f ~/.config/pomarchy/pomarchy.ini --list`
 
 ## Local Development
 

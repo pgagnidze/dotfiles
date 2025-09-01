@@ -77,7 +77,7 @@ teardown() {
 }
 
 @test "skips configuration when values are empty" {
-    load_test_config "minimal"
+    load_test_config "empty"
     
     run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/system.sh" --yes
     [ "$status" -eq 0 ]

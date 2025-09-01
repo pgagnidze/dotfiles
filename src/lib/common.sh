@@ -31,15 +31,41 @@ ensure_command() {
 }
 
 load_config() {
-    local default_config="${POMARCHY_ROOT}/src/config/pomarchy/.config/pomarchy/pomarchy.conf"
+    local default_config="${POMARCHY_ROOT}/src/config/pomarchy/.config/pomarchy/pomarchy.ini"
+    local user_config="${HOME}/.config/pomarchy/pomarchy.ini"
+
     if [[ -f "$default_config" ]]; then
-        source "$default_config"
+        load_config_from_file "$default_config"
     fi
 
-    local user_config="${HOME}/.config/pomarchy/pomarchy.conf"
     if [[ -f "$user_config" ]]; then
-        source "$user_config"
+        load_config_from_file "$user_config"
     fi
+}
+
+load_config_from_file() {
+    local config_file="$1"
+
+    while IFS='=' read -r key value; do
+        case "$key" in
+            theme.name) THEME="$value" ;;
+            dotfiles.enabled) DOTFILES="$value" ;;
+            packages.remove) PACKAGES_REMOVE="$value" ;;
+            packages.install) PACKAGES_INSTALL="$value" ;;
+            system.keyboard-layouts) KEYBOARD_LAYOUTS="$value" ;;
+            system.monitor-resolution) MONITOR_RESOLUTION="$value" ;;
+            system.monitor-scale) MONITOR_SCALE="$value" ;;
+            system.natural-scroll) NATURAL_SCROLL="$value" ;;
+            system.disable-while-typing) DISABLE_WHILE_TYPING="$value" ;;
+            system.clock-format) CLOCK_FORMAT="$value" ;;
+            system.default-browser) DEFAULT_BROWSER="$value" ;;
+            devtools.nodejs-version) NODEJS_VERSION="$value" ;;
+            devtools.npm-packages) NPM_PACKAGES="$value" ;;
+            devtools.go-tools) GO_TOOLS="$value" ;;
+            devtools.vscode-extensions) VSCODE_EXTENSIONS="$value" ;;
+            devtools.micro-plugins) MICRO_PLUGINS="$value" ;;
+        esac
+    done < <(git config -f "$config_file" --list 2>/dev/null)
 }
 
 validate_config() {

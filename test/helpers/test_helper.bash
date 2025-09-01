@@ -43,8 +43,8 @@ setup_test_environment() {
     mkdir -p "${HOME}/.config/alacritty"
     mkdir -p "${HOME}/.config/micro"
 
-    cp "${FIXTURES}/valid_pomarchy.conf" \
-        "${HOME}/.config/pomarchy/pomarchy.conf"
+    cp "${FIXTURES}/valid_pomarchy.ini" \
+        "${HOME}/.config/pomarchy/pomarchy.ini"
 
     echo "ttf-ubuntu-mono-nerd" >"${TEST_TMP}/installed_packages.txt"
     echo "micro" >>"${TEST_TMP}/installed_packages.txt"
@@ -218,10 +218,10 @@ assert_command_called_with() {
 
 load_test_config() {
     local config_name="${1:-valid}"
-    local config_file="${FIXTURES}/${config_name}_pomarchy.conf"
+    local config_file="${FIXTURES}/${config_name}_pomarchy.ini"
 
     if [[ -f "$config_file" ]]; then
-        cp "$config_file" "${HOME}/.config/pomarchy/pomarchy.conf"
+        cp "$config_file" "${HOME}/.config/pomarchy/pomarchy.ini"
     else
         echo "Test config file not found: $config_file" >&2
         return 1
