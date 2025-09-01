@@ -199,7 +199,7 @@ backup_single_file() {
     mkdir -p "$backup_dir"
 
     if [[ -d "$source_file" ]]; then
-        cp -r "$source_file" "$backup_file_path"
+        cp -r "$source_file/." "$backup_file_path/"
         echo "dir=$source_file" >>"$manifest_file"
     else
         cp "$source_file" "$backup_file_path"

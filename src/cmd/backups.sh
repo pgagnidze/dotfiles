@@ -207,7 +207,8 @@ restore_backup_files() {
                     if [[ -L "$backup_file_path" ]]; then
                         \cp -P "$backup_file_path" "$source_file"
                     elif [[ -d "$backup_file_path" ]]; then
-                        \cp -rf "$backup_file_path" "$source_file"
+                        mkdir -p "$source_file"
+                        \cp -rf "$backup_file_path"/. "$source_file"/
                     else
                         \cp -f "$backup_file_path" "$source_file"
                     fi
