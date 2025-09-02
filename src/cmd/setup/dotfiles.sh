@@ -54,7 +54,8 @@ stow_config() {
     for config in "${configs[@]}"; do
         if [[ -d "${POMARCHY_ROOT}/src/config/${config}" ]]; then
             log INFO "Installing ${config} configuration..."
-            stow -v -d "${POMARCHY_ROOT}/src/config" -t "${HOME}" "${config}"
+            stow --adopt -v -d "${POMARCHY_ROOT}/src/config" -t "${HOME}" "${config}"
+            git -C "${POMARCHY_ROOT}" restore "src/config/${config}" 2>/dev/null || true
         fi
     done
 }
