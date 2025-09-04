@@ -212,7 +212,7 @@ setup_litexl_plugins() {
 
     log INFO "Installing lite-xl plugins..."
     IFS=' ' read -ra PLUGINS <<<"$LITEXL_PLUGINS"
-    lpm install "${PLUGINS[@]}" --assume-yes
+    lpm install "${PLUGINS[@]}" --assume-yes --no-install-optional
     log INFO "Lite-xl plugins installed"
 }
 
