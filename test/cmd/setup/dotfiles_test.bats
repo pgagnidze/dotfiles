@@ -23,5 +23,5 @@ teardown() {
     run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/dotfiles.sh" --yes
     [ "$status" -eq 0 ]
     
-    assert_command_called_with "stow" "MOCK: stow -v -d"
+    assert_command_called_with "stow" "MOCK: stow --adopt -v -d"
 }

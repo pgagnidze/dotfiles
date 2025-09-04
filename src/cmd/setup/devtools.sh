@@ -13,9 +13,10 @@ show_help() {
     echo "What this command does:"
     echo "  • Installs Node.js v20 via NVM with global packages"
     echo "  • Sets up Go development tools (gopls, delve, golangci-lint)"
-    echo "  • Installs VS Code extensions for Go, Python, Docker, Terraform"
     echo "  • Configures Claude Code with powerline status line"
     echo "  • Installs essential npm packages (TypeScript, ESLint, Prettier)"
+    echo "  • Installs micro editor plugins for enhanced functionality"
+    echo "  • Installs lite-xl plugins via lpm for enhanced editor functionality"
     echo ""
     echo "Options:"
     echo "  --yes, -y    Skip confirmation prompts"
@@ -49,11 +50,12 @@ pre_setup_validation
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Setting up development tools for Omarchy..."
-    echo "This will install Node.js, Go tools, VS Code extensions, and Claude Code."
+    echo "This will install Node.js, Go tools, Claude Code, and editor plugins."
     echo "Node.js version: ${NODEJS_VERSION}"
     echo "NPM packages: ${NPM_PACKAGES}"
     echo "Go tools: ${GO_TOOLS}"
-    echo "VS Code extensions: ${VSCODE_EXTENSIONS}"
+    echo "Micro plugins: ${MICRO_PLUGINS}"
+    echo "Lite-xl plugins: ${LITEXL_PLUGINS}"
     echo ""
     read -rp "Do you want to continue? (y/N) "
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -144,31 +146,6 @@ setup_go() {
     fi
 }
 
-setup_vscode() {
-    if [[ -z "$VSCODE_EXTENSIONS" ]]; then
-        return
-    fi
-
-    log STEP "Setting up VS Code extensions..."
-
-    if command -v code &>/dev/null; then
-        if [[ -n "$VSCODE_EXTENSIONS" ]]; then
-            IFS=' ' read -ra EXTENSIONS <<<"$VSCODE_EXTENSIONS"
-        else
-            return
-        fi
-
-        for ext in "${EXTENSIONS[@]}"; do
-            log INFO "Installing VS Code extension: $ext"
-            code --install-extension "$ext" --force || log WARN "Failed to install $ext"
-        done
-
-        log INFO "VS Code extensions installed"
-    else
-        log WARN "VS Code is not installed. Skipping extension setup."
-    fi
-}
-
 setup_claude_code() {
     log STEP "Setting up Claude Code configuration..."
 
@@ -203,10 +180,47 @@ EOF
     fi
 }
 
+setup_micro_plugins() {
+    if [[ -z "$MICRO_PLUGINS" ]]; then
+        return
+    fi
+
+    log STEP "Setting up micro editor plugins..."
+
+    if ! command -v micro &>/dev/null; then
+        log WARN "Micro editor not installed, skipping plugin installation"
+        return
+    fi
+
+    log INFO "Installing micro plugins..."
+    IFS=' ' read -ra PLUGINS <<<"$MICRO_PLUGINS"
+    micro -plugin install "${PLUGINS[@]}"
+    log INFO "Micro plugins installed"
+}
+
+setup_litexl_plugins() {
+    if [[ -z "$LITEXL_PLUGINS" ]]; then
+        return
+    fi
+
+    log STEP "Setting up lite-xl plugins..."
+
+    if ! command -v lpm &>/dev/null; then
+        log WARN "lpm is not installed, skipping plugin installation"
+        return
+    fi
+
+    log INFO "Installing lite-xl plugins..."
+    IFS=' ' read -ra PLUGINS <<<"$LITEXL_PLUGINS"
+    lpm install "${PLUGINS[@]}" --assume-yes
+    log INFO "Lite-xl plugins installed"
+}
+
 setup_node
 setup_go
-setup_vscode
 setup_claude_code
+setup_micro_plugins
+setup_litexl_plugins
 
 log INFO "Development tools setup complete!"
 echo ""

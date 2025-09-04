@@ -156,6 +156,13 @@ mock_pgrep() {
     exit 1'
 }
 
+mock_lpm() {
+    create_mock "lpm" 'case "$1" in
+        install) echo "Installing lite-xl plugins: ${*:2}"; exit 0 ;;
+        *) echo "Mock lpm: $*"; exit 0 ;;
+    esac'
+}
+
 assert_file_contains() {
     local file="$1"
     local pattern="$2"

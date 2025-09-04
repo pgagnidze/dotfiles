@@ -30,16 +30,6 @@ teardown() {
     assert_command_called_with "yay" "MOCK: yay -Qi ttf-ubuntu-mono-nerd"
 }
 
-@test "installs micro plugins when micro is available" {
-    mock_micro
-    echo "micro" >> "${TEST_TMP}/installed_packages.txt"
-    
-    run_in_test_env "${POMARCHY_ROOT}/src/cmd/setup/packages.sh" --yes
-    [ "$status" -eq 0 ]
-    
-    assert_command_called_with "micro" "MOCK: micro -plugin install fzf"
-    assert_command_called_with "micro" "MOCK: micro -plugin install editorconfig"
-}
 
 @test "skips operations when config values are empty" {
     load_test_config "empty"

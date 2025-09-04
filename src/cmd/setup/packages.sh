@@ -107,33 +107,4 @@ if [[ -n "$DEFAULT_BROWSER" ]]; then
     xdg-settings set default-web-browser "$DEFAULT_BROWSER.desktop" || log WARN "Failed to set $DEFAULT_BROWSER as default"
 fi
 
-install_micro_plugins() {
-    if [[ -z "$MICRO_PLUGINS" ]]; then
-        return
-    fi
-
-    if ! command -v micro &>/dev/null; then
-        log WARN "Micro editor not installed, skipping plugin installation"
-        log INFO "To install micro plugins, ensure 'micro' is in PACKAGES_INSTALL"
-        return
-    fi
-
-    local plugins_dir="$HOME/.config/micro/plug"
-    IFS=' ' read -ra PLUGINS <<<"$MICRO_PLUGINS"
-
-    if [[ ! -d "$plugins_dir" ]] || [[ -z "$(ls -A "$plugins_dir" 2>/dev/null)" ]]; then
-        log INFO "Installing micro plugins..."
-        for plugin in "${PLUGINS[@]}"; do
-            micro -plugin install "$plugin"
-        done
-        log INFO "Micro plugin installation complete"
-    else
-        log INFO "Micro plugins already installed"
-    fi
-}
-
-echo ""
-log INFO "Installing micro editor plugins..."
-install_micro_plugins
-
 log INFO "Package management complete!"

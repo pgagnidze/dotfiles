@@ -24,15 +24,15 @@
 ### Package Management
 
 - Removes unnecessary software (1password, kdenlive, obsidian)
-- Installs essential tools (Firefox, VS Code, Go, Node.js, Claude Code)
+- Installs essential tools (Firefox, lite-xl, Go, Node.js, Claude Code)
 - Manages both official and AUR packages seamlessly
-- Automatic micro plugins installation after editor setup
+- Editor plugins for micro and lite-xl configured in devtools
 
 ### Development Environment
 
 - Node.js v20 with TypeScript, ESLint, Prettier
 - Go with language server and development tools  
-- VS Code extensions for Go, Python, Docker, Terraform
+- lite-xl plugins for enhanced editor functionality
 - Enhanced shell with custom aliases
 
 </td>
@@ -73,7 +73,7 @@ chmod +x pomarchy
 ./pomarchy setup dotfiles        # Terminal configs, micro editor
 ./pomarchy setup packages        # System packages and applications
 ./pomarchy setup system          # Keyboard, monitor, input settings
-./pomarchy setup devtools        # Node.js, Go, VS Code extensions
+./pomarchy setup devtools        # Node.js, Go, lite-xl plugins
 ```
 
 ## Usage
@@ -126,44 +126,46 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 
 ```ini
 [theme]
-	name = midnight
+ name = midnight
 
 [dotfiles]
-	enabled = bash micro alacritty pomarchy git
+ enabled = bash micro alacritty pomarchy git
 
 [packages]
-	remove = 1password-beta 1password-cli kdenlive obsidian pinta signal-desktop typora spotify
-	install = firefox code lite-xl lua go awsvpnclient k6-bin
+ remove = 1password-beta 1password-cli kdenlive obsidian pinta signal-desktop typora spotify
+ install = firefox lite-xl lpm-git lua go awsvpnclient k6-bin
 
 [system]
-	keyboard-layouts = us,ge
-	monitor-resolution = 2880x1800@120
-	monitor-scale = 2
-	natural-scroll = true
-	disable-while-typing = false
-	clock-format = 12h
-	default-browser = firefox
+ keyboard-layouts = us,ge
+ monitor-resolution = 2880x1800@120
+ monitor-scale = 2
+ natural-scroll = true
+ disable-while-typing = false
+ clock-format = 12h
+ default-browser = firefox
 
 [devtools]
-	nodejs-version = 20
-	npm-packages = typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code
-	go-tools = golang.org/x/tools/gopls@latest github.com/go-delve/delve/cmd/dlv@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	vscode-extensions = golang.go ms-python.python ms-python.debugpy dbaeumer.vscode-eslint esbenp.prettier-vscode eamodio.gitlens ms-azuretools.vscode-docker ms-azuretools.vscode-containers hashicorp.terraform redhat.vscode-yaml ms-vscode.makefile-tools bungcip.better-toml davidanson.vscode-markdownlint arcticicestudio.nord-visual-studio-code amerey.blackplusplus
-	micro-plugins = fzf editorconfig detectindent snippets bookmark lsp wc
+ nodejs-version = 20
+ npm-packages = typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code
+ go-tools = golang.org/x/tools/gopls@latest github.com/go-delve/delve/cmd/dlv@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+ micro-plugins = fzf editorconfig detectindent snippets bookmark lsp wc
+ litexl-plugins = ide ide_javascript ide_typescript ide_lua lsp_go lsp_json lsp_yaml nonicons language_containerfile language_env language_go language_ini language_json language_make language_sh language_toml language_yaml
 ```
 
 **Section mapping:**
+
 - `[theme]` → `pomarchy theme` commands
-- `[dotfiles]` → `pomarchy setup dotfiles` 
+- `[dotfiles]` → `pomarchy setup dotfiles`
 - `[packages]` → `pomarchy setup packages`
 - `[system]` → `pomarchy setup system`
 - `[devtools]` → `pomarchy setup devtools`
 
 **Configuration features:**
+
 - **Secure**: Git config backend prevents code execution vulnerabilities
 - **Organized**: Sections match setup commands for easy navigation
 - **Override hierarchy**: User config → Default config
-- **Empty values**: Skip components by setting empty values (`key = `)
+- **Empty values**: Skip components by setting empty values (`key =`)
 - **Space-separated lists**: Multiple items separated by spaces
 - **Built-in validation**: Monitor resolution, clock format, etc.
 
@@ -185,7 +187,7 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 > **System changes require Hyprland restart:** `Super+Esc` → Relaunch
 
 - **Steam:** Install via Omarchy menu for GPU support
-- **Micro plugins:** Installed automatically after micro editor setup
+- **Editor plugins:** Micro and lite-xl plugins managed in devtools setup
 - **Claude Code:** Configured with enhanced status line
 - **Themes:** Smart theme management - install from URLs or activate installed themes
 - **Configurable paths:** NVM, backup directory, and trash paths can be customized in config
@@ -257,9 +259,10 @@ git config -f ~/.config/pomarchy/pomarchy.ini system.clock-format "24h"
 ```
 
 **Configuration troubleshooting:**
+
 - Ensure INI format with `[sections]` and `key = value` pairs
 - Use tabs or spaces for indentation (git config handles both)
-- Empty values should be `key = ` (space after equals)
+- Empty values should be `key =` (space after equals)
 - Check syntax with `git config -f ~/.config/pomarchy/pomarchy.ini --list`
 
 ## Local Development
