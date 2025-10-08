@@ -105,7 +105,7 @@ pomarchy backups restore
 
 ## Configuration
 
-Pomarchy uses a simple configuration system with sensible defaults. The configuration is automatically installed when you include "pomarchy" in your DOTFILES setting.
+Pomarchy uses a simple configuration system with sensible defaults.
 
 **Default configuration:** `config/pomarchy/.config/pomarchy/pomarchy.ini`
 
@@ -154,22 +154,6 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 - `[system]` → `pomarchy setup system`
 - `[devtools]` → `pomarchy setup devtools`
 
-**Configuration features:**
-
-- **Secure**: Git config backend prevents code execution vulnerabilities
-- **Organized**: Sections match setup commands for easy navigation
-- **Override hierarchy**: User config → Default config
-- **Empty values**: Skip components by setting empty values (`key =`)
-- **Space-separated lists**: Multiple items separated by spaces
-- **Built-in validation**: Monitor resolution, clock format, etc.
-
-**Additional features:**
-
-- **Automatic pomarchy alias:** Detects installation path and creates global alias
-- **Config validation:** Validates monitor resolution, scale, and clock format on startup
-- **Enhanced error handling:** Comprehensive error trapping with automatic backup preservation on failure
-- **Backup manifest system:** Tracks exactly which files were backed up for precise restoration
-
 ## Requirements
 
 - **Omarchy Linux** (installed from ISO)
@@ -178,12 +162,9 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 
 ## Notes
 
-> **System changes require Hyprland restart:** `Super+Esc` → Relaunch
-
 - **Steam:** Install via Omarchy menu for GPU support
 - **Neovim:** Pre-installed with Omarchy - configure as needed
 - **Claude Code:** Configured with enhanced status line
-- **Themes:** Smart theme management - install from URLs or activate installed themes
 
 <details>
 <summary><strong>GPG Setup for Git Commit Signing</strong></summary>
@@ -227,78 +208,19 @@ gpg --armor --export YOUR_KEY_ID
 
 </details>
 
-## Troubleshooting
+## Mentions
 
-**Stow conflicts with existing files:**
+Git configuration inspired by [micahkepe](https://github.com/micahkepe)'s dotfiles.
 
-```bash
-# Remove conflicting files mentioned in error message
-rm ~/.bashrc ~/.config/alacritty/alacritty.toml
-pomarchy setup dotfiles
-```
-
-**Configuration not taking effect:**
-
-```bash
-# Check your configuration file
-cat ~/.config/pomarchy/pomarchy.ini
-
-# Edit configuration with any text editor
-nano ~/.config/pomarchy/pomarchy.ini
-
-# Or use git config command for individual settings
-git config -f ~/.config/pomarchy/pomarchy.ini packages.install "firefox code vim"
-git config -f ~/.config/pomarchy/pomarchy.ini system.clock-format "24h"
-```
-
-**Configuration troubleshooting:**
-
-- Ensure INI format with `[sections]` and `key = value` pairs
-- Use tabs or spaces for indentation (git config handles both)
-- Empty values should be `key =` (space after equals)
-- Check syntax with `git config -f ~/.config/pomarchy/pomarchy.ini --list`
-
-## Local Development
-
-### Prerequisites
-
-```bash
-make install
-```
-
-### Commands
-
-```bash
-make help      # Show available commands
-make lint      # Run shellcheck on all scripts
-make test      # Run all tests
-make format    # Format bash scripts with shfmt
-make clean     # Clean test artifacts
-```
-
-### Testing
-
-Tests use bats-core framework with isolated test environments. Coverage includes command help, basic functionality, and some error conditions.
-
-### Contributing
+## Contributing
 
 1. Install dependencies: `make install`
 2. Make your changes
 3. Run format, lint and tests: `make format && make lint && make test`
 4. Ensure all checks pass
 
-## Acknowledgments
-
-Git configuration inspired by [micahkepe](https://github.com/micahkepe)'s dotfiles.
+Show available commands with `make help`
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE)
-
-<div align="center">
-
----
-
-*Personal Omarchy customization - adapt for your own setup!*
-
-</div>
