@@ -145,8 +145,8 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 
 [devtools]
  nodejs-version = 20
- npm-packages = typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code
- go-tools = golang.org/x/tools/gopls@latest github.com/go-delve/delve/cmd/dlv@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+ npm-packages = typescript ts-node prettier eslint @anthropic-ai/claude-code
+ go-tools = golang.org/x/tools/gopls@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 ```
 
 **Section mapping:**
