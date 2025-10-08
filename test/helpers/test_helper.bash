@@ -41,13 +41,11 @@ setup_test_environment() {
     mkdir -p "${HOME}/.config/hypr"
     mkdir -p "${HOME}/.config/waybar"
     mkdir -p "${HOME}/.config/alacritty"
-    mkdir -p "${HOME}/.config/micro"
 
     cp "${FIXTURES}/valid_pomarchy.ini" \
         "${HOME}/.config/pomarchy/pomarchy.ini"
 
     echo "ttf-ubuntu-mono-nerd" >"${TEST_TMP}/installed_packages.txt"
-    echo "micro" >>"${TEST_TMP}/installed_packages.txt"
 }
 
 teardown_test_environment() {
@@ -115,13 +113,6 @@ mock_stow() {
     exit 0'
 }
 
-mock_micro() {
-    create_mock "micro" 'case "$1" in
-        -plugin) [[ "$2" == "install" ]] && echo "Installing micro plugin: $3"; exit 0 ;;
-        *) echo "Mock micro: $*"; exit 0 ;;
-    esac'
-}
-
 mock_code() {
     create_mock "code" 'case "$1" in
         --install-extension) echo "Installing VS Code extension: $2"; exit 0 ;;
@@ -156,12 +147,6 @@ mock_pgrep() {
     exit 1'
 }
 
-mock_lpm() {
-    create_mock "lpm" 'case "$1" in
-        install) echo "Installing lite-xl plugins: ${*:2}"; exit 0 ;;
-        *) echo "Mock lpm: $*"; exit 0 ;;
-    esac'
-}
 
 assert_file_contains() {
     local file="$1"

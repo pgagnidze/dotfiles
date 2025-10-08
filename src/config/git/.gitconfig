@@ -24,7 +24,7 @@
 # =============================================================================
 [core]
 	pager = diff-so-fancy | less --tabs=4 -RF
-	editor = micro
+	editor = nvim
 	compression = 9
 	whitespace = trailing-space
 	preloadIndex = true
