@@ -40,18 +40,6 @@ show_status() {
         echo "▢ bash - not stowed"
     fi
 
-    if [[ -L "$HOME/.config/micro/bindings.json" ]]; then
-        local micro_target
-        micro_target=$(readlink -f "$HOME/.config/micro/bindings.json" 2>/dev/null)
-        if [[ "$micro_target" == "$config_dir/micro/.config/micro/bindings.json" ]]; then
-            echo "▣ micro - stowed"
-        else
-            echo "▢ micro - not stowed (points elsewhere)"
-        fi
-    else
-        echo "▢ micro - not stowed"
-    fi
-
     if [[ -L "$HOME/.config/alacritty/alacritty.toml" ]]; then
         local alacritty_target
         alacritty_target=$(readlink -f "$HOME/.config/alacritty/alacritty.toml" 2>/dev/null)

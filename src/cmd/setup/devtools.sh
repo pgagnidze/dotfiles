@@ -15,8 +15,6 @@ show_help() {
     echo "  • Sets up Go development tools (gopls, delve, golangci-lint)"
     echo "  • Configures Claude Code with powerline status line"
     echo "  • Installs essential npm packages (TypeScript, ESLint, Prettier)"
-    echo "  • Installs micro editor plugins for enhanced functionality"
-    echo "  • Installs lite-xl plugins via lpm for enhanced editor functionality"
     echo ""
     echo "Options:"
     echo "  --yes, -y    Skip confirmation prompts"
@@ -50,12 +48,10 @@ pre_setup_validation
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Setting up development tools for Omarchy..."
-    echo "This will install Node.js, Go tools, Claude Code, and editor plugins."
+    echo "This will install Node.js, Go tools, and Claude Code."
     echo "Node.js version: ${NODEJS_VERSION}"
     echo "NPM packages: ${NPM_PACKAGES}"
     echo "Go tools: ${GO_TOOLS}"
-    echo "Micro plugins: ${MICRO_PLUGINS}"
-    echo "Lite-xl plugins: ${LITEXL_PLUGINS}"
     echo ""
     read -rp "Do you want to continue? (y/N) "
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -180,47 +176,9 @@ EOF
     fi
 }
 
-setup_micro_plugins() {
-    if [[ -z "$MICRO_PLUGINS" ]]; then
-        return
-    fi
-
-    log STEP "Setting up micro editor plugins..."
-
-    if ! command -v micro &>/dev/null; then
-        log WARN "Micro editor not installed, skipping plugin installation"
-        return
-    fi
-
-    log INFO "Installing micro plugins..."
-    IFS=' ' read -ra PLUGINS <<<"$MICRO_PLUGINS"
-    micro -plugin install "${PLUGINS[@]}"
-    log INFO "Micro plugins installed"
-}
-
-setup_litexl_plugins() {
-    if [[ -z "$LITEXL_PLUGINS" ]]; then
-        return
-    fi
-
-    log STEP "Setting up lite-xl plugins..."
-
-    if ! command -v lpm &>/dev/null; then
-        log WARN "lpm is not installed, skipping plugin installation"
-        return
-    fi
-
-    log INFO "Installing lite-xl plugins..."
-    IFS=' ' read -ra PLUGINS <<<"$LITEXL_PLUGINS"
-    lpm install "${PLUGINS[@]}" --assume-yes --no-install-optional
-    log INFO "Lite-xl plugins installed"
-}
-
 setup_node
 setup_go
 setup_claude_code
-setup_micro_plugins
-setup_litexl_plugins
 
 log INFO "Development tools setup complete!"
 echo ""

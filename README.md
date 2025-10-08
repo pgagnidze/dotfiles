@@ -24,15 +24,14 @@
 ### Package Management
 
 - Removes unnecessary software (1password, kdenlive, obsidian)
-- Installs essential tools (Firefox, lite-xl, Go, Node.js, Claude Code)
+- Installs essential tools (Firefox, Go, Node.js, Claude Code)
 - Manages both official and AUR packages seamlessly
-- Editor plugins for micro and lite-xl configured in devtools
+- Neovim pre-installed with Omarchy
 
 ### Development Environment
 
 - Node.js v20 with TypeScript, ESLint, Prettier
-- Go with language server and development tools  
-- lite-xl plugins for enhanced editor functionality
+- Go with language server and development tools
 - Enhanced shell with custom aliases
 
 </td>
@@ -70,10 +69,10 @@ chmod +x pomarchy
 **Modular Installation:**
 
 ```bash
-./pomarchy setup dotfiles        # Terminal configs, micro editor
+./pomarchy setup dotfiles        # Terminal and shell configs
 ./pomarchy setup packages        # System packages and applications
 ./pomarchy setup system          # Keyboard, monitor, input settings
-./pomarchy setup devtools        # Node.js, Go, lite-xl plugins
+./pomarchy setup devtools        # Node.js, Go development tools
 ```
 
 ## Usage
@@ -129,11 +128,11 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
  name = midnight
 
 [dotfiles]
- enabled = bash micro alacritty pomarchy git
+ enabled = bash alacritty pomarchy git
 
 [packages]
  remove = 1password-beta 1password-cli kdenlive obsidian pinta signal-desktop typora spotify
- install = firefox lite-xl lpm-git lua go awsvpnclient k6-bin
+ install = firefox lua go awsvpnclient k6-bin
 
 [system]
  keyboard-layouts = us,ge
@@ -148,8 +147,6 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
  nodejs-version = 20
  npm-packages = typescript ts-node nodemon prettier eslint @anthropic-ai/claude-code
  go-tools = golang.org/x/tools/gopls@latest github.com/go-delve/delve/cmd/dlv@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
- micro-plugins = fzf editorconfig detectindent snippets bookmark lsp wc
- litexl-plugins = ide ide_javascript ide_typescript ide_lua lsp_go lsp_json lsp_yaml nonicons language_containerfile language_env language_go language_ini language_json language_make language_sh language_toml language_yaml
 ```
 
 **Section mapping:**
@@ -187,7 +184,7 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 > **System changes require Hyprland restart:** `Super+Esc` → Relaunch
 
 - **Steam:** Install via Omarchy menu for GPU support
-- **Editor plugins:** Micro and lite-xl plugins managed in devtools setup
+- **Neovim:** Pre-installed with Omarchy - configure as needed
 - **Claude Code:** Configured with enhanced status line
 - **Themes:** Smart theme management - install from URLs or activate installed themes
 - **Configurable paths:** NVM, backup directory, and trash paths can be customized in config

@@ -62,8 +62,6 @@ load_config_from_file() {
             devtools.nodejs-version) NODEJS_VERSION="$value" ;;
             devtools.npm-packages) NPM_PACKAGES="$value" ;;
             devtools.go-tools) GO_TOOLS="$value" ;;
-            devtools.micro-plugins) MICRO_PLUGINS="$value" ;;
-            devtools.litexl-plugins) LITEXL_PLUGINS="$value" ;;
         esac
     done < <(git config -f "$config_file" --list 2>/dev/null)
 }

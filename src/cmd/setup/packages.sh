@@ -12,9 +12,8 @@ show_help() {
     echo ""
     echo "What this command does:"
     echo "  • Removes unnecessary packages (1password, spotify, etc.)"
-    echo "  • Installs essential packages (firefox, code, micro, go, etc.)"
+    echo "  • Installs essential packages (firefox, go, etc.)"
     echo "  • Installs AUR packages (awsvpnclient, k6-bin)"
-    echo "  • Installs micro editor plugins (fzf, lsp, snippets, etc.)"
     echo "  • Sets Firefox as default browser"
     echo ""
     echo "Options:"
@@ -60,11 +59,11 @@ if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     fi
 fi
 
-create_safety_backup "packages" "$HOME/.config/micro/plug"
+create_safety_backup "packages"
 
 log STEP "Package Management"
 
-readonly CORE_PACKAGES=("ttf-ubuntu-mono-nerd" "micro" "gnupg" "diff-so-fancy")
+readonly CORE_PACKAGES=("ttf-ubuntu-mono-nerd" "gnupg" "diff-so-fancy")
 IFS=' ' read -ra REMOVE_PACKAGES <<<"$PACKAGES_REMOVE"
 IFS=' ' read -ra INSTALL_PACKAGES <<<"$PACKAGES_INSTALL"
 

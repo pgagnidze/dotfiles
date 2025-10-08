@@ -8,11 +8,10 @@ load_config
 show_help() {
     echo "Usage: pomarchy setup dotfiles [OPTIONS]"
     echo ""
-    echo "Install dotfiles configurations for terminal, editor, and shell."
+    echo "Install dotfiles configurations for terminal and shell."
     echo ""
     echo "What this command installs:"
     echo "  • Alacritty terminal with Omarchy theme integration"
-    echo "  • Micro editor with plugins (fzf, lsp, snippets, bookmarks, etc.)"
     echo "  • Enhanced bash configuration with useful functions and aliases"
     echo ""
     echo "Bash enhancements added:"
@@ -83,7 +82,7 @@ pre_setup_validation
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Installing dotfiles for Omarchy..."
-    echo "This will install configurations for Alacritty, Micro, and Bash."
+    echo "This will install configurations for Alacritty and Bash."
     echo "Dotfiles to install: ${DOTFILES}"
     echo ""
     read -rp "Do you want to continue? (y/N) "
@@ -99,7 +98,6 @@ if [[ -n "$DOTFILES" ]]; then
     for config in "${configs[@]}"; do
         case "$config" in
             "alacritty") backup_files+=("$HOME/.config/alacritty") ;;
-            "micro") backup_files+=("$HOME/.config/micro") ;;
             "pomarchy") backup_files+=("$HOME/.config/pomarchy") ;;
             "bash") backup_files+=("$HOME/.bashrc" "$HOME/.bash_profile") ;;
             "git") backup_files+=("$HOME/.gitconfig") ;;
