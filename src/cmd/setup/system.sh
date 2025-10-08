@@ -50,6 +50,15 @@ done
 
 setup_error_handling "system"
 
+if ! command -v jq >/dev/null 2>&1; then
+    log WARN "jq not found, installing..."
+    ensure_command yay
+    if ! yay -S --noconfirm jq; then
+        log ERROR "Failed to install jq"
+        exit 1
+    fi
+fi
+
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Configuring system settings for Omarchy..."
     echo "This will configure keyboard layouts, monitor settings, and Waybar."
@@ -165,35 +174,59 @@ if [[ -n "$KEYBOARD_LAYOUTS" && -f "$WAYBAR_CONFIG" ]]; then
     log STEP "Configuring Waybar keyboard layout display..."
 
     if ! grep -q '"hyprland/language"' "$WAYBAR_CONFIG"; then
-        sed -i '/"modules-right": \[/a\    "hyprland/language",' "$WAYBAR_CONFIG"
+        jq '."modules-right" = ["hyprland/language"] + ."modules-right"' "$WAYBAR_CONFIG" > "${WAYBAR_CONFIG}.tmp"
+        mv "${WAYBAR_CONFIG}.tmp" "$WAYBAR_CONFIG"
         log INFO "Added hyprland/language module to waybar"
     fi
 
     if ! grep -q '"hyprland/language":' "$WAYBAR_CONFIG"; then
-        layout_formats=""
+        lang_config='{"format": "{}", "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"}'
+
         IFS=',' read -ra LAYOUTS <<<"$KEYBOARD_LAYOUTS"
         for layout in "${LAYOUTS[@]}"; do
             case "$layout" in
-                "us") layout_formats="$layout_formats\n    \"format-en\": \"US\"," ;;
-                "ge") layout_formats="$layout_formats\n    \"format-ka\": \"GE\"," ;;
-                "de") layout_formats="$layout_formats\n    \"format-de\": \"DE\"," ;;
-                "fr") layout_formats="$layout_formats\n    \"format-fr\": \"FR\"," ;;
-                "es") layout_formats="$layout_formats\n    \"format-es\": \"ES\"," ;;
-                "ru") layout_formats="$layout_formats\n    \"format-ru\": \"RU\"," ;;
-                *) layout_formats="$layout_formats\n    \"format-$layout\": \"${layout^^}\"," ;;
+                "us")
+                    format_key="format-en"
+                    format_value="US"
+                    ;;
+                "ge")
+                    format_key="format-ka"
+                    format_value="GE"
+                    ;;
+                "de")
+                    format_key="format-de"
+                    format_value="DE"
+                    ;;
+                "fr")
+                    format_key="format-fr"
+                    format_value="FR"
+                    ;;
+                "es")
+                    format_key="format-es"
+                    format_value="ES"
+                    ;;
+                "ru")
+                    format_key="format-ru"
+                    format_value="RU"
+                    ;;
+                *)
+                    format_key="format-$layout"
+                    format_value="${layout^^}"
+                    ;;
             esac
+            lang_config=$(echo "$lang_config" | jq --arg key "$format_key" --arg val "$format_value" '. + {($key): $val}')
         done
 
-        sed -i '/^  }$/i\  "hyprland/language": {\
-    "format": "{}",'"$layout_formats"'\
-    "on-click": "hyprctl switchxkblayout at-translated-set-2-keyboard next"\
-  },' "$WAYBAR_CONFIG"
+        jq --argjson lang "$lang_config" '. + {"hyprland/language": $lang}' "$WAYBAR_CONFIG" >"${WAYBAR_CONFIG}.tmp"
+        mv "${WAYBAR_CONFIG}.tmp" "$WAYBAR_CONFIG"
         log INFO "Added hyprland/language configuration to waybar"
     fi
 
     if [[ -f "$WAYBAR_STYLE" ]] && ! grep -q '#language' "$WAYBAR_STYLE"; then
-        sed -i '/#pulseaudio,/a\#language,' "$WAYBAR_STYLE"
-        log INFO "Added language module to waybar CSS"
+        if grep -q '#pulseaudio,' "$WAYBAR_STYLE"; then
+            sed -i '/#pulseaudio,/a\#language,' "$WAYBAR_STYLE"
+            log INFO "Added language module to waybar CSS"
+        fi
     fi
 
     log INFO "Keyboard layout display configured for waybar"
