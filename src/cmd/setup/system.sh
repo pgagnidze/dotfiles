@@ -174,7 +174,7 @@ if [[ -n "$KEYBOARD_LAYOUTS" && -f "$WAYBAR_CONFIG" ]]; then
     log STEP "Configuring Waybar keyboard layout display..."
 
     if ! grep -q '"hyprland/language"' "$WAYBAR_CONFIG"; then
-        jq '."modules-right" = ["hyprland/language"] + ."modules-right"' "$WAYBAR_CONFIG" > "${WAYBAR_CONFIG}.tmp"
+        jq '."modules-right" = ["hyprland/language"] + ."modules-right"' "$WAYBAR_CONFIG" >"${WAYBAR_CONFIG}.tmp"
         mv "${WAYBAR_CONFIG}.tmp" "$WAYBAR_CONFIG"
         log INFO "Added hyprland/language module to waybar"
     fi
