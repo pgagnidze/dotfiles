@@ -3,7 +3,7 @@
 # Pomarchy - Personal Omarchy Setup
 
 **Opinionated customization tool for Omarchy Linux**  
-*Omarchy is opinionated Arch/Hyprland setup. Pomarchy is opinionated Omarchy.*
+_Omarchy is opinionated Arch/Hyprland setup. Pomarchy is opinionated Omarchy._
 
 <p align="center">
   <img src="demo/demo.gif" alt="Pomarchy Demo" width="600"/>
@@ -74,16 +74,16 @@ chmod +x pomarchy
 
 ## Usage
 
-| Command | Description |
-|---------|-------------|
-| `pomarchy` | Full setup (dotfiles, packages, system, devtools) |
-| `pomarchy doctor` | Show system status and installed components |
-| `pomarchy setup [component]` | Install specific component |
-| `pomarchy theme list` | List installed themes |
-| `pomarchy theme use <name\|url>` | Install or activate theme |
-| `pomarchy backups list` | List available configuration backups |
-| `pomarchy backups restore` | Restore from backup |
-| `pomarchy update` | Update Pomarchy to latest version |
+| Command                          | Description                                       |
+| -------------------------------- | ------------------------------------------------- |
+| `pomarchy`                       | Full setup (dotfiles, packages, system, devtools) |
+| `pomarchy doctor`                | Show system status and installed components       |
+| `pomarchy setup [component]`     | Install specific component                        |
+| `pomarchy theme list`            | List installed themes                             |
+| `pomarchy theme use <name\|url>` | Install or activate theme                         |
+| `pomarchy backups list`          | List available configuration backups              |
+| `pomarchy backups restore`       | Restore from backup                               |
+| `pomarchy update`                | Update Pomarchy to latest version                 |
 
 **Examples:**
 
@@ -143,12 +143,6 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
  npm-packages = typescript ts-node prettier eslint @anthropic-ai/claude-code
  go-tools = golang.org/x/tools/gopls@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 ```
-
-## Requirements
-
-- **Omarchy Linux** (installed from ISO)
-- **yay** (AUR helper, pre-installed in Omarchy)  
-- **stow** (installed automatically if missing)
 
 ## Notes
 
