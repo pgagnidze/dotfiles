@@ -107,8 +107,6 @@ pomarchy backups restore
 
 Pomarchy uses a simple configuration system with sensible defaults.
 
-**Default configuration:** `config/pomarchy/.config/pomarchy/pomarchy.ini`
-
 **Customize your setup:**
 
 ```bash
@@ -145,14 +143,6 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
  npm-packages = typescript ts-node prettier eslint @anthropic-ai/claude-code
  go-tools = golang.org/x/tools/gopls@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 ```
-
-**Section mapping:**
-
-- `[theme]` → `pomarchy theme` commands
-- `[dotfiles]` → `pomarchy setup dotfiles`
-- `[packages]` → `pomarchy setup packages`
-- `[system]` → `pomarchy setup system`
-- `[devtools]` → `pomarchy setup devtools`
 
 ## Requirements
 
