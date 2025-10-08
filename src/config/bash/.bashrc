@@ -1,4 +1,4 @@
-source ~/.local/share/omarchy/default/bash/rc
+[ -f ~/.local/share/omarchy/default/bash/rc ] && source ~/.local/share/omarchy/default/bash/rc
 set -h
 
 export NVM_DIR="$HOME/.nvm"
