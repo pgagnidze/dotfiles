@@ -44,7 +44,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 setup_error_handling "packages"
-pre_setup_validation
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Installing packages for Omarchy..."

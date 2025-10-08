@@ -21,35 +21,32 @@
 <tr>
 <td width="50%">
 
-### Package Management
+**Package & Development Environment**
 
-- Removes unnecessary software (1password, kdenlive, obsidian)
-- Installs essential tools (Firefox, Go, Node.js, Claude Code)
-- Manages both official and AUR packages seamlessly
-- Neovim pre-installed with Omarchy
-
-### Development Environment
-
-- Node.js v20 with TypeScript, ESLint, Prettier
-- Go with language server and development tools
-- Enhanced shell with custom aliases
+Removes unwanted software and installs essential tools (Firefox, Go, Node.js, Claude Code). Node.js v20 with TypeScript, ESLint, Prettier. Go with language server and development tools.
 
 </td>
 <td width="50%">
 
-### System Configuration
+**System Configuration**
 
-- Multi-language keyboard layouts with Caps Lock switching
-- Active keyboard layout display in Waybar with click-to-switch
-- Monitor resolution and scaling optimization
-- Configurable touchpad and natural scrolling settings
+Multi-language keyboard layouts with Caps Lock switching. Active layout display in Waybar with click-to-switch. Monitor resolution and scaling optimization.
 
-### Safety & Flexibility
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-- **Automatic rollback system** - Failed operations preserve backups for easy restoration
-- **Pre-setup validation** - Checks disk space, connectivity, and permissions before changes
-- **Targeted backups** - Only backs up files each operation will modify (not entire system)
-- **Modular execution** - Run only what you need, configurable via simple key=value files
+**Automatic Rollback System**
+
+Failed operations preserve backups for easy restoration. Targeted backups only save files each operation modifies. Backup manifest tracks exactly what changed.
+
+</td>
+<td width="50%">
+
+**Modular & Configurable**
+
+Run only what you need via `pomarchy setup [component]`. Simple INI configuration with git config backend. Smart theme management from GitHub URLs.
 
 </td>
 </tr>
@@ -187,7 +184,6 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 - **Neovim:** Pre-installed with Omarchy - configure as needed
 - **Claude Code:** Configured with enhanced status line
 - **Themes:** Smart theme management - install from URLs or activate installed themes
-- **Configurable paths:** NVM, backup directory, and trash paths can be customized in config
 
 <details>
 <summary><strong>GPG Setup for Git Commit Signing</strong></summary>

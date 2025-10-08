@@ -216,7 +216,6 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     fi
 
     setup_error_handling "theme"
-    pre_setup_validation
 
     if [[ "$THEME_COMMAND" == "use" ]]; then
         THEME_TYPE=$(detect_theme_type "$THEME_INPUT")

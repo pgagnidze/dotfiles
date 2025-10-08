@@ -103,34 +103,6 @@ if [[ -z "${BACKUP_BASE_DIR:-}" ]]; then
     readonly BACKUP_BASE_DIR="${HOME}/.local/share/pomarchy/backups"
 fi
 
-pre_setup_validation() {
-    log INFO "Performing pre-setup validation..."
-
-    local available_space
-    available_space=$(df "$HOME" | awk 'NR==2 {print $4}')
-    if ((available_space < 1048576)); then
-        log ERROR "Insufficient disk space. At least 1GB free space required."
-        log ERROR "Current available space: $((available_space / 1024))MB"
-        exit 1
-    fi
-
-    if ! ping -c 1 -W 5 google.com &>/dev/null; then
-        log WARN "No internet connection detected. Some operations may fail."
-    fi
-
-    if [[ ! -w "$HOME" ]]; then
-        log ERROR "Cannot write to home directory: $HOME"
-        exit 1
-    fi
-
-    if [[ -n "${POMARCHY_SKIP_VALIDATION:-}" ]]; then
-        log INFO "Pre-setup validation skipped (POMARCHY_SKIP_VALIDATION set)"
-        return
-    fi
-
-    log INFO "Pre-setup validation completed successfully"
-}
-
 create_safety_backup() {
     local operation_name="$1"
     shift

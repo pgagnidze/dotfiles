@@ -44,7 +44,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 setup_error_handling "devtools"
-pre_setup_validation
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Setting up development tools for Omarchy..."

@@ -49,7 +49,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 setup_error_handling "system"
-pre_setup_validation
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Configuring system settings for Omarchy..."

@@ -78,7 +78,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 setup_error_handling "dotfiles"
-pre_setup_validation
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Installing dotfiles for Omarchy..."
