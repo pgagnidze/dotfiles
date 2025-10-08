@@ -8,25 +8,13 @@ export NVM_DIR="$HOME/.nvm"
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
-# Add pomarchy alias - automatically detects installation path
-if [[ -n "${POMARCHY_ROOT:-}" && -x "${POMARCHY_ROOT}/pomarchy" ]]; then
-    alias pomarchy="${POMARCHY_ROOT}/pomarchy"
-elif command -v pomarchy >/dev/null 2>&1; then
-    # pomarchy already in PATH, use as-is
-    :
-else
-    # Try common installation locations
-    for pomarchy_path in \
-        "$HOME/Development/personal/pomarchy/pomarchy" \
-        "$HOME/dotfiles/pomarchy/pomarchy" \
-        "$HOME/pomarchy/pomarchy" \
-        "$HOME/.local/bin/pomarchy" \
-        "/usr/local/bin/pomarchy"; do
-        if [[ -x "$pomarchy_path" ]]; then
-            alias pomarchy="$pomarchy_path"
-            break
-        fi
-    done
+if [[ -z "$(command -v pomarchy 2>/dev/null)" && -L ~/.bashrc ]]; then
+    _bashrc_target=$(readlink -f ~/.bashrc)
+    _pomarchy_root=$(cd "$(dirname "$_bashrc_target")" && git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -n "$_pomarchy_root" && -x "$_pomarchy_root/pomarchy" ]]; then
+        alias pomarchy="$_pomarchy_root/pomarchy"
+    fi
+    unset _bashrc_target _pomarchy_root
 fi
 
 cd() { 
