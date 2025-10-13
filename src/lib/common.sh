@@ -52,13 +52,13 @@ load_config_from_file() {
             dotfiles.enabled) DOTFILES="$value" ;;
             packages.remove) PACKAGES_REMOVE="$value" ;;
             packages.install) PACKAGES_INSTALL="$value" ;;
+            packages.default-browser) DEFAULT_BROWSER="$value" ;;
             system.keyboard-layouts) KEYBOARD_LAYOUTS="$value" ;;
             system.monitor-resolution) MONITOR_RESOLUTION="$value" ;;
             system.monitor-scale) MONITOR_SCALE="$value" ;;
             system.natural-scroll) NATURAL_SCROLL="$value" ;;
             system.disable-while-typing) DISABLE_WHILE_TYPING="$value" ;;
             system.clock-format) CLOCK_FORMAT="$value" ;;
-            system.default-browser) DEFAULT_BROWSER="$value" ;;
             devtools.nodejs-version) NODEJS_VERSION="$value" ;;
             devtools.npm-packages) NPM_PACKAGES="$value" ;;
             devtools.go-tools) GO_TOOLS="$value" ;;
