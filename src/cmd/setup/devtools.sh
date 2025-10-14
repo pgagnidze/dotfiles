@@ -13,6 +13,7 @@ show_help() {
     echo "What this command does:"
     echo "  • Installs Node.js v20 via NVM with global packages"
     echo "  • Sets up Go development tools (gopls, delve, golangci-lint)"
+    echo "  • Installs Neovim (stable or nightly based on config)"
     echo "  • Configures Claude Code with powerline status line"
     echo "  • Installs essential npm packages (TypeScript, ESLint, Prettier)"
     echo ""
@@ -47,10 +48,11 @@ setup_error_handling "devtools"
 
 if [[ "${SKIP_CONFIRM}" == "false" ]]; then
     log STEP "Setting up development tools for Omarchy..."
-    echo "This will install Node.js, Go tools, and Claude Code."
+    echo "This will install Node.js, Go tools, Neovim, and Claude Code."
     echo "Node.js version: ${NODEJS_VERSION}"
     echo "NPM packages: ${NPM_PACKAGES}"
     echo "Go tools: ${GO_TOOLS}"
+    echo "Neovim version: ${NEOVIM_VERSION:-stable}"
     echo ""
     read -rp "Do you want to continue? (y/N) "
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -141,6 +143,53 @@ setup_go() {
     fi
 }
 
+setup_neovim() {
+    local neovim_version="${NEOVIM_VERSION:-stable}"
+
+    if [[ -z "$neovim_version" ]]; then
+        return
+    fi
+
+    log STEP "Setting up Neovim ($neovim_version)..."
+
+    case "$neovim_version" in
+        stable)
+            if yay -Qi neovim-nightly-bin &>/dev/null; then
+                log INFO "Removing neovim-nightly-bin..."
+                yay -Rns --noconfirm neovim-nightly-bin || log ERROR "Failed to remove neovim-nightly-bin"
+            fi
+
+            if yay -Qi neovim &>/dev/null; then
+                log INFO "Neovim (stable) is already installed"
+            else
+                log INFO "Installing Neovim (stable) from official repos..."
+                yay -S --noconfirm neovim || log ERROR "Failed to install neovim"
+            fi
+            ;;
+        nightly)
+            if yay -Qi neovim &>/dev/null && ! yay -Qi neovim-nightly-bin &>/dev/null; then
+                log INFO "Removing neovim (stable)..."
+                yay -Rns --noconfirm neovim || log ERROR "Failed to remove neovim"
+            fi
+
+            if yay -Qi neovim-nightly-bin &>/dev/null; then
+                log INFO "Neovim (nightly) is already installed"
+            else
+                log INFO "Installing Neovim (nightly) from AUR..."
+                yay -S --noconfirm neovim-nightly-bin || log ERROR "Failed to install neovim-nightly-bin"
+            fi
+            ;;
+        *)
+            log ERROR "Invalid neovim-version: $neovim_version. Use 'stable' or 'nightly'."
+            ;;
+    esac
+
+    if command -v nvim &>/dev/null; then
+        nvim_version=$(nvim --version | head -n1)
+        log INFO "Neovim installed: $nvim_version"
+    fi
+}
+
 setup_claude_code() {
     log STEP "Setting up Claude Code configuration..."
 
@@ -155,7 +204,7 @@ setup_claude_code() {
         cat >"$settings_file" <<'EOF'
 {
   "statusLine": {
-    "type": "command", 
+    "type": "command",
     "command": "npx -y @owloops/claude-powerline@latest --style=powerline"
   }
 }
@@ -177,6 +226,7 @@ EOF
 
 setup_node
 setup_go
+setup_neovim
 setup_claude_code
 
 log INFO "Development tools setup complete!"
