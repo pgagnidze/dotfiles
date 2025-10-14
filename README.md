@@ -23,7 +23,7 @@ _Omarchy is opinionated Arch/Hyprland setup. Pomarchy is opinionated Omarchy._
 
 **Package & Development Environment**
 
-Removes unwanted software and installs essential tools (Firefox, Go, Node.js, Claude Code). Node.js v20 with TypeScript, ESLint, Prettier. Go with language server and development tools.
+Removes unwanted software and installs essential tools (Firefox, Go, Node.js, Neovim, Claude Code). Node.js v20 with TypeScript, ESLint, Prettier. Go with language server and development tools. Neovim with stable or nightly versions.
 
 </td>
 <td width="50%">
@@ -128,6 +128,7 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 [packages]
  remove = 1password-beta 1password-cli kdenlive obsidian pinta signal-desktop typora spotify
  install = firefox lua go awsvpnclient k6-bin
+ default-browser = firefox
 
 [system]
  keyboard-layouts = us,ge
@@ -136,18 +137,18 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
  natural-scroll = true
  disable-while-typing = false
  clock-format = 12h
- default-browser = firefox
 
 [devtools]
  nodejs-version = 20
  npm-packages = typescript ts-node prettier eslint @anthropic-ai/claude-code
  go-tools = golang.org/x/tools/gopls@latest github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+ neovim-version = nightly
 ```
 
 ## Notes
 
 - **Steam:** Install via Omarchy menu for GPU support
-- **Neovim:** Pre-installed with Omarchy - configure as needed
+- **Neovim:** Choose stable or nightly via `neovim-version` config option
 - **Claude Code:** Configured with enhanced status line
 
 <details>
