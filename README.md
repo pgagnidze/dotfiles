@@ -15,43 +15,6 @@ _Omarchy is opinionated Arch/Hyprland setup. Pomarchy is opinionated Omarchy._
 
 </div>
 
-## Features
-
-<table>
-<tr>
-<td width="50%">
-
-**Package & Development Environment**
-
-Removes unwanted software and installs essential tools (Firefox, Go, Node.js, Neovim, Claude Code). Node.js v20 with TypeScript, ESLint, Prettier. Go with language server and development tools. Neovim with stable or nightly versions.
-
-</td>
-<td width="50%">
-
-**System Configuration**
-
-Multi-language keyboard layouts with Caps Lock switching. Active layout display in Waybar with click-to-switch. Monitor resolution and scaling optimization.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-**Automatic Rollback System**
-
-Failed operations preserve backups for easy restoration. Targeted backups only save files each operation modifies. Backup manifest tracks exactly what changed.
-
-</td>
-<td width="50%">
-
-**Modular & Configurable**
-
-Run only what you need via `pomarchy setup [component]`. Simple INI configuration with git config backend. Smart theme management from GitHub URLs.
-
-</td>
-</tr>
-</table>
-
 ## Installation
 
 **Quick Setup (Recommended):**
@@ -61,15 +24,6 @@ git clone https://github.com/papungag/dotfiles.git
 cd dotfiles
 chmod +x pomarchy
 ./pomarchy                       # Full setup with confirmation
-```
-
-**Modular Installation:**
-
-```bash
-./pomarchy setup dotfiles        # Terminal and shell configs
-./pomarchy setup packages        # System packages and applications
-./pomarchy setup system          # Keyboard, monitor, input settings
-./pomarchy setup devtools        # Node.js, Go development tools
 ```
 
 ## Usage
