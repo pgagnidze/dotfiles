@@ -104,6 +104,7 @@ Pomarchy uses a secure INI-style configuration organized by setup commands. Each
 - **Steam:** Install via Omarchy menu for GPU support
 - **Neovim:** Choose stable or nightly via `neovim-version` config option
 - **Claude Code:** Configured with enhanced status line
+- **Keyboard device:** Waybar keyboard layout switcher uses `at-translated-set-2-keyboard`. If using external USB keyboards, update the device name in `src/cmd/setup/system.sh`
 
 <details>
 <summary><strong>GPG Setup for Git Commit Signing</strong></summary>
