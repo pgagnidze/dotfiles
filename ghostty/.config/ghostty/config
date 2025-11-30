@@ -1,5 +1,5 @@
 # =============================================================================
-# Ghostty Configuration for Fedora
+# Ghostty Configuration
 # =============================================================================
 
 # Theme - Monokai Pro Ristretto
@@ -7,9 +7,9 @@ theme = Monokai Pro Ristretto
 cursor-text = #000000
 
 # Font
-font-family = "CaskaydiaMono Nerd Font"
+font-family = "UbuntuMono Nerd Font"
 font-style = Regular
-font-size = 9
+font-size = 12
 
 # Window
 window-padding-x = 14

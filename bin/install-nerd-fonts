@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m'
+
+readonly FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
+readonly VERSION="v3.3.0"
+readonly BASE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}"
+
+readonly FONTS=(
+    CascadiaMono
+    JetBrainsMono
+    UbuntuMono
+)
+
+log() {
+    local level=$1
+    shift
+    local color
+    case "$level" in
+        INFO) color="$BLUE" ;;
+        SUCCESS) color="$GREEN" ;;
+        WARN) color="$YELLOW" ;;
+        ERROR) color="$RED" ;;
+        *) color="$NC" ;;
+    esac
+    echo -e "${color}[$level]${NC} $*"
+}
+
+show_help() {
+    cat << EOF
+Nerd Fonts Installer
+
+Downloads and installs Nerd Fonts for terminal use.
+
+Usage: $(basename "$0") [OPTIONS]
+
+Options:
+    -h, --help    Show this help message
+
+Fonts installed:
+    - CascadiaMono
+    - JetBrainsMono
+    - UbuntuMono
+
+Version: $VERSION
+Install location: $FONT_DIR
+EOF
+}
+
+check_prerequisites() {
+    log INFO "Checking prerequisites..."
+
+    for cmd in curl unzip fc-cache; do
+        if ! command -v "$cmd" &> /dev/null; then
+            log ERROR "$cmd is not installed"
+            exit 1
+        fi
+    done
+
+    log SUCCESS "Prerequisites check passed"
+}
+
+install_fonts() {
+    log INFO "Installing Nerd Fonts..."
+
+    mkdir -p "$FONT_DIR"
+
+    local success_count=0
+    for font in "${FONTS[@]}"; do
+        log INFO "Downloading $font..."
+
+        if curl -fsSL "${BASE_URL}/${font}.zip" -o "/tmp/${font}.zip"; then
+            unzip -oq "/tmp/${font}.zip" -d "$FONT_DIR"
+            rm "/tmp/${font}.zip"
+            log SUCCESS "$font installed"
+            success_count=$((success_count + 1))
+        else
+            log ERROR "Failed to download $font"
+        fi
+    done
+
+    log INFO "Updating font cache..."
+    fc-cache -f
+
+    log SUCCESS "Installed $success_count/${#FONTS[@]} fonts"
+}
+
+main() {
+    case "${1:-}" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        "")
+            log INFO "Starting Nerd Fonts installation..."
+            echo
+            check_prerequisites
+            install_fonts
+            ;;
+        *)
+            log ERROR "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"

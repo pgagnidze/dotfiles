@@ -1,79 +1,38 @@
 # Dotfiles
 
-Personal dotfiles for Fedora, managed with [GNU Stow](https://www.gnu.org/software/stow/).
-
-## Structure
-
-```
-.
-├── bash/           # Bash configuration + readline
-├── git/            # Git configuration with GPG signing
-├── ghostty/        # Ghostty terminal (Monokai Pro Ristretto)
-└── assets/
-    └── wallpapers/ # Ristretto theme wallpapers
-```
+Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Quick Start
 
 ```bash
-# Clone
 git clone https://github.com/pgagnidze/pomarchy.git ~/dotfiles
 cd ~/dotfiles
-
-# Install dotfiles
-stow bash git ghostty
+./bin/install-dotfiles
 ```
 
-## Fedora Setup
+## Setup
 
-### 1. Enable RPM Fusion
+### 1. Packages
+
+Install using your package manager:
+- `stow`, `zoxide`, `fzf`, `neovim`, `lua`, `diff-so-fancy`, `ghostty`
+
+Install Nerd Fonts:
 
 ```bash
-sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+./bin/install-nerd-fonts
 ```
 
-### 2. Install Packages
-
-```bash
-sudo dnf install \
-  git stow \
-  zoxide eza bat fzf starship \
-  neovim golang nodejs npm \
-  ffmpeg ImageMagick tmux \
-  gnupg2 diff-so-fancy \
-  ghostty
-```
-
-### 3. Nerd Fonts
-
-```bash
-sudo dnf copr enable che/nerd-fonts
-sudo dnf install nerd-fonts-cascadia-mono
-```
-
-### 4. NVM (Node Version Manager)
+### 2. Node
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 nvm install 22
-```
-
-### 5. NPM Packages
-
-```bash
 npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code
 ```
 
-### 6. Go Tools
-
-```bash
-go install golang.org/x/tools/gopls@latest
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-```
-
-### 7. LazyVim
+### 3. LazyVim
 
 ```bash
 mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
@@ -81,55 +40,44 @@ git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
 ```
 
-## What's Included
+### 4. Git Setup
 
-### Bash
-- History settings (32k lines, append mode)
-- Zoxide integration (`z` for smart cd)
-- Eza aliases (`ls`, `lt`, `lsa`)
-- Git aliases (`g`, `gcm`, `gcam`)
-- Utility functions: `del`, `buf`, `compress`, `iso2sd`, `format-drive`
-- Media functions: `transcode-video-1080p`, `img2jpg`, `img2png`
-- Starship prompt
-- fzf integration
-
-### Git
-- GPG commit signing
-- diff-so-fancy as pager
-- Useful aliases (`graph`, `stat`)
-- Auto-rebase on pull
-
-### Ghostty
-- Monokai Pro Ristretto theme
-- CaskaydiaMono Nerd Font
-- Block cursor, no blink
-
-## Tools
-
-| Tool | Purpose |
-|------|---------|
-| `zoxide` | Smart cd with frecency |
-| `eza` | Modern ls replacement |
-| `bat` | Cat with syntax highlighting |
-| `fzf` | Fuzzy finder |
-| `starship` | Cross-shell prompt |
-| `diff-so-fancy` | Better git diffs |
-
-## GPG Setup for Git Commit Signing
+**SSH Key** (authentication):
 
 ```bash
-# Generate key
+./bin/setup-ssh your_email@example.com
+```
+
+Add to [GitHub SSH keys](https://github.com/settings/keys).
+
+**GPG Key** (commit signing):
+
+```bash
 gpg --full-generate-key
-
-# Get key ID
 gpg --list-secret-keys --keyid-format=long
+```
 
-# Set signing key
-git config --global user.signingkey YOUR_KEY_ID
+Copy your key ID (hex string after `rsa4096/`), update `git/.gitconfig`:
 
-# Export for GitHub
+```
+[user]
+    signingkey = YOUR_KEY_ID
+```
+
+Export and add to [GitHub GPG keys](https://github.com/settings/keys):
+
+```bash
 gpg --armor --export YOUR_KEY_ID
 ```
+
+## System Settings
+
+- Dark mode, darker colours
+- Keyboard: US, Georgian
+- Display: 2880x1800@120, scale 2
+- Natural scroll, disable-while-typing off
+- 12-hour clock, metric system
+- Fingerprint, Gmail account
 
 ## License
 

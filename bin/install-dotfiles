@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m'
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+
+readonly CONFIGS=(
+    bash
+    git
+    ghostty
+)
+
+log() {
+    local level=$1
+    shift
+    local color
+    case "$level" in
+        INFO) color="$BLUE" ;;
+        SUCCESS) color="$GREEN" ;;
+        WARN) color="$YELLOW" ;;
+        ERROR) color="$RED" ;;
+        *) color="$NC" ;;
+    esac
+    echo -e "${color}[$level]${NC} $*"
+}
+
+show_help() {
+    cat << EOF
+Dotfiles Installer
+
+Installs dotfiles using GNU Stow with automatic conflict resolution.
+
+Usage: $(basename "$0") [OPTIONS] [configs...]
+
+Arguments:
+    configs    Specific configs to install (default: all)
+
+Options:
+    -h, --help    Show this help message
+
+Available configs:
+    bash, git, ghostty
+
+Examples:
+    $(basename "$0")              # Install all configs
+    $(basename "$0") bash git     # Install specific configs
+EOF
+}
+
+check_prerequisites() {
+    log INFO "Checking prerequisites..."
+
+    if ! command -v stow &> /dev/null; then
+        log ERROR "stow is not installed"
+        exit 1
+    fi
+
+    if ! command -v git &> /dev/null; then
+        log ERROR "git is not installed"
+        exit 1
+    fi
+
+    log SUCCESS "Prerequisites check passed"
+}
+
+install_config() {
+    local config=$1
+
+    if [[ ! -d "${DOTFILES_DIR}/${config}" ]]; then
+        log ERROR "Config '$config' not found"
+        return 1
+    fi
+
+    log INFO "Installing $config..."
+
+    stow --adopt -v -d "$DOTFILES_DIR" -t "$HOME" "$config" 2>&1 | grep -v "^BUG" || true
+    git -C "$DOTFILES_DIR" restore "$config" 2>/dev/null || true
+
+    log SUCCESS "$config installed"
+}
+
+main() {
+    local configs_to_install=()
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            *)
+                configs_to_install+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    if [[ ${#configs_to_install[@]} -eq 0 ]]; then
+        configs_to_install=("${CONFIGS[@]}")
+    fi
+
+    log INFO "Starting dotfiles installation..."
+    log INFO "Dotfiles directory: $DOTFILES_DIR"
+    echo
+
+    check_prerequisites
+
+    log INFO "Installing ${#configs_to_install[@]} config(s)..."
+    echo
+
+    local success_count=0
+    for config in "${configs_to_install[@]}"; do
+        if install_config "$config"; then
+            success_count=$((success_count + 1))
+        fi
+    done
+
+    echo
+    log SUCCESS "Installed $success_count/${#configs_to_install[@]} configs"
+}
+
+main "$@"
