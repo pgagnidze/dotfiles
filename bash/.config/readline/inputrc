@@ -1,0 +1,44 @@
+# =============================================================================
+# Readline Configuration (inputrc)
+# =============================================================================
+
+# Enable 8-bit input/output for Unicode support
+set meta-flag on
+set input-meta on
+set output-meta on
+set convert-meta off
+
+# Case-insensitive completion
+set completion-ignore-case on
+set completion-prefix-display-length 2
+
+# Show all completions on first tab
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+# Arrow keys search history based on typed prefix
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[C": forward-char
+"\e[D": backward-char
+
+# Immediately add trailing slash for symlinked directories
+set mark-symlinked-directories on
+
+# Don't autocomplete hidden files unless pattern starts with dot
+set match-hidden-files off
+
+# Show all completions at once (no paging)
+set page-completions off
+
+# Ask before showing more than 200 completions
+set completion-query-items 200
+
+# Show file type indicators (like ls -F)
+set visible-stats on
+
+# Smart completion - look at text after cursor too
+set skip-completed-text on
+
+# Colored completion based on file type
+set colored-stats on
