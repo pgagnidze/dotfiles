@@ -35,9 +35,6 @@ shopt -s dirspell 2>/dev/null
 # Bookmark directories with variables (cd $dotfiles)
 shopt -s cdable_vars
 
-# Ensure command hashing is off for mise
-set +h
-
 # -----------------------------------------------------------------------------
 # History
 # -----------------------------------------------------------------------------
