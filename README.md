@@ -36,7 +36,7 @@ All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment 
 Install using your package manager:
 
 ```bash
-sudo dnf install stow zoxide fzf neovim lua diff-so-fancy
+sudo dnf install stow zoxide fzf fd-find neovim lua diff-so-fancy gh
 ```
 
 Install [Ghostty](https://ghostty.org/) terminal.
