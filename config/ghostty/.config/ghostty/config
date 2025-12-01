@@ -12,6 +12,8 @@ font-style = Regular
 font-size = 12
 
 # Window
+window-width = 120
+window-height = 40
 window-padding-x = 14
 window-padding-y = 14
 confirm-close-surface = false
