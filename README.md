@@ -7,24 +7,24 @@ Personal dotfiles for Fedora, managed with [GNU Stow](https://www.gnu.org/softwa
 ```bash
 git clone https://github.com/pgagnidze/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./bin/install-dotfiles
+make setup
 ```
 
 ## What's Included
 
 | Config | Description |
 |--------|-------------|
-| `bash` | Shell configuration with prompt, aliases, and completions |
-| `git` | Git configuration with aliases and GPG signing |
-| `ghostty` | Terminal emulator settings |
+| `config/bin` | Scripts symlinked to `~/.local/bin` |
+| `config/bash` | Shell configuration with prompt, aliases, and completions |
+| `config/git` | Git configuration with aliases and GPG signing |
+| `config/ghostty` | Terminal emulator settings |
 
-## Scripts
+### Scripts
 
 | Script | Description |
 |--------|-------------|
-| `bin/install-dotfiles` | Install configs using GNU Stow with automatic conflict resolution |
-| `bin/install-nerd-fonts` | Download and install CascadiaMono, JetBrainsMono, UbuntuMono |
-| `bin/setup-ssh` | Generate ed25519 SSH key and configure for GitHub |
+| `install-nerd-fonts` | Download and install CascadiaMono, JetBrainsMono, UbuntuMono |
+| `setup-ssh` | Generate ed25519 SSH key and configure for GitHub |
 
 All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment variables.
 
@@ -44,7 +44,7 @@ Install [Ghostty](https://ghostty.org/) terminal.
 Install Nerd Fonts:
 
 ```bash
-./bin/install-nerd-fonts
+install-nerd-fonts
 ```
 
 </details>
@@ -76,7 +76,7 @@ rm -rf ~/.config/nvim/.git
 <summary><strong>4. SSH Key</strong></summary>
 
 ```bash
-./bin/setup-ssh your_email@example.com
+setup-ssh your_email@example.com
 ```
 
 Add the public key to [GitHub SSH keys](https://github.com/settings/keys).
@@ -91,7 +91,7 @@ gpg --full-generate-key
 gpg --list-secret-keys --keyid-format=long
 ```
 
-Copy your key ID (hex string after `rsa4096/`), update `git/.gitconfig`:
+Copy your key ID (hex string after `rsa4096/`), update `config/git/.gitconfig`:
 
 ```ini
 [user]

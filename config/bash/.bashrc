@@ -65,6 +65,9 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
+# Local bin
+[[ -d $HOME/.local/bin ]] && export PATH=$HOME/.local/bin:${PATH}
+
 # Go
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin

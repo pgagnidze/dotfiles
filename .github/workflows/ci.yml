@@ -16,7 +16,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y shellcheck
 
       - name: Run shellcheck
-        run: shellcheck bin/*
+        run: shellcheck setup config/bin/.local/bin/*
 
   format:
     runs-on: ubuntu-latest
@@ -27,4 +27,4 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y shfmt
 
       - name: Check formatting
-        run: shfmt -d -i 4 -ci bin/*
+        run: shfmt -d -i 4 -ci setup config/bin/.local/bin/*
