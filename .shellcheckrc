@@ -1,0 +1,7 @@
+# Shellcheck configuration
+external-sources=true
+
+# SC2016: Expressions don't expand in single quotes - intentional for literal strings
+# SC1090: Can't follow non-constant source - dynamic sourcing is fine
+# SC2155: Declare and assign separately - pedantic when using set -e
+disable=SC2016,SC1090,SC2155

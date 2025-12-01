@@ -2,111 +2,133 @@
 
 set -euo pipefail
 
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m'
-readonly NC='\033[0m'
+FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
+VERSION="v3.3.0"
+BASE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}"
 
-readonly FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
-readonly VERSION="v3.3.0"
-readonly BASE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}"
-
-readonly FONTS=(
+FONTS=(
     CascadiaMono
     JetBrainsMono
     UbuntuMono
 )
+
+setup_colors() {
+    if [[ -n "${FORCE_COLOR:-}" ]]; then
+        USE_COLOR=true
+    elif [[ -n "${NO_COLOR:-}" ]]; then
+        USE_COLOR=false
+    elif [[ -t 1 ]]; then
+        USE_COLOR=true
+    else
+        USE_COLOR=false
+    fi
+
+    if [[ "$USE_COLOR" == true ]]; then
+        red=$'\e[31m'
+        green=$'\e[32m'
+        yellow=$'\e[33m'
+        blue=$'\e[34m'
+        bold=$'\e[1m'
+        reset=$'\e[0m'
+    else
+        red='' green='' yellow='' blue='' bold='' reset=''
+    fi
+}
 
 log() {
     local level=$1
     shift
     local color
     case "$level" in
-        INFO) color="$BLUE" ;;
-        SUCCESS) color="$GREEN" ;;
-        WARN) color="$YELLOW" ;;
-        ERROR) color="$RED" ;;
-        *) color="$NC" ;;
+        info) color="$blue" ;;
+        success) color="$green" ;;
+        warn) color="$yellow" ;;
+        error) color="$red" ;;
+        *) color="" ;;
     esac
-    echo -e "${color}[$level]${NC} $*"
+    if [[ "$level" == "error" ]]; then
+        echo "${color}[${level}]${reset} $*" >&2
+    else
+        echo "${color}[${level}]${reset} $*"
+    fi
 }
 
 show_help() {
-    cat << EOF
-Nerd Fonts Installer
+    cat <<EOF
+${bold}Nerd Fonts Installer${reset}
 
 Downloads and installs Nerd Fonts for terminal use.
 
-Usage: $(basename "$0") [OPTIONS]
+Usage: $(basename "$0") [options]
 
 Options:
-    -h, --help    Show this help message
+    -h, --help      Show this help message
 
 Fonts installed:
-    - CascadiaMono
-    - JetBrainsMono
-    - UbuntuMono
+    CascadiaMono, JetBrainsMono, UbuntuMono
 
 Version: $VERSION
-Install location: $FONT_DIR
+Location: $FONT_DIR
 EOF
 }
 
 check_prerequisites() {
-    log INFO "Checking prerequisites..."
+    log info "Checking prerequisites"
 
     for cmd in curl unzip fc-cache; do
-        if ! command -v "$cmd" &> /dev/null; then
-            log ERROR "$cmd is not installed"
+        if ! command -v "$cmd" &>/dev/null; then
+            log error "$cmd is not installed"
             exit 1
         fi
     done
 
-    log SUCCESS "Prerequisites check passed"
+    log success "Prerequisites verified"
 }
 
 install_fonts() {
-    log INFO "Installing Nerd Fonts..."
+    log info "Installing Nerd Fonts"
 
     mkdir -p "$FONT_DIR"
 
     local success_count=0
     for font in "${FONTS[@]}"; do
-        log INFO "Downloading $font..."
+        log info "Downloading $font"
 
         if curl -fsSL "${BASE_URL}/${font}.zip" -o "/tmp/${font}.zip"; then
             unzip -oq "/tmp/${font}.zip" -d "$FONT_DIR"
             rm "/tmp/${font}.zip"
-            log SUCCESS "$font installed"
+            log success "$font installed"
             success_count=$((success_count + 1))
         else
-            log ERROR "Failed to download $font"
+            log error "Failed to download $font"
         fi
     done
 
-    log INFO "Updating font cache..."
+    log info "Updating font cache"
     fc-cache -f
 
-    log SUCCESS "Installed $success_count/${#FONTS[@]} fonts"
+    log success "Installed $success_count/${#FONTS[@]} fonts"
 }
 
 main() {
+    setup_colors
+
     case "${1:-}" in
-        -h|--help)
+        -h | --help)
             show_help
             exit 0
             ;;
         "")
-            log INFO "Starting Nerd Fonts installation..."
+            log info "Starting Nerd Fonts installation"
             echo
             check_prerequisites
+            echo
             install_fonts
             ;;
         *)
-            log ERROR "Unknown option: $1"
+            log error "Unknown option: $1"
             show_help
-            exit 1
+            exit 2
             ;;
     esac
 }

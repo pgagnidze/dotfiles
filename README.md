@@ -70,6 +70,18 @@ Export and add to [GitHub GPG keys](https://github.com/settings/keys):
 gpg --armor --export YOUR_KEY_ID
 ```
 
+<details>
+<summary><strong>Additional Packages</strong></summary>
+
+- **AWS CDK** - Infrastructure as code framework
+- **AWS CLI v2** - AWS command line interface
+- **AWS VPN Client** - VPN client
+- **Lite-XL** - Lightweight code editor
+- **Steam** - Gaming platform
+- **VS Code** - Code editor
+
+</details>
+
 ## System Settings
 
 - Dark mode, darker colours
