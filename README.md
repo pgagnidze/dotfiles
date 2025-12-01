@@ -1,11 +1,11 @@
-# Pomarchy
+# Dotfiles
 
 Personal dotfiles for Fedora, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/pgagnidze/pomarchy.git ~/dotfiles
+git clone https://github.com/pgagnidze/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./bin/install-dotfiles
 ```
