@@ -57,7 +57,7 @@ install-nerd-fonts
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 nvm install 22
-npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code
+npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code markdownlint-cli
 ```
 
 </details>
