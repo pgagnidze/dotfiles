@@ -1,6 +1,16 @@
+<div align="center">
+
 # Dotfiles
 
+<p align="center">
+  <img src="assets/screen.png" alt="Dotfiles screenshot" width="600"/>
+</p>
+
 Personal dotfiles for Fedora, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+
+![License:MIT](https://img.shields.io/static/v1?label=license&message=MIT&color=blue)
+
+</div>
 
 ## Quick Start
 
