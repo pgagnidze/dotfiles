@@ -1,0 +1,214 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SSH_DIR="$HOME/.ssh"
+CONFIG_FILE="$SSH_DIR/config"
+
+setup_colors() {
+    if [[ -n "${FORCE_COLOR:-}" ]]; then
+        USE_COLOR=true
+    elif [[ -n "${NO_COLOR:-}" ]]; then
+        USE_COLOR=false
+    elif [[ -t 1 ]]; then
+        USE_COLOR=true
+    else
+        USE_COLOR=false
+    fi
+
+    if [[ "$USE_COLOR" == true ]]; then
+        red=$'\e[31m'
+        green=$'\e[32m'
+        yellow=$'\e[33m'
+        blue=$'\e[34m'
+        bold=$'\e[1m'
+        reset=$'\e[0m'
+    else
+        red='' green='' yellow='' blue='' bold='' reset=''
+    fi
+}
+
+log() {
+    local level=$1
+    shift
+    local color
+    case "$level" in
+        info) color="$blue" ;;
+        success) color="$green" ;;
+        warn) color="$yellow" ;;
+        error) color="$red" ;;
+        *) color="" ;;
+    esac
+    if [[ "$level" == "error" ]]; then
+        echo "${color}[${level}]${reset} $*" >&2
+    else
+        echo "${color}[${level}]${reset} $*"
+    fi
+}
+
+show_help() {
+    cat <<EOF
+${bold}SSH Key Setup${reset}
+
+Generates an ed25519 SSH key and configures it for GitHub.
+
+Usage: $(basename "$0") <email> [key_name]
+
+Arguments:
+    email           Email address for the key
+    key_name        Optional key name (default: derived from email)
+
+Options:
+    -h, --help      Show this help message
+
+Examples:
+    $(basename "$0") personal@example.com
+    $(basename "$0") work@company.com work
+
+After running this script:
+    1. Go to https://github.com/settings/keys
+    2. Click "New SSH key"
+    3. Paste the public key displayed by this script
+    4. Click "Add SSH key"
+EOF
+}
+
+get_key_name() {
+    local email=$1
+    local custom_name=${2:-}
+
+    if [[ -n "$custom_name" ]]; then
+        echo "$custom_name"
+    else
+        echo "${email%%@*}"
+    fi
+}
+
+check_prerequisites() {
+    local key_file=$1
+
+    log info "Checking prerequisites"
+
+    if ! command -v ssh-keygen &>/dev/null; then
+        log error "ssh-keygen is not installed"
+        exit 1
+    fi
+
+    if [[ -f "$key_file" ]]; then
+        log warn "SSH key already exists at $key_file"
+        read -rp "Overwrite? (y/N): " -n 1
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log info "Aborted"
+            exit 0
+        fi
+    fi
+
+    log success "Prerequisites verified"
+}
+
+generate_key() {
+    local email=$1
+    local key_file=$2
+
+    log info "Generating ed25519 SSH key for $email"
+
+    mkdir -p "$SSH_DIR"
+    ssh-keygen -t ed25519 -C "$email" -f "$key_file"
+    chmod 600 "$key_file"
+
+    log success "SSH key generated at $key_file"
+}
+
+configure_github() {
+    local key_file=$1
+    local key_name=$2
+
+    log info "Configuring SSH for GitHub"
+
+    mkdir -p "$SSH_DIR"
+    touch "$CONFIG_FILE"
+
+    local host_alias="github.com-${key_name}"
+
+    if grep -q "Host $host_alias" "$CONFIG_FILE" 2>/dev/null; then
+        log warn "SSH configuration for $host_alias already exists"
+        return
+    fi
+
+    cat >>"$CONFIG_FILE" <<EOF
+
+Host $host_alias
+    Hostname ssh.github.com
+    Port 443
+    User git
+    IdentityFile $key_file
+EOF
+
+    if ! grep -q "Host github.com$" "$CONFIG_FILE" 2>/dev/null; then
+        cat >>"$CONFIG_FILE" <<EOF
+
+Host github.com
+    Hostname ssh.github.com
+    Port 443
+    User git
+    IdentityFile $key_file
+EOF
+    fi
+
+    log success "SSH configuration updated"
+}
+
+display_public_key() {
+    local key_file=$1
+
+    echo
+    log info "Your public key:"
+    echo
+    cat "${key_file}.pub"
+    echo
+    log warn "Add this key to GitHub: https://github.com/settings/keys"
+    echo
+    read -rp "Press Enter after adding the key to GitHub..."
+}
+
+test_connection() {
+    log info "Testing SSH connection to GitHub"
+    echo
+
+    if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+        log success "SSH setup complete"
+    else
+        ssh -T git@github.com || true
+        log info "If you see 'successfully authenticated', setup is complete"
+    fi
+}
+
+main() {
+    setup_colors
+
+    local email=${1:-}
+
+    if [[ -z "$email" || "$email" == "-h" || "$email" == "--help" ]]; then
+        show_help
+        [[ "$email" == "-h" || "$email" == "--help" ]] && exit 0
+        exit 2
+    fi
+
+    local key_name
+    key_name=$(get_key_name "$email" "${2:-}")
+
+    local key_file="$SSH_DIR/id_ed25519_${key_name}"
+
+    log info "Starting SSH setup"
+    log info "Key name: $key_name"
+    echo
+
+    check_prerequisites "$key_file"
+    generate_key "$email" "$key_file"
+    configure_github "$key_file" "$key_name"
+    display_public_key "$key_file"
+    test_connection
+}
+
+main "$@"
