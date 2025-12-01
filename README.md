@@ -6,7 +6,7 @@
   <img src="assets/screen.png" alt="Dotfiles screenshot" width="600"/>
 </p>
 
-Personal dotfiles for Fedora, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Personal dotfiles for Fedora, managed with [lnko](https://github.com/pgagnidze/lnko).
 
 ![License:MIT](https://img.shields.io/static/v1?label=license&message=MIT&color=blue)
 
@@ -16,8 +16,9 @@ Personal dotfiles for Fedora, managed with [GNU Stow](https://www.gnu.org/softwa
 
 ```bash
 git clone https://github.com/pgagnidze/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-make setup
+sudo luarocks install lnko
+cd ~/dotfiles/config
+lnko link bin bash git ghostty nvim
 ```
 
 ## What's Included
@@ -47,7 +48,8 @@ All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment 
 Install using your package manager:
 
 ```bash
-sudo dnf install stow zoxide fzf fd-find neovim lua diff-so-fancy gh
+sudo dnf install zoxide fzf fd-find neovim lua luarocks diff-so-fancy gh
+sudo luarocks install lnko
 ```
 
 Install [Ghostty](https://ghostty.org/) terminal.
