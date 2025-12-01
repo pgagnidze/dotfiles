@@ -51,10 +51,15 @@ do_work() { ... }
 main() {
     setup_colors
     ...
+    exit 0
 }
 
 main "$@"
 ```
+
+**Important:** Always end `main()` with `exit 0`. Bash reads scripts sequentially from disk, so if the script changes during execution, Bash resumes at the current byte offset—potentially running unintended code. The `main` function pattern loads code into memory before execution, and `exit` prevents returning to the (possibly modified) script on disk.
+
+Reference: https://arongriffis.com/2023-11-18-bash-main
 
 ## Colors
 

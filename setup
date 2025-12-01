@@ -178,6 +178,7 @@ main() {
 
     echo
     log success "Installed $success_count/${#configs_to_install[@]} configs"
+    exit 0
 }
 
 main "$@"

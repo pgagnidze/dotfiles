@@ -209,6 +209,7 @@ main() {
     configure_github "$key_file" "$key_name"
     display_public_key "$key_file"
     test_connection
+    exit 0
 }
 
 main "$@"
