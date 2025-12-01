@@ -91,6 +91,33 @@ check_prerequisites() {
     log success "Prerequisites verified"
 }
 
+remove_stale_symlinks() {
+    local config=$1
+    local config_dir="${DOTFILES_DIR}/${config}"
+
+    while IFS= read -r -d '' file; do
+        local relative_path="${file#"$config_dir"/}"
+        local target_path="${HOME}/${relative_path}"
+
+        if [[ -L "$target_path" ]]; then
+            local link_target
+            link_target=$(readlink "$target_path")
+
+            local abs_link_target
+            if [[ "$link_target" == /* ]]; then
+                abs_link_target="$link_target"
+            else
+                abs_link_target="$(cd "${target_path%/*}" && cd "${link_target%/*}" 2>/dev/null && pwd)/${link_target##*/}" || abs_link_target=""
+            fi
+
+            if [[ "$abs_link_target" != "${DOTFILES_DIR}/"* ]]; then
+                log warn "Removing stale symlink: $target_path"
+                rm "$target_path"
+            fi
+        fi
+    done < <(find "$config_dir" -type f -print0)
+}
+
 install_config() {
     local config=$1
 
@@ -100,6 +127,8 @@ install_config() {
     fi
 
     log info "Installing $config"
+
+    remove_stale_symlinks "$config"
 
     stow --adopt -v -d "$DOTFILES_DIR" -t "$HOME" "$config" 2>&1 | grep -v "^BUG" || true
     git -C "$DOTFILES_DIR" restore "$config" 2>/dev/null || true
