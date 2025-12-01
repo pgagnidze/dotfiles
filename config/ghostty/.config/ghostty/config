@@ -16,6 +16,8 @@ window-padding-x = 14
 window-padding-y = 14
 confirm-close-surface = false
 resize-overlay = never
+gtk-titlebar = false
+window-decoration = none
 
 # Cursor styling
 cursor-style = block
