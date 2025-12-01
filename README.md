@@ -1,6 +1,6 @@
-# Dotfiles
+# Pomarchy
 
-Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Personal dotfiles for Fedora, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## Quick Start
 
@@ -10,12 +10,36 @@ cd ~/dotfiles
 ./bin/install-dotfiles
 ```
 
+## What's Included
+
+| Config | Description |
+|--------|-------------|
+| `bash` | Shell configuration with prompt, aliases, and completions |
+| `git` | Git configuration with aliases and GPG signing |
+| `ghostty` | Terminal emulator settings |
+
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `bin/install-dotfiles` | Install configs using GNU Stow with automatic conflict resolution |
+| `bin/install-nerd-fonts` | Download and install CascadiaMono, JetBrainsMono, UbuntuMono |
+| `bin/setup-ssh` | Generate ed25519 SSH key and configure for GitHub |
+
+All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment variables.
+
 ## Setup
 
-### 1. Packages
+<details>
+<summary><strong>1. Packages</strong></summary>
 
 Install using your package manager:
-- `stow`, `zoxide`, `fzf`, `neovim`, `lua`, `diff-so-fancy`, `ghostty`
+
+```bash
+sudo dnf install stow zoxide fzf neovim lua diff-so-fancy
+```
+
+Install [Ghostty](https://ghostty.org/) terminal.
 
 Install Nerd Fonts:
 
@@ -23,7 +47,10 @@ Install Nerd Fonts:
 ./bin/install-nerd-fonts
 ```
 
-### 2. Node
+</details>
+
+<details>
+<summary><strong>2. Node</strong></summary>
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -32,7 +59,10 @@ nvm install 22
 npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code
 ```
 
-### 3. LazyVim
+</details>
+
+<details>
+<summary><strong>3. LazyVim</strong></summary>
 
 ```bash
 mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
@@ -40,17 +70,21 @@ git clone https://github.com/LazyVim/starter ~/.config/nvim
 rm -rf ~/.config/nvim/.git
 ```
 
-### 4. Git Setup
+</details>
 
-**SSH Key** (authentication):
+<details>
+<summary><strong>4. SSH Key</strong></summary>
 
 ```bash
 ./bin/setup-ssh your_email@example.com
 ```
 
-Add to [GitHub SSH keys](https://github.com/settings/keys).
+Add the public key to [GitHub SSH keys](https://github.com/settings/keys).
 
-**GPG Key** (commit signing):
+</details>
+
+<details>
+<summary><strong>5. GPG Key</strong></summary>
 
 ```bash
 gpg --full-generate-key
@@ -59,7 +93,7 @@ gpg --list-secret-keys --keyid-format=long
 
 Copy your key ID (hex string after `rsa4096/`), update `git/.gitconfig`:
 
-```
+```ini
 [user]
     signingkey = YOUR_KEY_ID
 ```
@@ -70,26 +104,42 @@ Export and add to [GitHub GPG keys](https://github.com/settings/keys):
 gpg --armor --export YOUR_KEY_ID
 ```
 
+</details>
+
 <details>
 <summary><strong>Additional Packages</strong></summary>
 
-- **AWS CDK** - Infrastructure as code framework
-- **AWS CLI v2** - AWS command line interface
-- **AWS VPN Client** - VPN client
-- **Lite-XL** - Lightweight code editor
-- **Steam** - Gaming platform
-- **VS Code** - Code editor
+| Package | Description |
+|---------|-------------|
+| AWS CDK | Infrastructure as code framework |
+| AWS CLI v2 | AWS command line interface |
+| AWS VPN Client | VPN client |
+| Lite-XL | Lightweight code editor |
+| Steam | Gaming platform |
+| VS Code | Code editor |
 
 </details>
 
 ## System Settings
 
-- Dark mode, darker colours
-- Keyboard: US, Georgian
-- Display: 2880x1800@120, scale 2
-- Natural scroll, disable-while-typing off
-- 12-hour clock, metric system
-- Fingerprint, Gmail account
+| Setting | Value |
+|---------|-------|
+| Theme | Dark mode, darker colours |
+| Keyboard | US, Georgian |
+| Display | 2880x1800@120, scale 2 |
+| Touchpad | Natural scroll, disable-while-typing off |
+| Clock | 12-hour, metric system |
+| Security | Fingerprint enabled |
+
+## Development
+
+```bash
+make install    # Install shellcheck and shfmt
+make lint       # Run shellcheck on bin scripts
+make format     # Format bin scripts with shfmt
+```
+
+See [docs/BASH.style.md](docs/BASH.style.md) for shell scripting conventions.
 
 ## License
 
