@@ -1,17 +1,10 @@
-# =============================================================================
-# Ghostty Configuration
-# =============================================================================
-
-# Theme - Monokai Pro Ristretto
 theme = Monokai Pro Ristretto
 cursor-text = #000000
 
-# Font
 font-family = "UbuntuMono Nerd Font"
 font-style = Regular
 font-size = 12
 
-# Window
 window-width = 120
 window-height = 40
 window-padding-x = 14
@@ -21,19 +14,14 @@ resize-overlay = never
 gtk-titlebar = false
 window-decoration = none
 
-# Cursor styling
 cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor
 
-# Keyboard bindings
 keybind = f11=toggle_fullscreen
-keybind = shift+insert=paste_from_clipboard
-keybind = control+insert=copy_to_clipboard
 keybind = super+control+shift+alt+arrow_down=resize_split:down,100
 keybind = super+control+shift+alt+arrow_up=resize_split:up,100
 keybind = super+control+shift+alt+arrow_left=resize_split:left,100
 keybind = super+control+shift+alt+arrow_right=resize_split:right,100
 
-# Mouse
 mouse-scroll-multiplier = 0.95
