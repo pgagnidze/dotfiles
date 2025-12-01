@@ -10,6 +10,7 @@ CONFIGS=(
     bash
     git
     ghostty
+    nvim
 )
 
 setup_colors() {
@@ -68,7 +69,7 @@ Options:
     -h, --help      Show this help message
 
 Available configs:
-    bin, bash, git, ghostty
+    bin, bash, git, ghostty, nvim
 
 Examples:
     $(basename "$0")              # Install all configs

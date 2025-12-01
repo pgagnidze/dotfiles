@@ -18,6 +18,7 @@ make setup
 | `config/bash` | Shell configuration with prompt, aliases, and completions |
 | `config/git` | Git configuration with aliases and GPG signing |
 | `config/ghostty` | Terminal emulator settings |
+| `config/nvim` | Neovim configuration with LazyVim |
 
 ### Scripts
 
@@ -62,18 +63,7 @@ npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code
 </details>
 
 <details>
-<summary><strong>3. LazyVim</strong></summary>
-
-```bash
-mv ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
-```
-
-</details>
-
-<details>
-<summary><strong>4. SSH Key</strong></summary>
+<summary><strong>3. SSH Key</strong></summary>
 
 ```bash
 setup-ssh your_email@example.com
@@ -84,7 +74,7 @@ Add the public key to [GitHub SSH keys](https://github.com/settings/keys).
 </details>
 
 <details>
-<summary><strong>5. GPG Key</strong></summary>
+<summary><strong>4. GPG Key</strong></summary>
 
 ```bash
 gpg --full-generate-key
