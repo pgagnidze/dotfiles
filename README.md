@@ -122,11 +122,46 @@ gpg --armor --export YOUR_KEY_ID
 
 </details>
 
+## GNOME Customization
+
+<details>
+<summary><strong>Theme and Panel</strong></summary>
+
+1. Install GTK theme dependencies:
+
+```bash
+sudo dnf install gtk-murrine-engine gnome-themes-extra
+```
+
+2. Install [Gruvbox GTK Theme](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme):
+
+```bash
+git clone https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git
+cd Gruvbox-GTK-Theme/themes
+./install.sh -l --tweaks soft float
+gsettings set org.gnome.desktop.interface gtk-theme 'Gruvbox-Dark'
+```
+
+3. Install [Reversal Icon Theme](https://github.com/yeyushengfan258/Reversal-icon-theme):
+
+```bash
+git clone https://github.com/yeyushengfan258/Reversal-icon-theme.git
+cd Reversal-icon-theme
+./install.sh -t brown
+gsettings set org.gnome.desktop.interface icon-theme 'Reversal-brown'
+```
+
+4. Install GNOME extensions:
+   - [Clipboard Indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/) - clipboard history
+   - [Blur my Shell](https://github.com/aunetx/blur-my-shell) - blur effects
+
+</details>
+
 ## System Settings
 
 | Setting | Value |
 |---------|-------|
-| Theme | Dark mode, darker colours |
+| Theme | Gruvbox Dark |
 | Keyboard | US, Georgian |
 | Display | 2880x1800@120, scale 2 |
 | Touchpad | Natural scroll, disable-while-typing off |
