@@ -122,10 +122,8 @@ gpg --armor --export YOUR_KEY_ID
 
 </details>
 
-## GNOME Customization
-
 <details>
-<summary><strong>Theme and Panel</strong></summary>
+<summary><strong>5. GNOME Customization</strong></summary>
 
 1. Install GTK theme dependencies:
 
@@ -161,7 +159,9 @@ gsettings set org.gnome.desktop.interface icon-theme 'Reversal-brown'
 
 | Setting | Value |
 |---------|-------|
-| Theme | Gruvbox Dark |
+| Theme | [Gruvbox Dark](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme) |
+| Icons | [Reversal Brown](https://github.com/yeyushengfan258/Reversal-icon-theme) |
+| Extensions | [Clipboard Indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/), [Blur my Shell](https://github.com/aunetx/blur-my-shell) |
 | Keyboard | US, Georgian |
 | Display | 2880x1800@120, scale 2 |
 | Touchpad | Natural scroll, disable-while-typing off |
