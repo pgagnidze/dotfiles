@@ -12,7 +12,6 @@ window-padding-y = 14
 confirm-close-surface = false
 resize-overlay = never
 gtk-titlebar = false
-window-decoration = none
 
 cursor-style = block
 cursor-style-blink = false
