@@ -134,16 +134,6 @@ gpg --armor --export YOUR_KEY_ID
 | Clock | 12-hour, metric system |
 | Security | Fingerprint enabled |
 
-## Development
-
-```bash
-make install    # Install shellcheck and shfmt
-make lint       # Run shellcheck on bin scripts
-make format     # Format bin scripts with shfmt
-```
-
-See [docs/bash/BASH.style.md](docs/bash/BASH.style.md) for shell scripting conventions.
-
 ## Style Guides
 
 Reusable style guides for different languages. Link them to your projects using lnko.
@@ -169,6 +159,16 @@ docs/LUA.style.md
 | [lua](docs/lua/LUA.style.md) | Lua coding conventions |
 | [python](docs/python/PYTHON.style.md) | Python coding conventions |
 | [bash](docs/bash/BASH.style.md) | Shell scripting conventions |
+
+## Development
+
+```bash
+make install    # Install shellcheck and shfmt
+make lint       # Run shellcheck on bin scripts
+make format     # Format bin scripts with shfmt
+```
+
+See [docs/bash/BASH.style.md](docs/bash/BASH.style.md) for shell scripting conventions.
 
 ## License
 
