@@ -142,7 +142,33 @@ make lint       # Run shellcheck on bin scripts
 make format     # Format bin scripts with shfmt
 ```
 
-See [docs/BASH.style.md](docs/BASH.style.md) for shell scripting conventions.
+See [docs/bash/BASH.style.md](docs/bash/BASH.style.md) for shell scripting conventions.
+
+## Style Guides
+
+Reusable style guides for different languages. Link them to your projects using lnko.
+
+Assumes dotfiles is cloned to `~/dotfiles` as shown in [Quick Start](#quick-start):
+
+```bash
+# Link Lua style guide to a project
+lnko link -d $HOME/dotfiles/docs -t $HOME/project/docs lua
+
+# Link multiple guides
+lnko link -d $HOME/dotfiles/docs -t $HOME/project/docs bash python
+```
+
+Add symlinked files to `.gitignore` in each project:
+
+```gitignore
+docs/LUA.style.md
+```
+
+| Guide | Description |
+|-------|-------------|
+| [lua](docs/lua/LUA.style.md) | Lua coding conventions |
+| [python](docs/python/PYTHON.style.md) | Python coding conventions |
+| [bash](docs/bash/BASH.style.md) | Shell scripting conventions |
 
 ## License
 
