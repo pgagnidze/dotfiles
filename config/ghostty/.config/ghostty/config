@@ -18,9 +18,9 @@ cursor-style-blink = false
 shell-integration-features = no-cursor
 
 keybind = f11=toggle_fullscreen
-keybind = super+control+shift+alt+arrow_down=resize_split:down,100
-keybind = super+control+shift+alt+arrow_up=resize_split:up,100
-keybind = super+control+shift+alt+arrow_left=resize_split:left,100
-keybind = super+control+shift+alt+arrow_right=resize_split:right,100
+keybind = ctrl+shift+arrow_down=resize_split:down,100
+keybind = ctrl+shift+arrow_up=resize_split:up,100
+keybind = ctrl+shift+arrow_left=resize_split:left,100
+keybind = ctrl+shift+arrow_right=resize_split:right,100
 
 mouse-scroll-multiplier = 0.95
