@@ -27,6 +27,7 @@ lnko link bin bash git ghostty nvim
 |--------|-------------|
 | `config/bin` | Scripts symlinked to `~/.local/bin` |
 | `config/bash` | Shell configuration with prompt, aliases, and completions |
+| `config/claude` | Claude Code settings and custom commands |
 | `config/git` | Git configuration with aliases and GPG signing |
 | `config/ghostty` | Terminal emulator settings |
 | `config/nvim` | Neovim configuration with LazyVim |
@@ -68,7 +69,7 @@ install-nerd-fonts
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 nvm install 22
-npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code markdownlint-cli
+npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code @owloops/claude-powerline markdownlint-cli
 ```
 
 </details>
