@@ -20,12 +20,12 @@
           },
           "session": {
             "enabled": true,
-            "type": "both",
+            "type": "tokens",
             "costSource": "calculated"
           },
           "today": {
             "enabled": true,
-            "type": "both"
+            "type": "tokens"
           },
           "metrics": {
             "enabled": true,
