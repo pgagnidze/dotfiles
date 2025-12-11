@@ -4,5 +4,6 @@
     "command": "claude-powerline"
   },
   "alwaysThinkingEnabled": false,
-  "includeCoAuthoredBy": false
+  "includeCoAuthoredBy": false,
+  "outputStyle": "Explanatory"
 }
