@@ -12,6 +12,12 @@ FONTS=(
     UbuntuMono
 )
 
+NOTO_FONTS=(
+    NotoSansSymbols
+    NotoSansSymbols2
+    NotoSansMath
+)
+
 setup_colors() {
     if [[ -n "${FORCE_COLOR:-}" ]]; then
         USE_COLOR=true
@@ -55,17 +61,20 @@ log() {
 
 show_help() {
     cat <<EOF
-${bold}Nerd Fonts Installer${reset}
+${bold}Fonts Installer${reset}
 
-Downloads and installs Nerd Fonts for terminal use.
+Downloads and installs Nerd Fonts and Noto fonts for terminal and editor use.
 
 Usage: $(basename "$0") [options]
 
 Options:
     -h, --help      Show this help message
 
-Fonts installed:
+Nerd Fonts:
     CascadiaMono, JetBrainsMono, UbuntuMono
+
+Noto Fonts:
+    NotoSansSymbols, NotoSansSymbols2, NotoSansMath
 
 Version: $VERSION
 Location: $FONT_DIR
@@ -86,11 +95,13 @@ check_prerequisites() {
 }
 
 install_fonts() {
-    log info "Installing Nerd Fonts"
+    log info "Installing fonts"
 
     mkdir -p "$FONT_DIR"
 
     local success_count=0
+    local expected=$((${#FONTS[@]} + ${#NOTO_FONTS[@]}))
+
     for font in "${FONTS[@]}"; do
         log info "Downloading $font"
 
@@ -104,10 +115,24 @@ install_fonts() {
         fi
     done
 
+    local noto_base_url="https://raw.githubusercontent.com/notofonts/notofonts.github.io/main/fonts"
+
+    for font in "${NOTO_FONTS[@]}"; do
+        log info "Downloading $font"
+        local font_url="${noto_base_url}/${font}/full/ttf/${font}-Regular.ttf"
+
+        if curl -fsSL "$font_url" -o "$FONT_DIR/${font}-Regular.ttf"; then
+            log success "$font installed"
+            success_count=$((success_count + 1))
+        else
+            log error "Failed to download $font"
+        fi
+    done
+
     log info "Updating font cache"
     fc-cache -f
 
-    log success "Installed $success_count/${#FONTS[@]} fonts"
+    log success "Installed $success_count/$expected fonts"
 }
 
 main() {
@@ -119,7 +144,7 @@ main() {
             exit 0
             ;;
         "")
-            log info "Starting Nerd Fonts installation"
+            log info "Starting fonts installation"
             echo
             check_prerequisites
             echo

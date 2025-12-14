@@ -36,7 +36,7 @@ lnko link bin bash git ghostty nvim
 
 | Script | Description |
 |--------|-------------|
-| `install-nerd-fonts` | Download and install CascadiaMono, JetBrainsMono, UbuntuMono |
+| `install-fonts` | Download and install Nerd Fonts and Noto symbol fonts |
 | `setup-ssh` | Generate ed25519 SSH key and configure for GitHub |
 
 All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment variables.
@@ -54,10 +54,10 @@ sudo dnf install zoxide fzf fd-find neovim lua luarocks diff-so-fancy gh gtk-mur
 
 Install [Ghostty](https://ghostty.org/) terminal.
 
-Install Nerd Fonts:
+Install fonts:
 
 ```bash
-install-nerd-fonts
+install-fonts
 ```
 
 </details>
