@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
+NERD_FONT_DIR="$HOME/.local/share/fonts/NerdFonts"
+NOTO_FONT_DIR="$HOME/.local/share/fonts/Noto"
 VERSION="v3.3.0"
 BASE_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/${VERSION}"
 
@@ -77,7 +78,7 @@ Noto Fonts:
     NotoSansSymbols, NotoSansSymbols2, NotoSansMath
 
 Version: $VERSION
-Location: $FONT_DIR
+Location: $NERD_FONT_DIR, $NOTO_FONT_DIR
 EOF
 }
 
@@ -97,7 +98,7 @@ check_prerequisites() {
 install_fonts() {
     log info "Installing fonts"
 
-    mkdir -p "$FONT_DIR"
+    mkdir -p "$NERD_FONT_DIR" "$NOTO_FONT_DIR"
 
     local success_count=0
     local expected=$((${#FONTS[@]} + ${#NOTO_FONTS[@]}))
@@ -106,7 +107,7 @@ install_fonts() {
         log info "Downloading $font"
 
         if curl -fsSL "${BASE_URL}/${font}.zip" -o "/tmp/${font}.zip"; then
-            unzip -oq "/tmp/${font}.zip" -d "$FONT_DIR"
+            unzip -oq "/tmp/${font}.zip" -d "$NERD_FONT_DIR"
             rm "/tmp/${font}.zip"
             log success "$font installed"
             success_count=$((success_count + 1))
@@ -121,7 +122,7 @@ install_fonts() {
         log info "Downloading $font"
         local font_url="${noto_base_url}/${font}/full/ttf/${font}-Regular.ttf"
 
-        if curl -fsSL "$font_url" -o "$FONT_DIR/${font}-Regular.ttf"; then
+        if curl -fsSL "$font_url" -o "$NOTO_FONT_DIR/${font}-Regular.ttf"; then
             log success "$font installed"
             success_count=$((success_count + 1))
         else
