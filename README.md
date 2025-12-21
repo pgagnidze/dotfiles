@@ -49,8 +49,10 @@ All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment 
 Install using your package manager:
 
 ```bash
-sudo dnf install zoxide fzf fd-find neovim lua luarocks diff-so-fancy gh gtk-murrine-engine gnome-themes-extra
+sudo dnf install zoxide fzf fd-find lua luarocks diff-so-fancy gh gtk-murrine-engine gnome-themes-extra
 ```
+
+Install [Neovim nightly](https://neovim.io/doc/install/).
 
 Install [Ghostty](https://ghostty.org/) terminal.
 
