@@ -1,6 +1,6 @@
 # Lua Style Guide
 
-Style conventions for Lua scripts and projects in this repository.
+Style conventions for Lua code in this repository.
 
 ## Header
 
@@ -30,15 +30,16 @@ Use `TODO` and `FIXME` tags when needed.
 
 ## Structure
 
-Organize scripts in this order:
+Organize files in this order:
 
 1. Shebang (for executables)
 2. Local requires
 3. Module table (if applicable)
-4. Constants
-5. Helper functions
-6. Public functions
-7. Main logic or module return
+4. Local aliases for performance
+5. Constants
+6. Helper functions
+7. Public functions
+8. Main logic or module return
 
 ```lua
 #!/usr/bin/env lua
@@ -46,6 +47,8 @@ Organize scripts in this order:
 local utils = require("utils")
 
 local module = {}
+
+local insert, concat = table.insert, table.concat
 
 local VERSION = "1.0.0"
 
@@ -74,9 +77,9 @@ main()
 
 ## Types
 
-Primitives work directly on value: `string`, `number`, `boolean`, `nil`
+Primitives (value): `string`, `number`, `boolean`, `nil`
 
-Complex types work on reference: `table`, `function`, `userdata`
+Complex (reference): `table`, `function`, `userdata`
 
 ```lua
 local foo = { 1, 2 }
@@ -87,17 +90,7 @@ print(foo[1]) -- 9 (same reference)
 
 ## Formatting
 
-Use 4 spaces. No tabs. Use LF (Unix) line endings. No semicolons.
-
-```lua
-for i, pkg in ipairs(packages) do
-    for name, version in pairs(pkg) do
-        if name == searched then
-            print(version)
-        end
-    end
-end
-```
+Use 4 spaces. No tabs. LF line endings. No semicolons.
 
 Space after `--`, commas, around operators, and inside braces:
 
@@ -108,24 +101,11 @@ local numbers = { 1, 2, 3 }
 local player = { name = "Jack" }
 ```
 
-No spaces inside parentheses. Blank lines between functions:
-
-```lua
-local function foo()
-end
-
-local function bar()
-end
-```
+No spaces inside parentheses. Blank lines between functions.
 
 Indent tables to the start of the line:
 
 ```lua
--- bad
-local my_table = {
-                   "hello",
-                 }
-
 -- good
 local my_table = {
     "hello",
@@ -136,63 +116,45 @@ Avoid aligning variable declarations (produces noisy diffs).
 
 ## Variables
 
-Always use `local` to declare variables:
+Always use `local`:
 
 ```lua
--- bad
-superpower = get_superpower()
-
--- good
 local superpower = get_superpower()
 ```
 
-Variables with larger scope need more descriptive names. One-letter names only for small scopes (under 10 lines) or iterators.
+Scope determines name length:
+- Large scope → descriptive names
+- Small scope (under 10 lines) or iterators → single letters ok
 
 Use `_` for ignored variables:
 
 ```lua
 for _, item in ipairs(items) do
-  process(item)
+    process(item)
 end
 ```
 
-Assign variables with the smallest possible scope.
+## Naming
 
-## Naming Conventions
+| Type | Convention | Example |
+|------|------------|---------|
+| Variables, functions | `snake_case` | `user_name`, `get_config` |
+| Classes | `PascalCase` | `MyClass`, `HttpClient` |
+| Boolean functions | `is_`/`has_` prefix | `is_valid`, `has_items` |
+| True constants | `UPPER_CASE` | `MAX_RETRIES` |
 
-- `snake_case` for variables and functions
-- `PascalCase` for classes (`MyClass`, `XmlParser`)
-- `is_` or `has_` prefix for boolean functions
-- `UPPER_CASE` sparingly for true constants
-- Never `_UPPERCASE` (reserved by Lua)
-
-```lua
-local user_name = "jack"
-local MAX_RETRIES = 3
-
-local function is_valid(input)
-    return input ~= nil
-end
-
-local Player = require("player")
-```
+Never use `_UPPERCASE` (reserved by Lua).
 
 ## Strings
 
-Use double quotes for consistency:
+Use double quotes. Use single quotes when string contains double quotes:
 
 ```lua
 local name = "LuaRocks"
-local path = "/usr/local/bin"
-```
-
-Use single quotes when the string contains double quotes:
-
-```lua
 local html = '<div class="container">'
 ```
 
-Long strings across multiple lines using concatenation. The concatenation operator can omit spaces:
+Concatenation operator can omit spaces:
 
 ```lua
 local message = "Hello, "..user.."! Day #"..day
@@ -200,7 +162,7 @@ local message = "Hello, "..user.."! Day #"..day
 
 ## Tables
 
-Prefer populating fields all at once. Trailing commas are encouraged:
+Populate fields at once. Use trailing commas:
 
 ```lua
 local player = {
@@ -212,32 +174,26 @@ local player = {
 Use plain `key` syntax when possible, `["key"]` for invalid identifiers:
 
 ```lua
-local codes = { ["UTF-8"] = val1, ["1394-E"] = val2 }
+local codes = { ["UTF-8"] = val1, ascii = val2 }
 ```
 
-Be aware that `nil` values don't count in `#` length. When tables have methods, use `self`:
-
-```lua
-local me = {
-    fullname = function(self)
-        return self.first_name .. " " .. self.last_name
-    end
-}
-```
+Note: `nil` values don't count in `#` length.
 
 ## Functions
 
 Prefer function syntax over variable syntax:
 
 ```lua
--- bad
-local nope = function(name) end
-
 -- good
 local function yup(name) end
+
+-- bad
+local nope = function(name) end
 ```
 
-Never name a parameter `arg` (conflicts with legacy Lua). Return early for validation:
+Never name a parameter `arg` (conflicts with legacy Lua).
+
+Return early for validation:
 
 ```lua
 local function is_good_name(name)
@@ -249,14 +205,10 @@ end
 Always use parentheses in function calls:
 
 ```lua
--- bad
-local bar = require "bar"
-
--- good
 local bar = require("bar")
 ```
 
-Exception: table arguments spanning multiple lines may omit parentheses:
+Exception: table arguments spanning multiple lines:
 
 ```lua
 local instance = module.new {
@@ -264,9 +216,9 @@ local instance = module.new {
 }
 ```
 
-### Functions in Tables
+### Module Functions
 
-Declare module/class functions external to the table:
+Declare external to the table:
 
 ```lua
 local module = {}
@@ -276,7 +228,7 @@ function module.hello()
 end
 ```
 
-Declare metatable functions internal to the table:
+Declare metatable functions internal:
 
 ```lua
 local version_mt = {
@@ -287,7 +239,7 @@ local version_mt = {
 
 ## Properties
 
-Use dot notation for known properties, brackets for dynamic access:
+Dot notation for known properties, brackets for dynamic access:
 
 ```lua
 local is_jedi = luke.jedi
@@ -299,29 +251,16 @@ local value = config[key]
 False and nil are falsy. Use shortcuts:
 
 ```lua
--- bad
-if name ~= nil then end
-
 -- good
 if name then end
-
 local name = input or "default"
 local result = condition and value_if_true or value_if_false
+
+-- bad
+if name ~= nil then end
 ```
 
-Note: `x and y or z` doesn't work if `y` can be `nil` or `false`.
-
-Prefer true statements over false. Prefer defaults to else:
-
-```lua
-local function full_name(first, last)
-    local name = "John Smith"
-    if first and last then
-        name = first .. " " .. last
-    end
-    return name
-end
-```
+Note: `x and y or z` fails if `y` can be `nil` or `false`.
 
 ## Blocks
 
@@ -335,18 +274,14 @@ use_callback(x, function(k) return k.last end)
 
 ## Type Checking
 
-Use explicit conversion functions, not coercion:
+Use explicit conversion functions:
 
 ```lua
--- bad
-local total = score .. ""
-
--- good
 local total = tostring(score)
 local val = tonumber(input)
 ```
 
-Add type assertions for function arguments when useful:
+Add type assertions for public APIs:
 
 ```lua
 function load_manifest(repo_url, lua_version)
@@ -381,7 +316,7 @@ end
 
 ## Modules
 
-Start with a local table named `module`. Return it at the end:
+Start with a local table. Return it at the end:
 
 ```lua
 local module = {}
@@ -393,44 +328,28 @@ end
 return module
 ```
 
-For modules with circular dependencies, register early in `package.loaded`:
+For circular dependencies, register early:
 
 ```lua
 local module = {}
 package.loaded["myproject.mymodule"] = module
 
-local other = require("myproject.other")  -- can now require this module back
+local other = require("myproject.other")
 ```
 
-Require into local variables named after the last component:
+Name requires after the last component:
 
 ```lua
--- bad
-local skt = require("socket")
-
--- good
 local socket = require("socket")
 local client = require("http.client")
 ```
 
-Create local aliases for frequently used functions (performance and readability):
-
-```lua
-local insert, concat = table.insert, table.concat
-local match, gsub = string.match, string.gsub
-```
-
 Module rules:
-
 - Do not set globals
-- Requiring should cause no side effects (except loading dependencies)
-- Modules are loaded as singletons; use factories for stateful objects
+- Requiring should cause no side effects
+- Use factories for stateful objects
 
 ```lua
--- bad: module state
-local mp = require("messagepack")
-mp.set_integer("unsigned")
-
 -- good: factory pattern
 local messagepack = require("messagepack")
 local mp = messagepack.new({ integer = "unsigned" })
@@ -438,18 +357,13 @@ local mp = messagepack.new({ integer = "unsigned" })
 
 ## OOP
 
-Use the idiomatic Lua OOP pattern with `Class:new(o)`:
+Use the idiomatic pattern with `Class:new(o)`:
 
 ```lua
-local module = {}
-
 local Player = {}
 
 function Player:new(o)
-    o = o or {
-        name = "unknown",
-        health = 100,
-    }
+    o = o or { name = "unknown", health = 100 }
     self.__index = self
     setmetatable(o, self)
     return o
@@ -458,24 +372,11 @@ end
 function Player:take_damage(amount)
     self.health = self.health - amount
 end
-
--- Expose class and convenience function
-module.Player = Player
-
-function module.create_player(name)
-    return Player:new({ name = name, health = 100 })
-end
-
-return module
 ```
 
 Use method notation (`:`) for method calls:
 
 ```lua
--- bad
-my_object.my_method(my_object)
-
--- good
 my_object:my_method()
 ```
 
@@ -495,89 +396,171 @@ local function should_use_color()
 end
 ```
 
-Priority:
+## Performance
 
-1. `FORCE_COLOR` set and non-empty: colors on
-2. `NO_COLOR` set and non-empty: colors off
-3. `TERM` is set and not `dumb`: colors on
-4. Otherwise: colors off
+These patterns matter in hot paths. Don't micro-optimize rarely-called code.
 
-References:
+### Localize Globals
 
-- <https://no-color.org>
-- <https://force-color.org>
-
-## Project Structure
-
-```
-project/
-  bin/                    # Executables
-  project/                # Main module directory
-    init.lua              # Main module (require('project'))
-    submodule.lua         # Submodules
-  spec/                   # Tests (busted)
-  project.rockspec.template  # LuaRocks template (for CI)
-  README.md
-  LICENSE
-```
-
-- Files named in lowercase with underscores
-- Main module matches project name
-- Tests mirror source structure
-
-## Rockspec
+Cache library functions at module top:
 
 ```lua
-local package_name = "myproject"
-local package_version = "scm"
-local rockspec_revision = "1"
-
-package = package_name
-version = package_version.."-"..rockspec_revision
-
-source = {
-    url = "git+https://github.com/user/myproject.git",
-    branch = (package_version == "scm") and "main" or nil,
-    tag = (package_version ~= "scm") and package_version or nil,
-}
-
-description = {
-    summary = "Short description",
-    license = "MIT",
-}
-
-dependencies = {
-    "lua >= 5.1, < 5.5",
-}
-
-build = {
-    type = "builtin",
-    modules = {
-        ["myproject"] = "myproject/init.lua",
-    },
-    install = {
-        bin = { ["myproject"] = "bin/myproject.lua" },
-    },
-}
+local insert, concat = table.insert, table.concat
+local match, gsub = string.match, string.gsub
+local floor, sin = math.floor, math.sin
 ```
+
+Global lookups go through `_G` at runtime. Locals are resolved at load time.
+
+### String Building
+
+Never concatenate in loops. Use `table.concat`:
+
+```lua
+-- bad: O(n²)
+local result = ""
+for i = 1, #items do
+    result = result .. items[i]
+end
+
+-- good: O(n)
+local parts = {}
+for i = 1, #items do
+    parts[i] = items[i]
+end
+local result = concat(parts)
+```
+
+### Table Construction
+
+Define all fields at construction. Move constants outside functions:
+
+```lua
+-- bad: creates table each call
+function get_headers()
+    return { ["Content-Type"] = "application/json" }
+end
+
+-- good: reuse constant
+local BASE_HEADERS = { ["Content-Type"] = "application/json" }
+```
+
+### Avoid Table Creation in Loops
+
+```lua
+-- bad: garbage every iteration
+for i = 1, N do
+    local point = { x = i, y = i * 2 }
+    process(point)
+end
+
+-- good: reuse table
+local point = { x = 0, y = 0 }
+for i = 1, N do
+    point.x, point.y = i, i * 2
+    process(point)
+end
+```
+
+### Cache Table Access
+
+```lua
+-- bad: repeated lookup
+for i = 1, #self.items do
+    process(self.items[i])
+end
+
+-- good: cache reference
+local items = self.items
+for i = 1, #items do
+    process(items[i])
+end
+```
+
+### Numeric For Loops
+
+Prefer numeric for over ipairs for arrays:
+
+```lua
+-- faster
+for i = 1, #array do
+    process(array[i])
+end
+```
+
+Use ipairs when you need sparse array safety or cleaner code.
+
+### LuaJIT Specific
+
+Pre-size tables with `table.new`:
+
+```lua
+local new = require("table.new")
+local t = new(1000, 0)  -- 1000 array slots, 0 hash slots
+```
+
+Use `goto` for continue pattern:
+
+```lua
+for i = 1, N do
+    if skip_condition then goto continue end
+    -- main logic
+    ::continue::
+end
+```
+
+Use FFI for numeric arrays in hot paths:
+
+```lua
+local ffi = require("ffi")
+local cache = ffi.new("int32_t[1000]")
+```
+
+## Pattern Matching
+
+### Use Lua Patterns For
+
+Simple extractions and replacements:
+
+```lua
+local ext = filename:match("%.([^%.]+)$")
+local safe = path:gsub("%.%.", "")
+local token = header:match("^Bearer%s+(.+)$")
+```
+
+### Use LPeg For
+
+Structured parsing, recursive grammars, RFC compliance:
+
+```lua
+local lpeg = require("lpeg")
+local P, R, S, C, Ct = lpeg.P, lpeg.R, lpeg.S, lpeg.C, lpeg.Ct
+
+local token = (R("az", "AZ", "09") + S"-._~")^1
+local quoted = P'"' * C((1 - P'"')^0) * P'"'
+local param = C(token) * P"=" * (quoted + C(token))
+```
+
+### Decision Matrix
+
+| Scenario | Use |
+|----------|-----|
+| Extract file extension | Lua patterns |
+| Sanitize filename | Lua patterns |
+| Extract query param | Lua patterns |
+| Parse HTTP request | LPeg |
+| Parse multipart form | LPeg |
+| Validate email (RFC) | LPeg |
 
 ## Testing
 
-Use busted. Write tests in `spec/` mirroring source structure.
-
-Use descriptive `describe` and `it` blocks:
+Use busted. Write tests in `spec/` mirroring source structure:
 
 ```lua
 describe("utils", function()
     describe("parse_args", function()
         it("returns empty table for no arguments", function()
             assert.same({}, utils.parse_args({}))
-        end)
-
-        it("parses flags correctly", function()
-            local result = utils.parse_args({ "-v", "--help" })
-            assert.is_true(result.v)
-            assert.is_true(result.help)
         end)
     end)
 end)
@@ -600,14 +583,25 @@ std = "lua51+lua52+lua53+lua54"
 ignore = { "212" }  -- unused argument
 ```
 
-Acceptable to ignore:
+## Project Structure
 
-- 6xx warnings (whitespace)
-- 211/212/213 (unused variables) when intentional for clarity
-- 542 (empty if branch) in switch-style constructs
+```
+project/
+  bin/                    # Executables
+  project/                # Main module directory
+    init.lua              # Main module
+    submodule.lua         # Submodules
+  spec/                   # Tests (busted)
+  README.md
+  LICENSE
+```
 
 ## References
 
 - <https://github.com/luarocks/lua-style-guide>
 - <https://github.com/Olivine-Labs/lua-style-guide>
 - <http://lua-users.org/wiki/LuaStyleGuide>
+- <https://www.lua.org/gems/sample.pdf> (Roberto's Performance Tips)
+- <https://www.inf.puc-rio.br/~roberto/lpeg/>
+- <https://no-color.org>
+- <https://force-color.org>
