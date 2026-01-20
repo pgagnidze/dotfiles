@@ -1,9 +1,12 @@
 {
+  "includeCoAuthoredBy": false,
   "statusLine": {
     "type": "command",
     "command": "claude-powerline"
   },
-  "alwaysThinkingEnabled": false,
-  "includeCoAuthoredBy": false,
-  "outputStyle": "Explanatory"
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true
+  },
+  "outputStyle": "Explanatory",
+  "alwaysThinkingEnabled": false
 }
