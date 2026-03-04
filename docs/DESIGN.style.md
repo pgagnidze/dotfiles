@@ -4,6 +4,8 @@ A terminal-inspired dark theme with glowing blue accents, designed to feel cohes
 
 ## Design Inspirations
 
+### App / Dashboard
+
 | Source | What We Borrowed |
 |--------|------------------|
 | [Oxide Console](https://console-preview.oxide.computer) | Dark theme, status badges with borders, data-dense tables, uppercase headers |
@@ -12,6 +14,16 @@ A terminal-inspired dark theme with glowing blue accents, designed to feel cohes
 | [Terminal Trove](https://terminaltrove.com) | Button glow effects, uppercase labels, green accents on dark |
 | [Owloops](https://owloops.com) | Card hover effects, monospace for technical content, terminal mockups |
 | [OpenCode](https://opencode.ai) | Clean code blocks, minimalist terminal vibes |
+
+### Landing Page / Marketing
+
+| Source | What We Borrowed |
+|--------|------------------|
+| [Railway](https://railway.com) | Full-viewport atmospheric illustration in hero, warm mountain/sky tones over dark theme, product UI floating with perspective tilt, generous whitespace between feature sections |
+| [Writizzy](https://writizzy.com) | AI-generated warm illustration as hero background (cozy room at sunset), rich purple/amber gradient palette, frosted glass UI frames, editorial feel |
+| [Linear](https://linear.app) | Enormous bold headings, maximum breathing room, perspective product screenshots as centerpiece, clean section rhythm |
+
+The landing page blends atmospheric warmth (Railway/Writizzy) with the dark terminal precision (Oxide/OpenCode) from the app. Warm and inviting, not cold and sterile, while staying true to the developer-tool identity.
 
 ---
 
