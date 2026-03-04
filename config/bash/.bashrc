@@ -195,6 +195,29 @@ extract() {
 
 compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
 
+recent() {
+  local _recent_excludes=(
+    .venv node_modules .git __pycache__
+    .terragrunt-cache .terraform
+  )
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: recent [pattern] [directory] [count]"
+    echo "  pattern   File glob pattern (default: *)"
+    echo "  directory Search directory (default: .)"
+    echo "  count     Number of results (default: 30)"
+    echo -e "\nExcluded directories:"
+    printf '  %s\n' "${_recent_excludes[@]}"
+    return
+  fi
+  local pattern="${1:-*}" dir="${2:-.}" count="${3:-30}"
+  local excludes=()
+  for ex in "${_recent_excludes[@]}"; do
+    excludes+=(-not -path "*/$ex/*")
+  done
+  find "$dir" -type f -name "$pattern" "${excludes[@]}" \
+    -printf '%T+ %p\n' 2>/dev/null | sort -r | head -n "$count"
+}
+
 iso2sd() {
   if [ $# -ne 2 ]; then
     echo "Usage: iso2sd <input_file> <output_device>"
@@ -213,3 +236,8 @@ export PATH="$FLYCTL_INSTALL/bin:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# tfjournal aliases
+alias tf='tfjournal -- terraform'
+alias tofu='tfjournal -- tofu'
+alias tg='tfjournal -- terragrunt'
