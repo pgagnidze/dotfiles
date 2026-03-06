@@ -144,6 +144,7 @@ alias g='git'
 alias gcm='git commit -m'
 alias gcam='git commit -a -m'
 alias gcad='git commit -a --amend'
+alias gclean='git branch --merged origin/main | grep -vE "^\s*(\*|main)" | xargs --no-run-if-empty -n 1 git branch -d'
 
 mkcd() { mkdir -p "$1" && cd "$1" || return; }
 
