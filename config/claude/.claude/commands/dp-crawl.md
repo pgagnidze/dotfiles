@@ -23,15 +23,23 @@ Requires `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` env vars. Check `.en
 
 ## Workflow
 
-1. Load credentials from env or `.env` files
+1. Load credentials: read `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` from env. If not set, try sourcing `~/.env`, `.env`, `.env.local` with `set -a` (auto-export)
 2. POST to `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/browser-rendering/crawl` with `url`, `limit`, `formats: ["markdown"]`, and options
 3. Response returns `{ "success": true, "result": "<job-id>" }`
 4. Poll `GET .../crawl/<JOB_ID>?limit=1` every 5s until status is not `running`
 5. Statuses: `running`, `completed`, `cancelled_due_to_timeout`, `cancelled_due_to_limits`, `errored`
-6. Fetch records with `?status=completed&limit=50`, paginate using `cursor` field
+6. Fetch completed records with `?status=completed&limit=50`, paginate using `cursor` field. Response has `result.records[]` (not `result.data[]`)
 7. Each record has `url`, `status`, `markdown`, and `metadata` (title, status code)
 8. Save each page as markdown to output dir, converting URLs to filenames
 9. If `--merge`, concatenate into a single file
+
+## Implementation notes
+
+- Each Bash tool call runs in a fresh shell. Env vars from `export` in one call are not available in the next. Either source the env file in every call, or use single-quoted literal values
+- Use single quotes around curl URLs and headers to prevent shell expansion issues with tokens containing special characters
+- Markdown in API responses contains newlines. Do not embed JSON responses inline in Python strings. Write to a temp file with `curl -o`, then read with `json.load()`
+- The shell may have `noclobber` set. Use unique temp file names or `>|` to force overwrite
+- External links on different domains show as `"status": "skipped"` in results. Only same-domain pages are crawled
 
 ## API notes
 
