@@ -1,3 +1,5 @@
+local vim = vim
+
 local function remove_comments()
   local bufnr = vim.api.nvim_get_current_buf()
   local ft = vim.bo[bufnr].filetype
@@ -65,5 +67,3 @@ end
 
 vim.api.nvim_create_user_command("RemoveComments", remove_comments, { desc = "Remove comments from buffer" })
 vim.keymap.set("n", "<leader>rc", remove_comments, { desc = "Remove comments" })
-
-return {}
