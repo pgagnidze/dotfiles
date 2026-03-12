@@ -59,6 +59,7 @@ vim.pack.add({
   "https://github.com/echasnovski/mini.clue",
   "https://github.com/echasnovski/mini.starter",
   "https://github.com/sphamba/smear-cursor.nvim",
+  "https://github.com/zbirenbaum/copilot.lua",
 })
 
 -- colorscheme --
@@ -287,6 +288,24 @@ require("mini.clue").setup({
 })
 
 require("smear_cursor").setup()
+
+require("copilot").setup({
+  suggestion = {
+    auto_trigger = true,
+    keymap = {
+      accept = "<Tab>",
+      accept_word = "<C-Right>",
+      accept_line = "<C-End>",
+      next = "<A-]>",
+      prev = "<A-[>",
+      dismiss = "<C-]>",
+    },
+  },
+  filetypes = {
+    markdown = true,
+    yaml = true,
+  },
+})
 
 -- keymaps --
 
