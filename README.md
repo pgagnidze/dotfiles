@@ -23,21 +23,21 @@ lnko link bin bash git ghostty nvim
 
 ## What's Included
 
-| Config | Description |
-|--------|-------------|
-| `config/bin` | Scripts symlinked to `~/.local/bin` |
-| `config/bash` | Shell configuration with prompt, aliases, and completions |
-| `config/claude` | Claude Code settings and custom commands |
-| `config/git` | Git configuration with aliases and GPG signing |
-| `config/ghostty` | Terminal emulator settings |
-| `config/nvim` | Neovim configuration with LazyVim |
+| Config           | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `config/bin`     | Scripts symlinked to `~/.local/bin`                       |
+| `config/bash`    | Shell configuration with prompt, aliases, and completions |
+| `config/claude`  | Claude Code settings and custom commands                  |
+| `config/git`     | Git configuration with aliases and GPG signing            |
+| `config/ghostty` | Terminal emulator settings                                |
+| `config/nvim`    | Neovim configuration with native vim.pack                 |
 
 ### Scripts
 
-| Script | Description |
-|--------|-------------|
+| Script          | Description                                           |
+| --------------- | ----------------------------------------------------- |
 | `install-fonts` | Download and install Nerd Fonts and Noto symbol fonts |
-| `setup-ssh` | Generate ed25519 SSH key and configure for GitHub |
+| `setup-ssh`     | Generate ed25519 SSH key and configure for GitHub     |
 
 All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment variables.
 
@@ -71,7 +71,7 @@ install-fonts
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 source ~/.bashrc
 nvm install 22
-npm install -g typescript ts-node prettier eslint @anthropic-ai/claude-code @owloops/claude-powerline markdownlint-cli
+npm install -g prettier eslint @anthropic-ai/claude-code @owloops/claude-powerline markdownlint-cli
 ```
 
 </details>
@@ -113,29 +113,27 @@ gpg --armor --export YOUR_KEY_ID
 <details>
 <summary><strong>Additional Packages</strong></summary>
 
-| Package | Description |
-|---------|-------------|
-| AWS CDK | Infrastructure as code framework |
-| AWS CLI v2 | AWS command line interface |
-| AWS VPN Client | VPN client |
-| Lite-XL | Lightweight code editor |
-| Steam | Gaming platform |
-| VS Code | Code editor |
+| Package        | Description                      |
+| -------------- | -------------------------------- |
+| AWS CDK        | Infrastructure as code framework |
+| AWS CLI v2     | AWS command line interface       |
+| AWS VPN Client | VPN client                       |
+| Steam          | Gaming platform                  |
 
 </details>
 
 ## System Settings
 
-| Setting | Value |
-|---------|-------|
-| Theme | [Gruvbox Dark](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme) |
-| Icons | [Reversal Brown](https://github.com/yeyushengfan258/Reversal-icon-theme) |
+| Setting    | Value                                                                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Theme      | [Gruvbox Dark](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme)                                                                            |
+| Icons      | [Reversal Brown](https://github.com/yeyushengfan258/Reversal-icon-theme)                                                                         |
 | Extensions | [Clipboard Indicator](https://extensions.gnome.org/extension/779/clipboard-indicator/), [Blur my Shell](https://github.com/aunetx/blur-my-shell) |
-| Keyboard | US, KA |
-| Display | 2880x1800@120, scale 2 |
-| Touchpad | Natural scroll, disable-while-typing off |
-| Clock | 12-hour, metric system |
-| Security | Fingerprint enabled |
+| Keyboard   | US, KA                                                                                                                                           |
+| Display    | 2880x1800@120, scale 2                                                                                                                           |
+| Touchpad   | Natural scroll, disable-while-typing off                                                                                                         |
+| Clock      | 12-hour, metric system                                                                                                                           |
+| Security   | Fingerprint enabled                                                                                                                              |
 
 ## Style Guides
 
@@ -157,11 +155,14 @@ Add symlinked files to `.gitignore` in each project:
 docs/LUA.style.md
 ```
 
-| Guide | Description |
-|-------|-------------|
-| [lua](docs/lua/LUA.style.md) | Lua coding conventions |
-| [python](docs/python/PYTHON.style.md) | Python coding conventions |
-| [bash](docs/bash/BASH.style.md) | Shell scripting conventions |
+| Guide                                             | Description                   |
+| ------------------------------------------------- | ----------------------------- |
+| [bash](docs/bash/BASH.style.md)                   | Shell scripting conventions   |
+| [frontend](docs/frontend/DESIGN.style.md)         | Frontend design conventions   |
+| [go](docs/go/GO.style.md)                         | Go coding conventions         |
+| [lua](docs/lua/LUA.style.md)                      | Lua coding conventions        |
+| [python](docs/python/PYTHON.style.md)             | Python coding conventions     |
+| [typescript](docs/typescript/TYPESCRIPT.style.md) | TypeScript coding conventions |
 
 ## Development
 
