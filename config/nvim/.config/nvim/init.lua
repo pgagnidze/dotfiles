@@ -300,6 +300,7 @@ map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New file" })
 map("n", "<leader>y", function()
   vim.fn.setreg("+", vim.fn.expand("%"))
 end, { desc = "Copy filepath" })
+map("n", "<leader>Y", '<cmd>%y+<cr>', { desc = "Copy entire file" })
 
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
