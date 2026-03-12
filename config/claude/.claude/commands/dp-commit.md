@@ -14,6 +14,7 @@ Requirements:
 - Keep the message as a single line
 - Use lowercase throughout
 - Be concise and descriptive
+- Split unrelated changes into logically grouped commits
 - Do not mention any AI or tooling in the commit message
 
 Current changes:
