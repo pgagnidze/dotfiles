@@ -11,5 +11,6 @@
   },
   "outputStyle": "Explanatory",
   "alwaysThinkingEnabled": false,
-  "fastMode": true
+  "fastMode": true,
+  "voiceEnabled": true
 }
