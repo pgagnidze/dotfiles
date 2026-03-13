@@ -32,8 +32,24 @@ o.splitbelow = true
 o.splitright = true
 o.cursorline = true
 o.scrolloff = 8
+o.clipboard = "unnamedplus"
 o.foldmethod = "indent"
 o.foldlevelstart = 99
+
+-- hooks --
+
+autocmd("PackChanged", {
+  group = augroup,
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == "nvim-treesitter" and (kind == "install" or kind == "update") then
+      if not ev.data.active then
+        vim.cmd.packadd("nvim-treesitter")
+      end
+      vim.cmd("TSUpdate")
+    end
+  end,
+})
 
 -- plugins --
 
@@ -59,7 +75,6 @@ vim.pack.add({
   "https://github.com/echasnovski/mini.clue",
   "https://github.com/echasnovski/mini.starter",
   "https://github.com/sphamba/smear-cursor.nvim",
-  "https://github.com/zbirenbaum/copilot.lua",
 })
 
 -- colorscheme --
@@ -84,6 +99,15 @@ require("monokai-pro").setup({
 vim.cmd.colorscheme("monokai-pro")
 
 -- treesitter --
+
+autocmd("FileType", {
+  group = augroup,
+  callback = function(ev)
+    if pcall(vim.treesitter.start, ev.buf) then
+      vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
+})
 
 require("nvim-treesitter-textobjects").setup({
   select = { lookahead = true },
@@ -289,22 +313,29 @@ require("mini.clue").setup({
 
 require("smear_cursor").setup()
 
-require("copilot").setup({
-  suggestion = {
-    auto_trigger = true,
-    keymap = {
-      accept = "<Tab>",
-      accept_word = "<C-Right>",
-      accept_line = "<C-End>",
-      next = "<A-]>",
-      prev = "<A-[>",
-      dismiss = "<C-]>",
-    },
-  },
-  filetypes = {
-    markdown = true,
-    yaml = true,
-  },
+autocmd("InsertEnter", {
+  group = augroup,
+  once = true,
+  callback = function()
+    vim.pack.add({ "https://github.com/zbirenbaum/copilot.lua" })
+    require("copilot").setup({
+      suggestion = {
+        auto_trigger = true,
+        keymap = {
+          accept = "<Tab>",
+          accept_word = "<C-Right>",
+          accept_line = "<C-End>",
+          next = "<A-]>",
+          prev = "<A-[>",
+          dismiss = "<C-]>",
+        },
+      },
+      filetypes = {
+        markdown = true,
+        yaml = true,
+      },
+    })
+  end,
 })
 
 -- keymaps --
@@ -319,7 +350,7 @@ map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New file" })
 map("n", "<leader>y", function()
   vim.fn.setreg("+", vim.fn.expand("%"))
 end, { desc = "Copy filepath" })
-map("n", "<leader>Y", '<cmd>%y+<cr>', { desc = "Copy entire file" })
+map("n", "<leader>Y", "<cmd>%y+<cr>", { desc = "Copy entire file" })
 
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
