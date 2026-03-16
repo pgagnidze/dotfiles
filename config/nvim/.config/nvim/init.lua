@@ -432,6 +432,15 @@ autocmd("BufEnter", {
   end,
 })
 
+autocmd("FileType", {
+  group = augroup,
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end,
+})
+
 autocmd("TextYankPost", {
   group = augroup,
   callback = function()
