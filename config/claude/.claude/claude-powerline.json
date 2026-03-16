@@ -1,8 +1,8 @@
 {
   "theme": "gruvbox",
   "display": {
-    "style": "minimal",
-    "charset": "text",
+    "style": "tui",
+    "charset": "unicode",
     "colorCompatibility": "auto",
     "autoWrap": true,
     "lines": [
