@@ -54,7 +54,7 @@ autocmd("PackChanged", {
 -- plugins --
 
 vim.pack.add({
-  "https://github.com/gthelding/monokai-pro.nvim",
+  "https://github.com/EdenEast/nightfox.nvim",
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
   "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
   "https://github.com/windwp/nvim-ts-autotag",
@@ -79,24 +79,7 @@ vim.pack.add({
 
 -- colorscheme --
 
-require("monokai-pro").setup({
-  filter = "ristretto",
-  override = function()
-    return {
-      NonText = { fg = "#948a8b" },
-      MiniIconsGrey = { fg = "#948a8b" },
-      MiniIconsRed = { fg = "#fd6883" },
-      MiniIconsBlue = { fg = "#85dacc" },
-      MiniIconsGreen = { fg = "#adda78" },
-      MiniIconsYellow = { fg = "#f9cc6c" },
-      MiniIconsOrange = { fg = "#f38d70" },
-      MiniIconsPurple = { fg = "#a8a9eb" },
-      MiniIconsAzure = { fg = "#a8a9eb" },
-      MiniIconsCyan = { fg = "#85dacc" },
-    }
-  end,
-})
-vim.cmd.colorscheme("monokai-pro")
+vim.cmd.colorscheme("nordfox")
 
 -- treesitter --
 

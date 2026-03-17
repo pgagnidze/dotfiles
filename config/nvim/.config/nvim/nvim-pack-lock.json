@@ -28,6 +28,10 @@
       "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
       "src": "https://github.com/mason-org/mason.nvim"
     },
+    "miasma.nvim": {
+      "rev": "627f2e1cac91de0d1d4dd7472b506a30f41b2b7d",
+      "src": "https://github.com/xero/miasma.nvim"
+    },
     "mini.ai": {
       "rev": "4b0a6207341d895b6cfe9bcb1e4d3e8607bfe4f4",
       "src": "https://github.com/echasnovski/mini.ai"
@@ -75,6 +79,14 @@
     "monokai-pro.nvim": {
       "rev": "1ac671f6da720cba967d28d25c2f16b8b4e18808",
       "src": "https://github.com/loctvl842/monokai-pro.nvim"
+    },
+    "nightfox.nvim": {
+      "rev": "ba47d4b4c5ec308718641ba7402c143836f35aa9",
+      "src": "https://github.com/EdenEast/nightfox.nvim"
+    },
+    "nordic.nvim": {
+      "rev": "4ce6bad95fde832f9bd10b991de846047a144628",
+      "src": "https://github.com/AlexvZyl/nordic.nvim"
     },
     "nvim-lspconfig": {
       "rev": "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
