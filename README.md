@@ -3,7 +3,7 @@
 # Dotfiles
 
 <p align="center">
-  <img src="assets/screen.png" alt="Dotfiles screenshot" width="600"/>
+  <img src="assets/screen-nord.png" alt="Dotfiles screenshot" width="600"/>
 </p>
 
 Personal dotfiles for Fedora, managed with [lnko](https://github.com/pgagnidze/lnko).
