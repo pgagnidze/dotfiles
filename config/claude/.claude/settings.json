@@ -4,7 +4,6 @@
     "type": "command",
     "command": "claude-powerline"
   },
-  "effortLevel": "high",
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
@@ -12,6 +11,10 @@
   },
   "outputStyle": "Explanatory",
   "alwaysThinkingEnabled": false,
+  "effortLevel": "high",
   "fastMode": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "0"
+  }
 }
