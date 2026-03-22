@@ -12,7 +12,7 @@
   "outputStyle": "Explanatory",
   "alwaysThinkingEnabled": false,
   "effortLevel": "high",
-  "fastMode": true,
+  "fastMode": false,
   "voiceEnabled": true,
   "env": {
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "0"

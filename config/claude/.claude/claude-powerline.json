@@ -1,59 +1,10 @@
 {
-  "theme": "gruvbox",
+  "theme": "nord",
   "display": {
     "style": "tui",
     "charset": "unicode",
     "colorCompatibility": "auto",
-    "autoWrap": true,
-    "lines": [
-      {
-        "segments": {
-          "directory": {
-            "enabled": true,
-            "showBasename": true
-          },
-          "version": {
-            "enabled": true
-          },
-          "model": {
-            "enabled": true
-          },
-          "session": {
-            "enabled": true,
-            "type": "tokens",
-            "costSource": "calculated"
-          },
-          "today": {
-            "enabled": true,
-            "type": "tokens"
-          },
-          "metrics": {
-            "enabled": true,
-            "showResponseTime": false,
-            "showLastResponseTime": true,
-            "showDuration": true,
-            "showMessageCount": true,
-            "showLinesAdded": true,
-            "showLinesRemoved": true
-          },
-          "context": {
-            "enabled": true,
-            "showPercentageOnly": false
-          },
-          "git": {
-            "enabled": true,
-            "showSha": true,
-            "showWorkingTree": false,
-            "showOperation": false,
-            "showTag": false,
-            "showTimeSinceCommit": true,
-            "showStashCount": false,
-            "showUpstream": true,
-            "showRepoName": false
-          }
-        }
-      }
-    ]
+    "autoWrap": true
   },
   "budget": {
     "session": {
@@ -71,7 +22,7 @@
     }
   },
   "modelContextLimits": {
-    "sonnet": 200000,
-    "opus": 200000
+    "sonnet": 1000000,
+    "opus": 10000000
   }
 }
