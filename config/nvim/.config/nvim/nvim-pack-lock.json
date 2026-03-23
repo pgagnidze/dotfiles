@@ -32,49 +32,9 @@
       "rev": "627f2e1cac91de0d1d4dd7472b506a30f41b2b7d",
       "src": "https://github.com/xero/miasma.nvim"
     },
-    "mini.ai": {
-      "rev": "4b0a6207341d895b6cfe9bcb1e4d3e8607bfe4f4",
-      "src": "https://github.com/echasnovski/mini.ai"
-    },
-    "mini.bracketed": {
-      "rev": "75369c33613b911d1ce304475dc4d30cd255c9ed",
-      "src": "https://github.com/echasnovski/mini.bracketed"
-    },
-    "mini.clue": {
-      "rev": "8b748316c5a5ab24ab18ccd5db9d62fe86fdddee",
-      "src": "https://github.com/echasnovski/mini.clue"
-    },
-    "mini.diff": {
-      "rev": "ff3cd5e76e812fa18bde0f8126d6f3bb62008c79",
-      "src": "https://github.com/echasnovski/mini.diff"
-    },
-    "mini.files": {
-      "rev": "22c64f010eef047ed270e29e7cc266cd4740787e",
-      "src": "https://github.com/echasnovski/mini.files"
-    },
-    "mini.icons": {
-      "rev": "ff2e4f1d29f659cc2bad0f9256f2f6195c6b2428",
-      "src": "https://github.com/echasnovski/mini.icons"
-    },
-    "mini.notify": {
-      "rev": "e506fb6da26c0a31ee6b1d2eb99626cb147f28ca",
-      "src": "https://github.com/echasnovski/mini.notify"
-    },
-    "mini.pairs": {
-      "rev": "d5a29b6254dad07757832db505ea5aeab9aad43a",
-      "src": "https://github.com/echasnovski/mini.pairs"
-    },
-    "mini.starter": {
-      "rev": "cdf909e5bda577e09c61fa6d9a36bb2a88dbc636",
-      "src": "https://github.com/echasnovski/mini.starter"
-    },
-    "mini.statusline": {
-      "rev": "8c3829d4ef02b693f68e43fc131b433f11049b2b",
-      "src": "https://github.com/echasnovski/mini.statusline"
-    },
-    "mini.surround": {
-      "rev": "88c52297ed3e69ecf9f8652837888ecc727a28ee",
-      "src": "https://github.com/echasnovski/mini.surround"
+    "mini.nvim": {
+      "rev": "59f09943573c5348ca6c88393fa09ce3b66a7818",
+      "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "monokai-pro.nvim": {
       "rev": "1ac671f6da720cba967d28d25c2f16b8b4e18808",

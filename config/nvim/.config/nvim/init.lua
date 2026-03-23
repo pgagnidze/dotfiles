@@ -63,17 +63,7 @@ vim.pack.add({
   "https://github.com/stevearc/conform.nvim",
   "https://github.com/folke/flash.nvim",
   "https://github.com/ibhagwan/fzf-lua",
-  "https://github.com/echasnovski/mini.ai",
-  "https://github.com/echasnovski/mini.surround",
-  "https://github.com/echasnovski/mini.pairs",
-  "https://github.com/echasnovski/mini.icons",
-  "https://github.com/echasnovski/mini.files",
-  "https://github.com/echasnovski/mini.statusline",
-  "https://github.com/echasnovski/mini.notify",
-  "https://github.com/echasnovski/mini.diff",
-  "https://github.com/echasnovski/mini.bracketed",
-  "https://github.com/echasnovski/mini.clue",
-  "https://github.com/echasnovski/mini.starter",
+  "https://github.com/nvim-mini/mini.nvim",
   "https://github.com/sphamba/smear-cursor.nvim",
 })
 
@@ -228,6 +218,28 @@ require("mini.statusline").setup()
 require("mini.notify").setup()
 require("mini.diff").setup()
 require("mini.bracketed").setup()
+require("mini.move").setup()
+require("mini.cursorword").setup()
+require("mini.splitjoin").setup()
+require("mini.indentscope").setup()
+require("mini.trailspace").setup()
+require("mini.hipatterns").setup({
+  highlighters = {
+    fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+    hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+    todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+    note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+    hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+  },
+})
+require("mini.operators").setup({
+  sort = { prefix = "go" },
+})
+require("mini.git").setup()
+require("mini.comment").setup()
+require("mini.sessions").setup()
+require("mini.tabline").setup()
+require("mini.bufremove").setup()
 
 local starter = require("mini.starter")
 starter.setup({
@@ -334,13 +346,6 @@ map("n", "<leader>y", function()
   vim.fn.setreg("+", vim.fn.expand("%"))
 end, { desc = "Copy filepath" })
 map("n", "<leader>Y", "<cmd>%y+<cr>", { desc = "Copy entire file" })
-
-map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
-map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
-map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move line down" })
-map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move line up" })
-map("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move selection down" })
-map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
 
 map("v", "<", "<gv")
 map("v", ">", ">gv")
