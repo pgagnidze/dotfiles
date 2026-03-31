@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "0"
+  },
   "includeCoAuthoredBy": false,
   "statusLine": {
     "type": "command",
@@ -13,8 +16,5 @@
   "alwaysThinkingEnabled": false,
   "effortLevel": "high",
   "fastMode": false,
-  "voiceEnabled": true,
-  "env": {
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "0"
-  }
+  "voiceEnabled": true
 }
