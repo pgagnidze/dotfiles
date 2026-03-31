@@ -2,7 +2,10 @@
   "env": {
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "0"
   },
-  "includeCoAuthoredBy": false,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "statusLine": {
     "type": "command",
     "command": "claude-powerline"
@@ -13,7 +16,7 @@
     "frontend-design@claude-plugins-official": true
   },
   "outputStyle": "Explanatory",
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "fastMode": false,
   "voiceEnabled": true
