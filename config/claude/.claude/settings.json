@@ -13,7 +13,8 @@
   "enabledPlugins": {
     "lua-lsp@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true,
+    "claude-powerline@claude-powerline": true
   },
   "outputStyle": "Explanatory",
   "alwaysThinkingEnabled": true,
