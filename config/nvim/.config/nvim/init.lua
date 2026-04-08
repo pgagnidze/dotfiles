@@ -21,6 +21,7 @@ o.expandtab = true
 o.wrap = false
 o.signcolumn = "yes"
 o.completeopt = { "menuone", "noselect", "popup" }
+o.autocomplete = true
 o.pumheight = 15
 o.winborder = "rounded"
 o.undofile = true
@@ -163,11 +164,6 @@ autocmd("LspAttach", {
     map("i", "<C-k>", vim.lsp.buf.signature_help, bufopts)
     map("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = ev.buf, desc = "Code action" })
     map("n", "<leader>cr", vim.lsp.buf.rename, { buffer = ev.buf, desc = "Rename" })
-
-    local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
-    if client:supports_method("textDocument/completion") then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
   end,
 })
 
