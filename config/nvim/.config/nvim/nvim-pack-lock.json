@@ -24,17 +24,9 @@
       "rev": "59f09943573c5348ca6c88393fa09ce3b66a7818",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
-    "monokai-pro.nvim": {
-      "rev": "1ac671f6da720cba967d28d25c2f16b8b4e18808",
-      "src": "https://github.com/loctvl842/monokai-pro.nvim"
-    },
     "nightfox.nvim": {
       "rev": "ba47d4b4c5ec308718641ba7402c143836f35aa9",
       "src": "https://github.com/EdenEast/nightfox.nvim"
-    },
-    "nordic.nvim": {
-      "rev": "4ce6bad95fde832f9bd10b991de846047a144628",
-      "src": "https://github.com/AlexvZyl/nordic.nvim"
     },
     "nvim-lspconfig": {
       "rev": "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
@@ -52,6 +44,10 @@
     "nvim-ts-autotag": {
       "rev": "8e1c0a389f20bf7f5b0dd0e00306c1247bda2595",
       "src": "https://github.com/windwp/nvim-ts-autotag"
+    },
+    "render-markdown.nvim": {
+      "rev": "54d4b5431e9634ee3d8d30784e017239b5b89d41",
+      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "smear-cursor.nvim": {
       "rev": "c85bdbb25db096fbcf616bc4e1357bd61fe2c199",

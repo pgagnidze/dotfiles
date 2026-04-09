@@ -66,6 +66,7 @@ vim.pack.add({
   "https://github.com/ibhagwan/fzf-lua",
   "https://github.com/nvim-mini/mini.nvim",
   "https://github.com/sphamba/smear-cursor.nvim",
+  "https://github.com/MeanderingProgrammer/render-markdown.nvim",
 })
 
 -- colorscheme --
@@ -302,7 +303,9 @@ require("mini.clue").setup({
   },
 })
 
-require("smear_cursor").setup()
+require("smear_cursor").setup({
+  smear_to_cmd = false,
+})
 
 autocmd("InsertEnter", {
   group = augroup,
@@ -435,9 +438,12 @@ autocmd("TextYankPost", {
 -- extui --
 
 pcall(function()
-  require("vim._extui").enable({})
+  require("vim._core.ui2").enable({})
 end)
 
 -- utilities --
 
 require("remove-comments")
+require("tiny-cmdline").setup()
+require("render-markdown").setup()
+vim.diagnostic.config({ virtual_text = true })
