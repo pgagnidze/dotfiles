@@ -1,3 +1,5 @@
+-- https://github.com/KashifKhn/remove-comments
+
 local vim = vim
 
 local function remove_comments()
