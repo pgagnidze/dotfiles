@@ -1,6 +1,7 @@
 {
   "env": {
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "0"
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "0",
+    "CLAUDE_CODE_NO_FLICKER": "1"
   },
   "attribution": {
     "commit": "",
@@ -20,5 +21,9 @@
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "fastMode": false,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "permissions": {
+    "defaultMode": "auto"
+  }
 }
