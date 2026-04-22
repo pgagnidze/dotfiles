@@ -18,19 +18,20 @@ Personal dotfiles for Fedora, managed with [lnko](https://github.com/pgagnidze/l
 git clone https://github.com/pgagnidze/dotfiles.git ~/dotfiles
 sudo luarocks install lnko
 cd ~/dotfiles/config
-lnko link bin bash git ghostty nvim
+lnko link bin bash git fastfetch ghostty nvim
 ```
 
 ## What's Included
 
-| Config           | Description                                               |
-| ---------------- | --------------------------------------------------------- |
-| `config/bin`     | Scripts symlinked to `~/.local/bin`                       |
-| `config/bash`    | Shell configuration with prompt, aliases, and completions |
-| `config/claude`  | Claude Code settings and custom commands                  |
-| `config/git`     | Git configuration with aliases and GPG signing            |
-| `config/ghostty` | Terminal emulator settings                                |
-| `config/nvim`    | Neovim configuration with native vim.pack                 |
+| Config             | Description                                               |
+| ------------------ | --------------------------------------------------------- |
+| `config/bin`       | Scripts symlinked to `~/.local/bin`                       |
+| `config/bash`      | Shell configuration with prompt, aliases, and completions |
+| `config/claude`    | Claude Code settings and custom commands                  |
+| `config/fastfetch` | Fastfetch config with ThinkPad ASCII logo                 |
+| `config/git`       | Git configuration with aliases and GPG signing            |
+| `config/ghostty`   | Terminal emulator settings                                |
+| `config/nvim`      | Neovim configuration with native vim.pack                 |
 
 ### Scripts
 

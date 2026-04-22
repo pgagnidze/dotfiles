@@ -1,0 +1,173 @@
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "source": "~/.config/fastfetch/thinkpad.txt",
+        "type": "file",
+        "padding": {
+            "top": 1,
+            "left": 2,
+            "right": 4
+        }
+    },
+    "display": {
+        "separator": " \u001b[31m│\u001b[0m ",
+        "constants": [
+            // $1: Horizontal line
+            "═══════════════════════════════════════════════════════════════════════════════════",
+            // $2 Second Horizontal Line
+            "═════════════╤═════════════════════════════════════════════════════════════════════",
+            // $3 Middle Horizontal Lines
+            "═════════════╪═════════════════════════════════════════════════════════════════════",
+            // $4 Bottom Horizontal Line
+            "═════════════╧═════════════════════════════════════════════════════════════════════",
+            // $5: Vertical jump
+            "\u001b[31m║\u001b[83C║\u001b[83D\u001b[0m"
+        ]
+    },
+    "modules": [
+        // --- HEADER SECTION ---
+        {
+            "type": "custom",
+            "format": "\u001b[31m╔{$1}╗" 
+        },
+        {
+    "type": "title",
+    // Format: Border ($5) + Jump 20 spaces + Colors + User@Host + Colors
+    // Adjust the '20C' jump to fine-tune the center position
+    "format": "{$5}\u001b[20C \u001b[41m  \u001b[42m  \u001b[43m  \u001b[44m  \u001b[0m  \u001b[1;31m{user-name}\u001b[0m\u001b[90m@\u001b[0m\u001b[1;34m{host-name}\u001b[0m  \u001b[45m  \u001b[46m  \u001b[47m  \u001b[40m  \u001b[0m"
+},
+        {
+            "type": "custom",
+            "format": "\u001b[31m╠{$2}╣"
+        },
+
+{
+    "type": "host",
+    "key": "{$5}  \u001b[32m󰌢 model  "
+},
+        {
+            "type": "custom",
+            "format": "\u001b[31m╠{$3}╣"
+        },
+
+        // --- TIME & UPTIME ---
+        {
+            "type": "datetime",
+            "key": "{$5}  \u001b[31m time   "
+        },
+        {
+            "type": "uptime",
+            "key": "{$5}  \u001b[33m󰅐 uptime "
+        },
+
+        // --- SOFTWARE ---
+        {
+            "type": "custom",
+            "format": "\u001b[31m╠{$3}╣"
+        },
+        {
+            "type": "os",
+            "key": "{$5}  \u001b[34m distro ",
+            "format": "{2} {8}"
+        },
+        {
+            "type": "kernel",
+            "key": "{$5}  \u001b[32m kernel "
+        },
+        {
+            "type": "packages",
+            "key": "{$5}  \u001b[33m󰏖 pkgs   "
+        },
+        {
+            "type": "shell",
+            "key": "{$5}  \u001b[36m shell  "
+        },
+        {
+            "type": "terminal",
+            "key": "{$5}  \u001b[35m term   "
+        },
+        {
+            "type": "de",
+            "key": "{$5}  \u001b[34m󰇄 de/wm  "
+        },
+
+        // --- HARDWARE ---
+        {
+            "type": "custom",
+            "format": "\u001b[31m╠{$3}╣"
+        },
+        {
+            "type": "cpu",
+            "key": "{$5}  \u001b[32m󰍛 cpu    ",
+            "showPeCoreCount": true,
+            "temp": true
+        },
+        {
+            "type": "gpu",
+            "key": "{$5}  \u001b[33m󰍛 gpu    ",
+            // Full Specs: Name @ Freq [Type]
+            "format": "{name} @ {frequency} [{type}]"
+        },
+        {
+            "type": "display",
+            "key": "{$5}  \u001b[36m󰍹 display",
+            // Full Specs: Name, Res, Hz, Inches
+            "format": "{name} {width}x{height} @ {refresh-rate}Hz {inch}\""
+        },
+        {
+            "type": "sound",
+            "key": "{$5}  \u001b[35m sound  "
+        },
+        {
+            "type": "custom",
+            "format": "\u001b[31m╠{$3}╣"
+        },
+        {
+            "type": "memory",
+            "key": "{$5}  \u001b[34m memory "
+        },
+        {
+            "type": "disk",
+            "key": "{$5}  \u001b[35m󰉉 disk   ",
+            "folders": "/"
+        },
+        
+
+        // --- POWER & NET ---
+        {
+            "type": "custom",
+            "format": "\u001b[31m╠{$3}╣"
+        },
+        {
+            "type": "battery",
+            "key": "{$5}  \u001b[32m bat    ",
+            "format": "{capacity} ({status})"
+        },
+        {
+            "type": "poweradapter",
+            "key": "{$5}  \u001b[33m power  ",
+            "format": "{name}"
+        },
+        {
+            "type": "localip",
+            "key": "{$5}  \u001b[34m󰩟 local  ",
+            "format": "{ipv4} ({ifname})"
+        },
+// disabled because it makes stuff slow
+        //        {
+//            "type": "netio",
+//            "key": "{$5}  \u001b[35m󰓅 netio  "
+//        },
+        {
+            "type": "wifi",
+            "key": "{$5}  \u001b[36m wifi   ",
+            "format": "{ssid} ({signal-quality})"
+        },
+
+        // --- BOTTOM BORDER ---
+        {
+            "type": "custom",
+            "format": "\u001b[31m╚{$4}╝"
+        }
+    ]
+}
