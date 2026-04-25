@@ -7,6 +7,9 @@
     "commit": "",
     "pr": ""
   },
+  "permissions": {
+    "defaultMode": "auto"
+  },
   "statusLine": {
     "type": "command",
     "command": "claude-powerline"
@@ -17,13 +20,11 @@
     "frontend-design@claude-plugins-official": true,
     "claude-powerline@claude-powerline": true
   },
-  "outputStyle": "Explanatory",
+  "outputStyle": "Learning",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "fastMode": false,
-  "voiceEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "permissions": {
-    "defaultMode": "auto"
-  }
+  "voiceEnabled": true,
+  "autoCompactEnabled": false
 }
