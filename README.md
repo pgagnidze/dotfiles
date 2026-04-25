@@ -35,10 +35,11 @@ lnko link bin bash git fastfetch ghostty nvim
 
 ### Scripts
 
-| Script          | Description                                           |
-| --------------- | ----------------------------------------------------- |
-| `install-fonts` | Download and install Nerd Fonts and Noto symbol fonts |
-| `setup-ssh`     | Generate ed25519 SSH key and configure for GitHub     |
+| Script                  | Description                                                 |
+| ----------------------- | ----------------------------------------------------------- |
+| `install-fonts`         | Download and install Nerd Fonts and Noto symbol fonts       |
+| `setup-ssh`             | Generate ed25519 SSH key and configure for GitHub           |
+| `bootstrap-treesitter`  | Build Neovim tree-sitter parsers and sync queries           |
 
 All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment variables.
 
@@ -50,7 +51,7 @@ All scripts support `--help` and respect `NO_COLOR` / `FORCE_COLOR` environment 
 Install using your package manager:
 
 ```bash
-sudo dnf install zoxide fzf fd-find lua luarocks diff-so-fancy gh gtk-murrine-engine gnome-themes-extra
+sudo dnf install zoxide fzf fd-find lua luarocks diff-so-fancy gh gtk-murrine-engine gnome-themes-extra tree-sitter-cli
 ```
 
 Install [Neovim nightly](https://neovim.io/doc/install/).
@@ -61,6 +62,12 @@ Install fonts:
 
 ```bash
 install-fonts
+```
+
+Bootstrap Neovim tree-sitter parsers and queries:
+
+```bash
+bootstrap-treesitter
 ```
 
 </details>

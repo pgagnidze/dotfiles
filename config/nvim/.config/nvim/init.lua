@@ -37,26 +37,10 @@ o.clipboard = "unnamedplus"
 o.foldmethod = "indent"
 o.foldlevelstart = 99
 
--- hooks --
-
-autocmd("PackChanged", {
-  group = augroup,
-  callback = function(ev)
-    local name, kind = ev.data.spec.name, ev.data.kind
-    if name == "nvim-treesitter" and (kind == "install" or kind == "update") then
-      if not ev.data.active then
-        vim.cmd.packadd("nvim-treesitter")
-      end
-      vim.cmd("TSUpdate")
-    end
-  end,
-})
-
 -- plugins --
 
 vim.pack.add({
   "https://github.com/EdenEast/nightfox.nvim",
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
   "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
   "https://github.com/windwp/nvim-ts-autotag",
   "https://github.com/mason-org/mason.nvim",
@@ -75,12 +59,12 @@ vim.cmd.colorscheme("nordfox")
 
 -- treesitter --
 
+vim.treesitter.language.register("hcl", "terraform")
+
 autocmd("FileType", {
   group = augroup,
   callback = function(ev)
-    if pcall(vim.treesitter.start, ev.buf) then
-      vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-    end
+    pcall(vim.treesitter.start, ev.buf)
   end,
 })
 

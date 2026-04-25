@@ -1,0 +1,195 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PARSER_DIR="${NVIM_PARSER_DIR:-$HOME/.local/share/nvim/site/parser}"
+QUERY_DIR="${NVIM_QUERY_DIR:-$HOME/.local/share/nvim/site/queries}"
+WORK_DIR="${TS_BOOTSTRAP_WORK:-$HOME/.cache/ts-bootstrap}"
+
+declare -A PARSERS=(
+    [go]="https://github.com/tree-sitter/tree-sitter-go"
+    [javascript]="https://github.com/tree-sitter/tree-sitter-javascript"
+    [typescript]="https://github.com/tree-sitter/tree-sitter-typescript|typescript"
+    [tsx]="https://github.com/tree-sitter/tree-sitter-typescript|tsx"
+    [svelte]="https://github.com/tree-sitter-grammars/tree-sitter-svelte"
+    [hcl]="https://github.com/MichaHoffmann/tree-sitter-hcl"
+    [dockerfile]="https://github.com/camdencheek/tree-sitter-dockerfile"
+    [json]="https://github.com/tree-sitter/tree-sitter-json"
+    [yaml]="https://github.com/tree-sitter-grammars/tree-sitter-yaml"
+    [html]="https://github.com/tree-sitter/tree-sitter-html"
+    [css]="https://github.com/tree-sitter/tree-sitter-css"
+    [bash]="https://github.com/tree-sitter/tree-sitter-bash"
+)
+
+setup_colors() {
+    if [[ -n "${FORCE_COLOR:-}" ]]; then
+        USE_COLOR=true
+    elif [[ -n "${NO_COLOR:-}" ]]; then
+        USE_COLOR=false
+    elif [[ -t 1 ]]; then
+        USE_COLOR=true
+    else
+        USE_COLOR=false
+    fi
+
+    if [[ "$USE_COLOR" == true ]]; then
+        red=$'\e[31m'
+        green=$'\e[32m'
+        yellow=$'\e[33m'
+        blue=$'\e[34m'
+        bold=$'\e[1m'
+        reset=$'\e[0m'
+    else
+        red='' green='' yellow='' blue='' bold='' reset=''
+    fi
+}
+
+log() {
+    local level=$1
+    shift
+    local color
+    case "$level" in
+        info) color="$blue" ;;
+        success) color="$green" ;;
+        warn) color="$yellow" ;;
+        error) color="$red" ;;
+        *) color="" ;;
+    esac
+    if [[ "$level" == "error" ]]; then
+        printf "%s[%s]%s %s\n" "$color" "$level" "$reset" "$*" >&2
+    else
+        printf "%s[%s]%s %s\n" "$color" "$level" "$reset" "$*"
+    fi
+}
+
+show_help() {
+    cat <<EOF
+${bold}Bootstrap Tree-sitter${reset}
+
+Build tree-sitter parsers and sync queries for Neovim, replacing nvim-treesitter.
+
+Usage: $(basename "$0") [options]
+
+Options:
+    -h, --help    Show this help message
+
+Environment:
+    NVIM_PARSER_DIR     Output dir for compiled parsers
+                        (default: ~/.local/share/nvim/site/parser)
+    NVIM_QUERY_DIR      Output dir for queries
+                        (default: ~/.local/share/nvim/site/queries)
+    TS_BOOTSTRAP_WORK   Workspace for clones
+                        (default: ~/.cache/ts-bootstrap)
+
+Examples:
+    $(basename "$0")
+    NVIM_PARSER_DIR=/tmp/parsers $(basename "$0")
+EOF
+}
+
+check_prerequisites() {
+    if ! command -v tree-sitter &>/dev/null; then
+        log error "tree-sitter CLI not found. Install: dnf install tree-sitter-cli (or brew install tree-sitter-cli)"
+        exit 1
+    fi
+    if ! command -v git &>/dev/null; then
+        log error "git not found"
+        exit 1
+    fi
+}
+
+sync_repo() {
+    local url=$1 dest=$2 branch=${3:-}
+    if [[ -d "$dest" ]]; then
+        git -C "$dest" fetch --depth 1 origin "${branch:-HEAD}" --quiet
+        git -C "$dest" reset --hard FETCH_HEAD --quiet
+    else
+        git clone --depth 1 ${branch:+--branch "$branch"} "$url" "$dest" --quiet
+    fi
+}
+
+build_parser() {
+    local lang=$1 spec=$2
+    local url="${spec%%|*}"
+    local subdir=""
+    [[ "$spec" == *\|* ]] && subdir="${spec#*|}"
+    local repo_name="${url##*/}"
+    local repo_dir="$WORK_DIR/$repo_name"
+
+    log info "[$lang] sync"
+    sync_repo "$url" "$repo_dir"
+
+    pushd "$repo_dir${subdir:+/$subdir}" >/dev/null
+    rm -f ./*.so ./*.dylib
+    tree-sitter build >/dev/null 2>&1
+
+    local out=""
+    for f in ./*.so ./*.dylib; do
+        if [[ -f "$f" ]]; then
+            out="$f"
+            break
+        fi
+    done
+    if [[ -z "$out" ]]; then
+        log error "[$lang] no .so/.dylib produced in $(pwd)"
+        popd >/dev/null
+        return 1
+    fi
+    cp "$out" "$PARSER_DIR/$lang.so"
+    popd >/dev/null
+}
+
+sync_queries() {
+    local repo="$WORK_DIR/nvim-treesitter"
+    log info "[queries] sync nvim-treesitter (master)"
+    sync_repo "https://github.com/nvim-treesitter/nvim-treesitter" "$repo" master
+    local src name
+    for src in "$repo"/queries/*; do
+        name="${src##*/}"
+        rm -rf "$QUERY_DIR/$name"
+        cp -r "$src" "$QUERY_DIR/$name"
+    done
+}
+
+main() {
+    setup_colors
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h | --help)
+                show_help
+                exit 0
+                ;;
+            *)
+                log error "unknown argument: $1"
+                show_help
+                exit 2
+                ;;
+        esac
+    done
+
+    check_prerequisites
+    mkdir -p "$PARSER_DIR" "$QUERY_DIR" "$WORK_DIR"
+
+    local lang result
+    for lang in "${!PARSERS[@]}"; do
+        set +e
+        build_parser "$lang" "${PARSERS[$lang]}"
+        result=$?
+        set -e
+        if [[ $result -ne 0 ]]; then
+            log warn "[$lang] failed, continuing"
+        fi
+    done
+
+    sync_queries
+
+    log success "done"
+    log info "  parsers: $PARSER_DIR"
+    log info "  queries: $QUERY_DIR"
+    log info "  verify with :checkhealth vim.treesitter"
+
+    exit 0
+}
+
+main "$@"
