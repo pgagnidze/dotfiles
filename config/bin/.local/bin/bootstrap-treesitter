@@ -146,7 +146,7 @@ sync_queries() {
     local src name
     for src in "$repo"/queries/*; do
         name="${src##*/}"
-        rm -rf "$QUERY_DIR/$name"
+        rm -rf "${QUERY_DIR:?}/$name"
         cp -r "$src" "$QUERY_DIR/$name"
     done
 }
