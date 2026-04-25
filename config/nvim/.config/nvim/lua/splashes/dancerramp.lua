@@ -248,7 +248,9 @@ for i, blob in ipairs(raw) do
 end
 
 local color_by_byte = {}
-for b = 0, 255 do color_by_byte[b] = DIM end
+for b = 0, 255 do
+  color_by_byte[b] = DIM
+end
 color_by_byte[string.byte(" ")] = nil
 for _, range in ipairs({ { "0", "9" }, { "a", "z" }, { "A", "Z" } }) do
   for b = string.byte(range[1]), string.byte(range[2]) do
@@ -262,7 +264,9 @@ end
 local ns = vim.api.nvim_create_namespace("dancer_paint")
 local hl_cache = {}
 local function get_hl(fg)
-  if hl_cache[fg] then return hl_cache[fg] end
+  if hl_cache[fg] then
+    return hl_cache[fg]
+  end
   local name = "Dancer_" .. fg:sub(2)
   vim.api.nvim_set_hl(0, name, { fg = fg })
   hl_cache[fg] = name
@@ -290,18 +294,24 @@ function M.attach(buf)
       break
     end
   end
-  if not start_row then return end
+  if not start_row then
+    return
+  end
 
   local pad_str = string.rep(" ", pad_bytes)
   local padded_frames = {}
   for fi, f in ipairs(M.frames) do
     local p = {}
-    for i, l in ipairs(f) do p[i] = pad_str .. l end
+    for i, l in ipairs(f) do
+      p[i] = pad_str .. l
+    end
     padded_frames[fi] = p
   end
 
   local function paint(idx)
-    if not vim.api.nvim_buf_is_valid(buf) then return false end
+    if not vim.api.nvim_buf_is_valid(buf) then
+      return false
+    end
     local frame = M.frames[idx]
     local padded = padded_frames[idx]
     vim.bo[buf].modifiable = true
@@ -335,14 +345,18 @@ function M.attach(buf)
 
   local timer = vim.uv.new_timer()
   local idx = 1
-  timer:start(0, DELAY, vim.schedule_wrap(function()
-    if not paint(idx) then
-      timer:stop()
-      timer:close()
-      return
-    end
-    idx = (idx % #M.frames) + 1
-  end))
+  timer:start(
+    0,
+    DELAY,
+    vim.schedule_wrap(function()
+      if not paint(idx) then
+        timer:stop()
+        timer:close()
+        return
+      end
+      idx = (idx % #M.frames) + 1
+    end)
+  )
 end
 
 return M

@@ -260,7 +260,9 @@ starter.setup({
 autocmd("User", {
   group = augroup,
   pattern = "MiniStarterOpened",
-  callback = function(args) dancer.attach(args.buf) end,
+  callback = function(args)
+    dancer.attach(args.buf)
+  end,
 })
 
 require("mini.clue").setup({
