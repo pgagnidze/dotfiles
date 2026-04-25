@@ -238,16 +238,10 @@ require("mini.sessions").setup()
 require("mini.tabline").setup()
 require("mini.bufremove").setup()
 
+local dancer = require("splashes.dancerramp")
 local starter = require("mini.starter")
 starter.setup({
-  header = table.concat({
-    "          ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
-    "          ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
-    "          ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
-    "          ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
-    "          ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
-    "          ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
-  }, "\n"),
+  header = table.concat(dancer.frames[1], "\n"),
   items = {
     { name = "Find File", action = "FzfLua files", section = "Actions" },
     { name = "New File", action = "enew | startinsert", section = "Actions" },
@@ -261,6 +255,12 @@ starter.setup({
     end),
   },
   footer = "",
+})
+
+autocmd("User", {
+  group = augroup,
+  pattern = "MiniStarterOpened",
+  callback = function(args) dancer.attach(args.buf) end,
 })
 
 require("mini.clue").setup({
