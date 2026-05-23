@@ -61,6 +61,17 @@ vim.cmd.colorscheme("gruvbox")
 
 vim.treesitter.language.register("hcl", "terraform")
 
+vim.treesitter.query.add_directive("set-lang-from-info-string!", function(match, _, bufnr, pred, metadata)
+  local capture = match[pred[2]]
+  if not capture then return end
+  local node = type(capture) == "table" and capture[1] or capture
+  local text = vim.treesitter.get_node_text(node, bufnr):lower():gsub("[^%w_]+", "")
+  local lang = vim.treesitter.language.get_lang(text) or text
+  if lang and lang ~= "" then
+    metadata["injection.language"] = lang
+  end
+end, { all = false })
+
 autocmd("FileType", {
   group = augroup,
   callback = function(ev)
