@@ -40,7 +40,7 @@ o.foldlevelstart = 99
 -- plugins --
 
 vim.pack.add({
-  "https://github.com/EdenEast/nightfox.nvim",
+  "https://github.com/ellisonleao/gruvbox.nvim",
   "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
   "https://github.com/windwp/nvim-ts-autotag",
   "https://github.com/mason-org/mason.nvim",
@@ -55,7 +55,7 @@ vim.pack.add({
 
 -- colorscheme --
 
-vim.cmd.colorscheme("nordfox")
+vim.cmd.colorscheme("gruvbox")
 
 -- treesitter --
 

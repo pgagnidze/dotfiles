@@ -1,5 +1,5 @@
 {
-  "theme": "nord",
+  "theme": "gruvbox",
   "display": {
     "style": "tui",
     "charset": "unicode",
