@@ -22,9 +22,11 @@
   },
   "outputStyle": "Learning",
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "fastMode": false,
+  "autoCompactEnabled": false,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "autoCompactEnabled": false
+  "model": "opus",
+  "ultracode": true
 }
