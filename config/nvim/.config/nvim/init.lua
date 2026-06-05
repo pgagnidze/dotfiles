@@ -40,7 +40,7 @@ o.foldlevelstart = 99
 -- plugins --
 
 vim.pack.add({
-  "https://github.com/ellisonleao/gruvbox.nvim",
+  "https://github.com/folke/tokyonight.nvim",
   "https://github.com/nvim-treesitter/nvim-treesitter-textobjects",
   "https://github.com/windwp/nvim-ts-autotag",
   "https://github.com/mason-org/mason.nvim",
@@ -55,7 +55,7 @@ vim.pack.add({
 
 -- colorscheme --
 
-vim.cmd.colorscheme("gruvbox")
+vim.cmd.colorscheme("tokyonight-night")
 
 -- treesitter --
 
@@ -442,5 +442,17 @@ end)
 
 require("remove-comments")
 require("tiny-cmdline").setup()
-require("render-markdown").setup()
+require("render-markdown").setup({
+  anti_conceal = { enabled = false },
+  heading = {
+    width = "block",
+    sign = false,
+  },
+  code = {
+    width = "block",
+    border = "thin",
+    sign = false,
+  },
+  sign = { enabled = false },
+})
 vim.diagnostic.config({ virtual_text = true })
