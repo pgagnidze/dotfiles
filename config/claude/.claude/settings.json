@@ -10,6 +10,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "claude-powerline"
@@ -20,13 +21,13 @@
     "frontend-design@claude-plugins-official": true,
     "claude-powerline@claude-powerline": true
   },
+  "extraKnownMarketplaces": {},
   "outputStyle": "Learning",
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "ultracode": true,
   "fastMode": false,
   "autoCompactEnabled": false,
   "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true,
-  "model": "opus",
-  "ultracode": true
+  "voiceEnabled": true
 }
