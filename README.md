@@ -134,8 +134,8 @@ gpg --armor --export YOUR_KEY_ID
 
 | Setting    | Value                                                                                                                                            |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Theme      | [Gruvbox Dark](https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme)                                                                            |
-| Icons      | [Reversal Brown](https://github.com/yeyushengfan258/Reversal-icon-theme)                                                                         |
+| Theme      | [Tokyonight Dark](https://github.com/Fausto-Korpsvart/Tokyonight-GTK-Theme)                                                                      |
+| Icons      | [Reversal Blue](https://github.com/yeyushengfan258/Reversal-icon-theme)                                                                          |
 | Extensions | [Blur my Shell](https://github.com/aunetx/blur-my-shell)                                                                                         |
 | Keyboard   | US, KA                                                                                                                                           |
 | Display    | 2880x1800@120, scale 2                                                                                                                           |
